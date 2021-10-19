@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'in.mcxiv.jpsd'
+version '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'com.twelvemonkeys.imageio:imageio:3.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
