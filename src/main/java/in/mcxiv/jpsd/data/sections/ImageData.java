@@ -2,6 +2,7 @@ package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.sections.FileHeaderData.ColorMode;
+import in.mcxiv.jpsd.io.PSDFileReader;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -13,6 +14,10 @@ public class ImageData extends DataObject {
 
     public ImageData(byte[][] imageData) {
         this.imageData = imageData;
+    }
+
+    public ImageData(byte[] data) {
+
     }
 
     public byte[][] getImageData() {
@@ -39,9 +44,11 @@ public class ImageData extends DataObject {
         ColorMode colorMode = header.getColorMode();
         short depth = header.getDepth();
 
-        DataBufferByte bufferByte = new DataBufferByte(imageData, w * h);
-        BandedSampleModel model = new BandedSampleModel(DataBuffer.TYPE_BYTE, w, h, channels);
-        WritableRaster raster = WritableRaster.createRaster(model, bufferByte, new Point()).createCompatibleWritableRaster();
+        WritableRaster raster = WritableRaster.createBandedRaster(DataBuffer.TYPE_BYTE, w, h, channels, new Point());
+        DataBufferByte dataBuffer = (DataBufferByte) raster.getDataBuffer();
+
+        for (int i = 0; i < channels; i++)
+            System.arraycopy(imageData[i], 0, dataBuffer.getData(i), 0, imageData[i].length);
 
         ComponentColorModel colorModel = new ComponentColorModel(
                 colorMode.getColorSpace(),
@@ -53,39 +60,42 @@ public class ImageData extends DataObject {
 
         BufferedImage image = new BufferedImage(colorModel, raster, false, null);
 
-        for(int i = 0; i < w; i++) {
-            for(int j = 0; j < h; j++) {
-                System.out.print(Integer.toBinaryString(image.getRGB(i, j))+" ");
+        if (PSDFileReader.debugging()) {
+            for (int i = 0; i < w; i++) {
+                for (int j = 0; j < h; j++)
+                    System.out.print(Integer.toBinaryString(image.getRGB(i, j)) + " ");
+                System.out.println();
             }
-            System.out.println();
         }
 
         return image;
+    }
 
-        /*
-        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+    public BufferedImage __createImage(FileHeaderData header) {
+
+        int w = header.getWidth();
+        int h = header.getHeight();
+        int channels = header.getChannels();
+        ColorMode colorMode = header.getColorMode();
+        short depth = header.getDepth();
+        BufferedImage image = new BufferedImage(w, h, colorMode.getBIType());
 
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
 
                 int extent = i + j * w;
 
-                int r = imageData[0][extent];
-                int g = imageData[1][extent];
-                int b = imageData[2][extent];
+                int color = 0xFF << 24;
+                for (int k = channels - 1, l = 0; k >= 0; k--, l++) {
+                    int component = imageData[l][extent];
+                    color |= component << (depth * k);
+                }
 
-                int c = (r << 16) + (g << 8) + b;
-                c = c | (0xFF << 24);
-
-                image.setRGB(i, j, c);
-
+                image.setRGB(i, j, color);
             }
         }
 
         return image;
-        */
-
-
     }
 
     @Override

@@ -18,10 +18,12 @@ public class PrintScaleRBlockIO extends ImageResourceBlockIO<PrintScaleRBlock> {
     @Override
     public PrintScaleRBlock read(DataReader reader, ImageResourceID id, String pascalString, long blockLength) throws IOException {
 
-        Style style = Style.of(reader.stream.readShort());
-        float x_offset = reader.stream.readFloat();
-        float y_offset = reader.stream.readFloat();
-        float scale = reader.stream.readFloat();
+        //@formatter:off
+        Style style    = Style.of(reader.stream.readShort ());
+        float x_offset = reader.stream.         readFloat ();
+        float y_offset = reader.stream.         readFloat ();
+        float scale    = reader.stream.         readFloat ();
+        //@formatter:on
 
         return new PrintScaleRBlock(pascalString, blockLength, style, x_offset, y_offset, scale);
 

@@ -17,11 +17,13 @@ public class VersionInfoRBlockIO extends ImageResourceBlockIO<VersionInfoRBlock>
     @Override
     public VersionInfoRBlock read(DataReader reader, ImageResourceID id, String pascalString, long blockLength) throws IOException {
 
-        int version = reader.stream.readInt();
-        boolean hasMergedData = reader.stream.readBoolean();
-        String readerName = reader.readUnicodeString();
-        String writerName = reader.readUnicodeString();
-        int fileVersion = reader.stream.readInt();
+        //@formatter:off
+        int     version       = reader.stream.readInt          ();
+        boolean hasMergedData = reader.stream.readBoolean      ();
+        String  readerName    = reader       .readUnicodeString();
+        String  writerName    = reader       .readUnicodeString();
+        int     fileVersion   = reader.stream.readInt          ();
+        //@formatter:on
 
         return new VersionInfoRBlock(id, pascalString, blockLength, version, hasMergedData, readerName, writerName, fileVersion);
     }

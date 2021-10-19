@@ -6,7 +6,9 @@ public abstract class Effect {
     protected int version;
     protected boolean isEnabled;
 
-    public Effect(EffectType type) {
+    public Effect(EffectType type, int version, boolean isEnabled) {
         this.type = type;
+        this.version = version;
+        this.isEnabled = isEnabled;
     }
 }

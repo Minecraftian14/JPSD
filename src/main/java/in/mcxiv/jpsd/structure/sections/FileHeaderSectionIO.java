@@ -45,6 +45,7 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
         checkBytesCount(BYTES, reader.stream.getStreamPosition());
 
         FileVersion fileVersion = FileVersion.of(version);
+
         return new FileHeaderData(fileVersion, channels, height, width, depth, colorMode);
     }
 

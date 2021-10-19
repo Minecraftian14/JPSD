@@ -70,7 +70,6 @@ class SectionIOTest {
 
         BufferedImage image = id.createImage(fhd);
 
-        // D:\Projects\JAVA\JPSD\src\test\test_data
         ImageIO.write(image, "PNG", new File(System.getProperty("user.dir") + "/src/test/test_data/out.png"));
 
         System.out.println("reader.getPosition() = " + reader.stream.getStreamPosition());

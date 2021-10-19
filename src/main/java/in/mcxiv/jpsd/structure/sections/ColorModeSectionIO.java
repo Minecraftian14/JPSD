@@ -24,7 +24,6 @@ public class ColorModeSectionIO extends SectionIO<ColorModeData> {
     public ColorModeData read(DataReader reader) throws IOException {
 
         int sectionLength = reader.stream.readInt();
-
         long mark = reader.stream.getStreamPosition();
 
         byte[] data = reader.readBytes(sectionLength, true);

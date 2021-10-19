@@ -26,8 +26,6 @@ public class AlphaChannelsNamesRBlockIO extends ImageResourceBlockIO<AlphaChanne
         while (reader.stream.getStreamPosition() < endPosition)
             strings.add(reader.readPascalStringRaw());
 
-        // FIXME: Do we have an extra byte left after each string read?
-
         return new AlphaChannelsNamesRBlock(id, pascalString, blockLength, strings.toArray(new String[0]));
     }
 

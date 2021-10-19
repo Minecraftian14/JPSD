@@ -2,16 +2,22 @@ package in.mcxiv.jpsd.data.resource.types;
 
 import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
+import in.mcxiv.jpsd.data.sections.ImageData;
 
 import java.util.Arrays;
 
 public class RawImageRBlock extends ImageResourceBlock {
 
+    private ImageData imageData;
     private byte[] data;
 
     public RawImageRBlock(ImageResourceID identity, String pascalString, long length, byte[] data) {
         super(identity, pascalString, length);
-        this.data = data;
+        imageData = new ImageData(this.data = data);
+    }
+
+    public ImageData getImageData() {
+        return imageData;
     }
 
     public byte[] getData() {
@@ -21,7 +27,8 @@ public class RawImageRBlock extends ImageResourceBlock {
     @Override
     public String toString() {
         return "RawImageRBlock{" +
-                "data=" + Arrays.toString(data) +
+                "imageData=" + imageData +
+                ", data.length=" + data.length +
                 '}';
     }
 }

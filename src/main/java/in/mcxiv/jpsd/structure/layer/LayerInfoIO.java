@@ -53,10 +53,11 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
 
         for (int i = 0; i < layers; i++)
             recordList[i] = LAYER_RECORD_IO.read(reader);
+
         for (int i = 0; i < layers; i++) {
             for (ChannelInfo channelInfo : recordList[i].getChannelInfo()) {
                 Compression compression = Compression.of(reader.stream.readShort());
-                byte[] data = reader.readBytes((int) (channelInfo.getDataLength() - 2), true);//TODO, was -2 good?
+                byte[] data = reader.readBytes((int) (channelInfo.getDataLength() - 2), true);
                 channelInfo.setData(new ChannelImageData(compression, data));
             }
         }

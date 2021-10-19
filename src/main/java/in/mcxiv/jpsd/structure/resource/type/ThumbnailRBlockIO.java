@@ -3,6 +3,7 @@ package in.mcxiv.jpsd.structure.resource.type;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.types.ThumbnailRBlock;
 import in.mcxiv.jpsd.data.resource.types.ThumbnailRBlock.Format;
+import in.mcxiv.jpsd.exceptions.IllegalSignatureException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.resource.ImageResourceBlockIO;
@@ -25,7 +26,7 @@ public class ThumbnailRBlockIO extends ImageResourceBlockIO<ThumbnailRBlock> {
     public ThumbnailRBlock read(DataReader reader, ImageResourceID id, String pascalString, long blockLength) throws IOException {
 
         if (this.id != id)
-            throw new RuntimeException("What????");
+            throw new IllegalSignatureException("Given id must be one of ImageResourceID#Thumbnail4 or ImageResourceID#Thumbnail5");
 
         //@formatter:off
         Format  format          = Format.of(reader.stream.readInt());

@@ -17,11 +17,13 @@ public class PrintFlagsInfoRBlockIO extends ImageResourceBlockIO<PrintFlagsInfoR
     @Override
     public PrintFlagsInfoRBlock read(DataReader reader, ImageResourceID id, String pascalString, long blockLength) throws IOException {
 
-        int version = reader.stream.readUnsignedShort();
-        byte cropMasks = reader.stream.readByte();
-        reader.stream.skipBytes(1);
-        long bleedWidth = reader.stream.readUnsignedInt();
-        int bleedScale = reader.stream.readUnsignedShort();
+        //@formatter:off
+        int  version    = reader.stream.  readUnsignedShort ();
+        byte cropMasks  = reader.stream.  readByte          ();
+                          reader.stream.  skipBytes         (1);
+        long bleedWidth = reader.stream.  readUnsignedInt   ();
+        int  bleedScale = reader.stream.  readUnsignedShort ();
+        //@formatter:on
 
         return new PrintFlagsInfoRBlock(pascalString, blockLength, version, cropMasks, bleedWidth, bleedScale);
     }

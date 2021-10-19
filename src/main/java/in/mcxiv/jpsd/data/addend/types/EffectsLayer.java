@@ -11,12 +11,10 @@ public class EffectsLayer extends AdditionalLayerInfo {
 
     public static final AdditionalInfoKey KEY = AdditionalInfoKey.EFFECTS_KEY;
 
-    private EffectType[] effectsTypes;
     private Effect[] effects;
 
-    public EffectsLayer(String signature, long length, EffectType[] effectsTypes, Effect[] effects) {
+    public EffectsLayer(long length, Effect[] effects) {
         super(KEY, length);
-        this.effectsTypes = effectsTypes;
         this.effects = effects;
     }
 }

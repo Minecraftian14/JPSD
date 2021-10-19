@@ -1,8 +1,39 @@
 package in.mcxiv.jpsd.io;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import static in.mcxiv.jpsd.io.PSDFileReader.UnknownBytesStrategy.Action.Skip;
 
 public class PSDFileReader {
+
+    private static final PrintStream nullStream = new PrintStream(new OutputStream() {
+        private volatile boolean closed;
+
+        private void ensureOpen() throws IOException {
+            if (closed) {
+                throw new IOException("Stream closed");
+            }
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            ensureOpen();
+        }
+
+        @Override
+        public void write(byte b[], int off, int len) throws IOException {
+            ensureOpen();
+        }
+
+        @Override
+        public void close() {
+            closed = true;
+        }
+    });
+
+    public static PrintStream out = nullStream;
 
     /**
      * Signifies the start of a Photoshop file.
@@ -66,6 +97,10 @@ public class PSDFileReader {
 
     public static final byte[] ADDITIONAL_LAYER_INFO_SIGNATURE_LONG = {'8', 'B', '6', '4'};
 
+    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL = {0, 0, '8', 'B'};
+
+    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_LONG = CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL;
+
     public static UnknownBytesStrategy unknownBytesStrategy = new UnknownBytesStrategy(Skip);
 
 
@@ -94,6 +129,7 @@ public class PSDFileReader {
 
     public static void setDebuggingMode(boolean rVDebugging) {
         R_V_DEBUGGING = rVDebugging;
+        if (R_V_DEBUGGING) out = System.out;
+        else out = nullStream;
     }
-
 }

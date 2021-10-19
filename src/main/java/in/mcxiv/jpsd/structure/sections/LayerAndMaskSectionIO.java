@@ -55,13 +55,20 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
         GlobalLayerMaskInfo globalLayerMaskInfo = GLOBAL_LAYER_MASK_INFO_IO.read(reader);
         List<AdditionalLayerInfo> additionalLayerInfos = new ArrayList<>();
 
+        // FIXME:
         // When using /2x2_Yellow_over_2x4_Red_centered_(2_layers).psd I had to skip 2 bytes (in debug mode)
-        // other wise, when reading the next four bytes for sign, we only got "**8B"
-        reader.stream.skipBytes(2);
+        // otherwise, when reading the next four bytes for sign, we only got "**8B"
+
+//        reader.stream.skipBytes(2);
+
+        // NOTE: the above mentioned problem is temporarily fixed by checking of a given string ends with "8B"
+        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL
+        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_LONG
 
         while (expectedEnd - reader.stream.getStreamPosition() > 12) {
             // 12 = signature:4 + key:4 + length:4||8
             // Therefore, if that's < 12, there can't be any valid data left.
+            // Thing is, why is sometimes data less than 12?
             // I really want to investigate why that's like that, but
             // for now, it's just a TODO.
 

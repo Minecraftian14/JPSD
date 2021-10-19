@@ -27,14 +27,15 @@ public class ColorSamplersRBlockIO extends ImageResourceBlockIO<ColorSamplersRBl
 
         for (int i = 0; i < numberOfColorSamples; i++) {
 
-            int versionS = reader.stream.readInt();
-            int horizontal = reader.stream.readInt(); // Position
-            int vertical = reader.stream.readInt();   // Position
-            ColorSpace colorSpace = ColorSpace.of(reader.stream.readShort());
-            short depth = reader.stream.readShort();
+            //@formatter:off
+            int        versionS   = reader.stream.              readInt   ();
+            int        horizontal = reader.stream.              readInt   ();    // Position
+            int        vertical   = reader.stream.              readInt   ();    // Position
+            ColorSpace colorSpace = ColorSpace.of(reader.stream.readShort ());
+            short      depth      = reader.stream.              readShort ();
+            //@formatter:on
 
             blocks[i] = new SamplersResourceSubBlock(versionS, horizontal, vertical, colorSpace, depth);
-
         }
 
         return new ColorSamplersRBlock(id, pascalString, blockLength, version, blocks);

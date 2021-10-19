@@ -19,6 +19,10 @@ public enum EffectType implements BytesEntry {
         value = v.getBytes(StandardCharsets.US_ASCII);
     }
 
+    public static EffectType of(byte[] value) {
+        return BytesEntry.of(value, values());
+    }
+
     @Override
     public int getLength() {
         return 4;

@@ -12,7 +12,11 @@ public class SolidFill extends Effect {
     private byte opacity;
     private ColorComponents nativeColor;
 
-    public SolidFill() {
-        super(EffectType.SolidFill);
+    public SolidFill(int version, boolean isEnabled, BlendingMode mode, ColorComponents color, byte opacity, ColorComponents nativeColor) {
+        super(EffectType.SolidFill, version, isEnabled);
+        this.mode = mode;
+        this.color = color;
+        this.opacity = opacity;
+        this.nativeColor = nativeColor;
     }
 }

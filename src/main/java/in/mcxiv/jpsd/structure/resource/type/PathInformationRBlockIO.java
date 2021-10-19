@@ -32,7 +32,7 @@ public class PathInformationRBlockIO extends ImageResourceBlockIO<PathInformatio
 
         List<PathRecord> list = new ArrayList<>();
 
-        while (reader.stream.getStreamPosition() < blockLength) {
+        while (reader.stream.getStreamPosition() < expectedEnd) {
 
             Selector selector = Selector.of(reader.stream.readShort());
 
@@ -59,7 +59,7 @@ public class PathInformationRBlockIO extends ImageResourceBlockIO<PathInformatio
                     break;
 
                 case CLIPBOARD_RECORD:
-                    // FIXME: Umm? We had to use this thing only, right?
+                    // FIXME: Umm? We had to use readFFloat only, right?
                     float top = reader.readFFloat();
                     float lef = reader.readFFloat();
                     float bot = reader.readFFloat();
