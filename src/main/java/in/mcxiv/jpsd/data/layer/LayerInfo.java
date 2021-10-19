@@ -9,18 +9,15 @@ import java.util.Arrays;
 public class LayerInfo extends DataObject {
 
     private LayerRecord[] layerRecords;
-    private ChannelImageData[] imageData; // Probably same sized as layerRecords
 
-    public LayerInfo(LayerRecord[] layerRecords, ChannelImageData[] imageData) {
+    public LayerInfo(LayerRecord[] layerRecords) {
         this.layerRecords = layerRecords;
-        this.imageData = imageData;
     }
 
     @Override
     public String toString() {
         return "LayerInfo{" +
                 "layerRecords=" + Arrays.toString(layerRecords) +
-                ", imageData=" + Arrays.toString(imageData) +
                 '}';
     }
 }

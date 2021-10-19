@@ -4,6 +4,7 @@ import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.primitive.IntEntry;
 import in.mcxiv.jpsd.data.primitive.ShortEntry;
 
+import java.awt.color.ColorSpace;
 import java.util.Objects;
 
 public class FileHeaderData extends DataObject {
@@ -133,17 +134,30 @@ public class FileHeaderData extends DataObject {
     }
 
     public enum ColorMode implements ShortEntry {
-        Bitmap(0), Grayscale(1), Indexed(2), RGB(3), CMYK(4), Multichannel(7), Duotone(8), Lab(9);
+        Bitmap(0, null),
+        Grayscale(1, null),
+        Indexed(2, null),
+        RGB(3, ColorSpace.getInstance(ColorSpace.CS_sRGB)),
+        CMYK(4, null),
+        Multichannel(7, null),
+        Duotone(8, null),
+        Lab(9, null);
 
         private final short colorMode;
+        private final ColorSpace colorSpace;
 
-        ColorMode(int colorMode) {
+        ColorMode(int colorMode, ColorSpace colorSpace) {
             this.colorMode = (short) colorMode;
+            this.colorSpace = colorSpace;
         }
 
         @Override
         public short getValue() {
             return colorMode;
+        }
+
+        public ColorSpace getColorSpace() {
+            return colorSpace;
         }
 
         static ColorMode of(short colorMode) {

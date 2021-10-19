@@ -1,14 +1,14 @@
 package in.mcxiv.jpsd.structure;
 
-import in.mcxiv.jpsd.data.sections.ColorModeData;
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
-import in.mcxiv.jpsd.data.sections.ImageResourcesData;
-import in.mcxiv.jpsd.data.sections.LayerAndMaskData;
+import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.structure.sections.ImageDataIO;
 import org.junit.jupiter.api.Test;
 
+import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,7 +41,7 @@ class SectionIOTest {
     @Test
     void reading() throws IOException {
 
-        FileImageInputStream in = get(resources[5]);
+        FileImageInputStream in = get(resources[3]);
 
         System.out.println("in.available() = " + in.length());
 
@@ -64,9 +64,14 @@ class SectionIOTest {
         else lmd = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSD.read(reader);
         pj(lmd.toString());
 
-//        SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fhd);
-//        ImageData id = IMAGE_DATA_IO.read(reader);
-//        pj(id.toString());
+        SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fhd);
+        ImageData id = IMAGE_DATA_IO.read(reader);
+        pj(id.toString());
+
+        BufferedImage image = id.createImage(fhd);
+
+        // D:\Projects\JAVA\JPSD\src\test\test_data
+        ImageIO.write(image, "PNG", new File(System.getProperty("user.dir") + "/src/test/test_data/out.png"));
 
         System.out.println("reader.getPosition() = " + reader.stream.getStreamPosition());
 

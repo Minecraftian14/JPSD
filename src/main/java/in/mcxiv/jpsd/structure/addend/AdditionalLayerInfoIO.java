@@ -2,15 +2,19 @@ package in.mcxiv.jpsd.structure.addend;
 
 import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
+import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
 import in.mcxiv.jpsd.data.addend.types.LayerID;
 import in.mcxiv.jpsd.data.addend.types.UnicodeLayerName;
-import in.mcxiv.jpsd.data.addend.types.UnknownAdditionalLayerInfo;
+import in.mcxiv.jpsd.data.addend.UnknownAdditionalLayerInfo;
+import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDFileReader;
 import in.mcxiv.jpsd.structure.SectionIO;
+import in.mcxiv.jpsd.structure.layer.LayerInfoIO;
+import in.mcxiv.jpsd.structure.sections.LayerAndMaskSectionIO;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,9 +23,18 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
 
     public final FileHeaderData.FileVersion version;
 
+    public final LayerInfoIO LAYER_INFO_IO;
+
     public AdditionalLayerInfoIO(FileHeaderData.FileVersion version) {
         super(true);
         this.version = version;
+        LAYER_INFO_IO = null;
+    }
+
+    public AdditionalLayerInfoIO(FileHeaderData.FileVersion version, LayerInfoIO LAYER_INFO_IO) {
+        super(true);
+        this.version = version;
+        this.LAYER_INFO_IO = LAYER_INFO_IO;
     }
 
     @Override
@@ -62,6 +75,11 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
             case LAYER_ID_KEY:
                 int id = reader.stream.readInt();
                 return new LayerID(id, size);
+
+            case LAYER_AND_MASK_INFO_16:
+                LayerInfo layerInfo = LAYER_INFO_IO.read(reader, size);
+                reader.skipToPadBy(size, 4);
+                return new LayerAndMaskInfo(key, size, layerInfo);
 
             default:
                 switch (unknownBytesStrategy.action) {

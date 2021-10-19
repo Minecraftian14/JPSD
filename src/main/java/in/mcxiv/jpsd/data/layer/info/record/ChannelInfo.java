@@ -6,7 +6,7 @@ import in.mcxiv.jpsd.data.primitive.ShortEntry;
 public class ChannelInfo {
 
     public enum ChannelID implements ShortEntry {
-        Red(0), Green(1), Blue(2),
+        Channel1(0), Channel2(1), Channel3(2), Channel4(3), Channel5(4), Channel6(5),
         TransparencyMask(-1), UserSuppliedMask(-2), RealUserSuppliedMask(-3);
 
         private final short value;

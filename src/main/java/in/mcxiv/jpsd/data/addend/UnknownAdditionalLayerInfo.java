@@ -1,4 +1,4 @@
-package in.mcxiv.jpsd.data.addend.types;
+package in.mcxiv.jpsd.data.addend;
 
 import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;

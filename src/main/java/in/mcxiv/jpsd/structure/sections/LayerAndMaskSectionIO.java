@@ -38,7 +38,7 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
         super(true);
         this.version = version;
         LAYER_INFO_IO = new LayerInfoIO(this.version);
-        ADDITIONAL_LAYER_INFO_IO = new AdditionalLayerInfoIO(this.version);
+        ADDITIONAL_LAYER_INFO_IO = new AdditionalLayerInfoIO(this.version, LAYER_INFO_IO);
     }
 
     @Override
@@ -57,6 +57,7 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
 
         // When using /2x2_Yellow_over_2x4_Red_centered_(2_layers).psd I had to skip 2 bytes (in debug mode)
         // other wise, when reading the next four bytes for sign, we only got "**8B"
+        reader.stream.skipBytes(2);
 
         while (expectedEnd - reader.stream.getStreamPosition() > 12) {
             // 12 = signature:4 + key:4 + length:4||8

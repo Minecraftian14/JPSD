@@ -1,11 +1,11 @@
 package in.mcxiv.jpsd.structure.layer;
 
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
+import in.mcxiv.jpsd.data.common.Compression;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.ChannelImageData;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
-import in.mcxiv.jpsd.data.common.Compression;
 import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
+import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
@@ -28,8 +28,14 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
     public LayerInfo read(DataReader reader) throws IOException {
 
         long length;
-        if(version.isLarge()) length = reader.stream.readLong();
+        if (version.isLarge()) length = reader.stream.readLong();
         else length = reader.stream.readInt();
+
+        return read(reader, length);
+
+    }
+
+    public LayerInfo read(DataReader reader, long length) throws IOException {
 
         if (length % 2 != 0)
             throw new RuntimeException("Hey MCXIV, shouldn't this be an even number? ((rounded up to a multiple of 2))");
@@ -44,7 +50,6 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
         }
 
         LayerRecord[] recordList = new LayerRecord[layers];
-        ChannelImageData[] channelImageDataList = new ChannelImageData[layers];
 
         for (int i = 0; i < layers; i++)
             recordList[i] = LAYER_RECORD_IO.read(reader);
@@ -56,7 +61,7 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
             }
         }
 
-        return new LayerInfo(recordList, channelImageDataList);
+        return new LayerInfo(recordList);
     }
 
     @Override
