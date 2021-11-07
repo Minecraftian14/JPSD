@@ -53,6 +53,6 @@ public class ThumbnailRBlockIO extends ImageResourceBlockIO<ThumbnailRBlock> {
 //        writer.writeInt(data.getCompressedSize());
 //        writer.writeShort(data.getBitsPerPixel());
 //        writer.writeShort(data.getNumberOfPlanes());
-//        writer.writeBytes(data.getImageData());
+//        writer.writeBytes(data.getData());
     }
 }

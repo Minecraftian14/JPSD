@@ -1,11 +1,15 @@
 package in.mcxiv.jpsd.io;
 
+import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.exceptions.IllegalSignatureException;
 import in.mcxiv.jpsd.exceptions.IllegalVersionException;
 
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.MemoryCacheImageInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -25,6 +29,14 @@ public class DataReader implements AutoCloseable, Closeable {
 
     public DataReader(ImageInputStream stream) {
         this.stream = stream;
+    }
+
+    public DataReader(InputStream stream) {
+        this(new MemoryCacheImageInputStream(stream));
+    }
+
+    public DataReader(byte[] data) {
+        this(new ByteArrayInputStream(data));
     }
 
     public byte[] readBytes(int length, boolean createNew) throws IOException {
@@ -62,7 +74,7 @@ public class DataReader implements AutoCloseable, Closeable {
      */
     public void skipToPadBy(long length, int multiple) throws IOException {
         int bytesReadExtra = (int) (length % multiple);
-        if(bytesReadExtra == 0) return;
+        if (bytesReadExtra == 0) return;
         int bytesRequiredMoreToCompleteBlock = multiple - bytesReadExtra;
         stream.skipBytes(bytesRequiredMoreToCompleteBlock);
     }
@@ -146,7 +158,20 @@ public class DataReader implements AutoCloseable, Closeable {
         float bifVanA = (bifVanX & (65535 << 16)) >> 16;
         float bifVanB = (bifVanX & 65535) / 65535f;
         return bifVanA + bifVanB;
-        // TODO: verify against  return ((pFP & 0xffff0000) >> 16) + (pFP & 0xffff) / (float) 0xffff;
+    }
+
+    public int readByBits(DepthEntry depth) throws IOException {
+        switch (depth) {
+            default:
+            case O:
+                throw new UnsupportedOperationException();
+            case E:
+                return (byte) stream.readByte();
+            case S:
+                return (short) stream.readShort();
+            case T:
+                return stream.readInt();
+        }
     }
 
     public int verifyShortVersion(final int possibility1, final int possibility2) throws IOException {

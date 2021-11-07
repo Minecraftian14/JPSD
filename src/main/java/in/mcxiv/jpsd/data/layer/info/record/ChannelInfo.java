@@ -28,6 +28,14 @@ public class ChannelInfo {
         public String toString() {
             return "ChannelID:"+name();
         }
+
+        public boolean isColor() {
+            return value > -2;
+        }
+
+        public boolean isAlpha() {
+            return value == -1;
+        }
     }
 
     private ChannelID id;
@@ -45,6 +53,14 @@ public class ChannelInfo {
 
     public void setData(ChannelImageData data) {
         this.data = data;
+    }
+
+    public ChannelID getId() {
+        return id;
+    }
+
+    public ChannelImageData getData() {
+        return data;
     }
 
     @Override

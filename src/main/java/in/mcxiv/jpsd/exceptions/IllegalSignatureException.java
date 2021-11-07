@@ -10,7 +10,7 @@ public class IllegalSignatureException extends IOException {
     }
 
     public IllegalSignatureException(byte[] expected, byte[] actual) {
-        super("Expected " + Arrays.toString(expected) + " but found " + Arrays.toString(actual));
+        super(String.format("Expected %s but found %s(%s)", new String(expected), Arrays.toString(actual), new String(actual)));
     }
 
     public IllegalSignatureException(byte[][] expected, byte[] actual) {

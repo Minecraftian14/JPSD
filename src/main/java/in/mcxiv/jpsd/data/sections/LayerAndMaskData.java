@@ -2,8 +2,10 @@ package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
+import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
+import in.mcxiv.jpsd.io.PSDFileReader;
 
 import java.util.Arrays;
 
@@ -27,4 +29,19 @@ public class LayerAndMaskData extends DataObject {
                 ", additionalLayerInfo=" + Arrays.toString(additionalLayerInfo) +
                 '}';
     }
+
+    public LayerInfo getLayerInfo() {
+        return layerInfo;
+    }
+
+    public LayerInfo justGetALayerInfo() {
+        if (layerInfo != null) return layerInfo;
+        for (AdditionalLayerInfo info : additionalLayerInfo)
+            if (info instanceof LayerAndMaskInfo)
+                return ((LayerAndMaskInfo) info).getLayerInfo();
+        if (PSDFileReader.unknownBytesStrategy.action.equals(PSDFileReader.UnknownBytesStrategy.Action.Quit))
+            throw new RuntimeException("No layer info found!");
+            return null;
+    }
+
 }

@@ -1,5 +1,7 @@
 package in.mcxiv.jpsd.structure;
 
+import in.mcxiv.jpsd.data.file.ColorMode;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
@@ -20,12 +22,12 @@ class FileHeaderSectionIOTest {
 
         FileHeaderData data = io.read(new DataReader(stream));
 
-        assertEquals(data.getVersion(), FileHeaderData.FileVersion.PSD);
-        assertEquals(data.getChannels(), 3);
+        assertEquals(data.getVersion(), FileVersion.PSD);
+        assertEquals(data.getNumberOfChannels(), 3);
         assertEquals(data.getHeight(), 2);
         assertEquals(data.getWidth(), 4);
         assertEquals(data.getDepth(), 8);
-        assertEquals(data.getColorMode(), FileHeaderData.ColorMode.RGB);
+        assertEquals(data.getColorMode(), ColorMode.RGB);
     }
 
     @Test

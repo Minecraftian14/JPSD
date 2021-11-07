@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.structure;
 
 import in.mcxiv.jpsd.data.DataObject;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.sections.ColorModeData;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.data.sections.ImageResourcesData;
@@ -21,8 +22,8 @@ public abstract class SectionIO<Data extends DataObject> {
     public static final SectionIO<FileHeaderData> FILE_HEADER_SECTION = new FileHeaderSectionIO();
     public static final SectionIO<ColorModeData> COLOR_MODE_DATA_SECTION = new ColorModeSectionIO();
     public static final SectionIO<ImageResourcesData> IMAGE_RESOURCES_DATA_SECTION = new ImageResourcesSectionIO();
-    public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSD = new LayerAndMaskSectionIO(FileHeaderData.FileVersion.PSD);
-    public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSB = new LayerAndMaskSectionIO(FileHeaderData.FileVersion.PSB);
+    public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSD = new LayerAndMaskSectionIO(FileVersion.PSD);
+    public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSB = new LayerAndMaskSectionIO(FileVersion.PSB);
 
     protected PSDFileReader.UnknownBytesStrategy unknownBytesStrategy = PSDFileReader.unknownBytesStrategy;
 

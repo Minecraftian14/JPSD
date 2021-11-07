@@ -2,9 +2,12 @@ package in.mcxiv.jpsd.data.addend.types.effects.types;
 
 import in.mcxiv.jpsd.data.addend.types.effects.Effect;
 import in.mcxiv.jpsd.data.addend.types.effects.EffectType;
-import in.mcxiv.jpsd.data.common.ColorComponents;
 import in.mcxiv.jpsd.data.common.BlendingMode;
+import in.mcxiv.jpsd.data.common.ColorComponents;
 
+/**
+ * https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577409_31889
+ */
 public class Bevel extends Effect {
 
     private int angle;
@@ -39,5 +42,28 @@ public class Bevel extends Effect {
         this.upOrDown = upOrDown;
         this.realHighlightColor = realHighlightColor;
         this.realShadowColor = realShadowColor;
+    }
+
+    @Override
+    public String toString() {
+        return "Bevel{" +
+                "type=" + type +
+                ", version=" + version +
+                ", isEnabled=" + isEnabled +
+                ", angle=" + angle +
+                ", strength=" + strength +
+                ", blur=" + blur +
+                ", highlightBlendingMode=" + highlightBlendingMode +
+                ", shadowBlendingMode=" + shadowBlendingMode +
+                ", highlightColor=" + highlightColor +
+                ", shadowColor=" + shadowColor +
+                ", bevelStyle=" + bevelStyle +
+                ", highlightOpacity=" + highlightOpacity +
+                ", shadowOpacity=" + shadowOpacity +
+                ", useAngleInAllEffect=" + useAngleInAllEffect +
+                ", upOrDown=" + upOrDown +
+                ", realHighlightColor=" + realHighlightColor +
+                ", realShadowColor=" + realShadowColor +
+                '}';
     }
 }

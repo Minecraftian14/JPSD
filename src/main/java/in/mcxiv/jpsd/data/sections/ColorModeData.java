@@ -1,7 +1,10 @@
 package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
+import in.mcxiv.jpsd.data.file.ColorMode;
 
+import java.awt.image.DataBuffer;
+import java.awt.image.IndexColorModel;
 import java.util.Arrays;
 
 public class ColorModeData extends DataObject {
@@ -10,7 +13,7 @@ public class ColorModeData extends DataObject {
     private byte[] data;
 
     /**
-     * If true, the data "may" represent {@link FileHeaderData.ColorMode#Indexed} or {@link FileHeaderData.ColorMode#Duotone} modes.
+     * If true, the data "may" represent {@link ColorMode#Indexed} or {@link ColorMode#Duotone} modes.
      * If false, length is simply 0.
      */
     private boolean hasData;

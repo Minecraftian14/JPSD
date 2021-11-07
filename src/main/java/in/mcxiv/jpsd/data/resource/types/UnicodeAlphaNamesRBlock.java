@@ -10,8 +10,6 @@ public class UnicodeAlphaNamesRBlock extends AlphaChannelsNamesRBlock {
         super(identity, pascalString, length, channelNames);
     }
 
-
-
     @Override
     public String toString() {
         return "UnicodeAlphaNamesRBlock{" +

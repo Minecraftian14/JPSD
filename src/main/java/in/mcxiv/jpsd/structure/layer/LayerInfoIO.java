@@ -1,11 +1,11 @@
 package in.mcxiv.jpsd.structure.layer;
 
 import in.mcxiv.jpsd.data.common.Compression;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.ChannelImageData;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
@@ -15,10 +15,10 @@ import java.io.IOException;
 
 public class LayerInfoIO extends SectionIO<LayerInfo> {
 
-    private final FileHeaderData.FileVersion version;
+    private final FileVersion version;
     public final SectionIO<LayerRecord> LAYER_RECORD_IO;
 
-    public LayerInfoIO(FileHeaderData.FileVersion version) {
+    public LayerInfoIO(FileVersion version) {
         super(true);
         this.version = version;
         LAYER_RECORD_IO = new LayerRecordIO(version);
@@ -44,9 +44,10 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
             return null;
 
         short layers = reader.stream.readShort();
+        boolean hasAlpha = false;
         if (layers < 0) {
-            System.err.println("Hmm... Why is number of layers negative?");
             layers *= -1;
+            hasAlpha = true;
         }
 
         LayerRecord[] recordList = new LayerRecord[layers];
@@ -62,7 +63,7 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
             }
         }
 
-        return new LayerInfo(recordList);
+        return new LayerInfo(hasAlpha, recordList);
     }
 
     @Override

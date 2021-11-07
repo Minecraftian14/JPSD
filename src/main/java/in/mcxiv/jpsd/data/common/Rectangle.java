@@ -19,6 +19,11 @@ public class Rectangle extends DataObject {
         this.rig = rig;
     }
 
+    @Deprecated
+    public Rectangle(int width, int height) {
+        this(0, 0, height, width);
+    }
+
     @Override
     public String toString() {
         return "Rectangle{" +
@@ -27,5 +32,21 @@ public class Rectangle extends DataObject {
                 ", bot=" + bot +
                 ", rig=" + rig +
                 '}';
+    }
+
+    public int getTop() {
+        return top;
+    }
+
+    public int getLef() {
+        return lef;
+    }
+
+    public int getBot() {
+        return bot;
+    }
+
+    public int getRig() {
+        return rig;
     }
 }

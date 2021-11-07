@@ -4,6 +4,8 @@ import in.mcxiv.jpsd.data.path.PathRecord;
 import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 
+import java.util.Arrays;
+
 public class PathInformationRBlock extends ImageResourceBlock {
 
     private short identity;
@@ -24,4 +26,11 @@ public class PathInformationRBlock extends ImageResourceBlock {
         return identity;
     }
 
+    @Override
+    public String toString() {
+        return "PathInformationRBlock{" +
+                "identity=" + identity +
+                ", records=" + Arrays.toString(records) +
+                '}';
+    }
 }

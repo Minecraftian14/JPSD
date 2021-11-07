@@ -24,6 +24,10 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
 
     @Override
     public EffectsLayer read(DataReader reader) throws IOException {
+        return readEffectsLayer(reader, -1);
+    }
+
+    public EffectsLayer readEffectsLayer(DataReader reader, long length) throws IOException {
 
         //@formatter:off
         short version = reader.stream.readShort();
@@ -44,6 +48,10 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     reader.stream.skipBytes(4 + 7);
                     effects.add(new CommonState());
                     // FIXME: but that's an odd number!
+                    // after referring to 0a9e420[1].psd, it doesnt look like we need an extra byte...
+                    // 8BIMcmnS...7....1..8BIMdsdw->...
+                    // ^   ^      ^    ^  ^   ^
+                    // sig typ    0x7 0x1 sig typ
                 }
                 break;
 
@@ -59,7 +67,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     int             angle                 = reader.stream.readInt();
                     int             distance              = reader.stream.readInt();
                     ColorComponents colorComponents       = ColorComponentsIO.INSTANCE.read(reader);
-                                                            reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDFileReader.RESOURCE);
                     BlendingMode    mode                  = BlendingMode.of(reader.readBytes(4, false));
                     boolean         effectEnabled         = reader.stream.readBoolean();
                     boolean         useAngleInAllEffects  = reader.stream.readBoolean();
@@ -77,12 +85,12 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     // Space
                 {
                     //@formatter:off
-                                                       reader.stream.skipBytes(4);
+                    reader.stream.skipBytes(4);
                     int             versionS         = reader.stream.readInt();
                     int             blur             = reader.stream.readInt();
                     int             intensity        = reader.stream.readInt(); // FIXME: um? float?
                     ColorComponents colorComponents  = ColorComponentsIO.INSTANCE.read(reader);
-                                                       reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDFileReader.RESOURCE);
                     BlendingMode    blendingMode     = BlendingMode.of(reader.readBytes(4, false));
                     boolean         effectEnabled    = reader.stream.readBoolean();
                     boolean         opacityAsPercent = reader.stream.readBoolean();
@@ -103,14 +111,14 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
 
                 case Bevel: {
                     //@formatter:off
-                                                            reader.stream.skipBytes(4);
+                    reader.stream.skipBytes(4);
                     int             versionS              = reader.stream.readInt();
                     int             angle                 = reader.stream.readInt();
                     int             strength              = reader.stream.readInt();
                     int             blur                  = reader.stream.readInt();
-                                                            reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDFileReader.RESOURCE);
                     BlendingMode    highlightBlendingMode = BlendingMode.of(reader.readBytes(4, false));;
-                                                            reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDFileReader.RESOURCE);
                     BlendingMode    shadowBlendingMode    = BlendingMode.of(reader.readBytes(4, false));;
                     ColorComponents highlightColor        = ColorComponentsIO.INSTANCE.read(reader);;
                     ColorComponents shadowColor           = ColorComponentsIO.INSTANCE.read(reader);;
@@ -133,9 +141,9 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
 
                 case SolidFill: {
                     //@formatter:off
-                                                            reader.stream.skipBytes(4);
+                    reader.stream.skipBytes(4);
                     int             versionS              = reader.stream.readInt();
-                    //                                      reader.verifySignature(PSDFileReader.RESOURCE);
+                                                            reader.verifySignature(PSDFileReader.RESOURCE);
                     BlendingMode    mode                  = BlendingMode.of(reader.readBytes(4, false));
                     ColorComponents color                 = ColorComponentsIO.INSTANCE.read(reader);
                     byte            opacity               = reader.stream.readByte();
@@ -148,7 +156,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
             }
         }
 
-        return new EffectsLayer(0, effects.toArray(new Effect[0]));
+        return new EffectsLayer(length, effects.toArray(new Effect[0]));
     }
 
     @Override

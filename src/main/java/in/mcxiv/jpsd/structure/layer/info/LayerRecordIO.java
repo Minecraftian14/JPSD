@@ -3,12 +3,14 @@ package in.mcxiv.jpsd.structure.layer.info;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.common.BlendingMode;
 import in.mcxiv.jpsd.data.common.Clipping;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.layer.info.record.*;
 import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
+import in.mcxiv.jpsd.io.PSDFileReader;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.addend.AdditionalLayerInfoIO;
 import in.mcxiv.jpsd.structure.layer.info.record.LayerBlendingRangesIO;
@@ -25,9 +27,9 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
     public static final SectionIO<LayerBlendingRanges> LAYER_BLENDING_RANGES_IO = new LayerBlendingRangesIO();
     public final SectionIO<AdditionalLayerInfo> ADDITIONAL_LAYER_RECORD_INFO;
 
-    public final FileHeaderData.FileVersion version;
+    public final FileVersion version;
 
-    public LayerRecordIO(FileHeaderData.FileVersion version) {
+    public LayerRecordIO(FileVersion version) {
         super(true);
         this.version = version;
         ADDITIONAL_LAYER_RECORD_INFO = new AdditionalLayerInfoIO(this.version);
@@ -49,8 +51,7 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
             info[i] = new ChannelInfo(id, infol);
         }
 
-        if (!LayerRecord.BLENDING_MODE_SIGNATURE.equals(reader.readString(4)))//        reader.verifySignature(LayerRecord.BLENDING_MODE_SIGNATURE);
-            throw new RuntimeException("Format error!");
+        reader.verifySignature(PSDFileReader.RESOURCE);
         BlendingMode blendingMode = BlendingMode.of(reader.readBytes(4, true));
 
         byte opacity = reader.stream.readByte();

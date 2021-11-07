@@ -24,4 +24,8 @@ public class LayerAndMaskInfo extends AdditionalLayerInfo {
                 ", layerInfo=" + layerInfo +
                 '}';
     }
+
+    public LayerInfo getLayerInfo() {
+        return layerInfo;
+    }
 }

@@ -11,11 +11,6 @@ public class LayerBlendingRanges extends DataObject {
         private Range source;
         private Range destination;
 
-        public Blend(Range source, Range destination) {
-            this.source = source;
-            this.destination = destination;
-        }
-
         public Blend(short blackSource,short whiteSource,short blackDestination,short whiteDestination ) {
             this.source = new Range(blackSource, whiteSource);
             this.destination = new Range(blackDestination, whiteDestination);

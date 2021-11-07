@@ -1,7 +1,7 @@
 package in.mcxiv.jpsd.structure.sections;
 
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
-import in.mcxiv.jpsd.data.sections.FileHeaderData.FileVersion;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDFileReader;
@@ -56,8 +56,8 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
 
         writer.writeBytes  (PSDFileReader.FILE_SIGNATURE_8BPS);
         writer.writeShort  (data.getVersion().getValue());
-        writer.writeZeros  (6);
-        writer.writeShort  (data.getChannels());
+        writer.fillZeros  (6);
+        writer.writeShort  (data.getNumberOfChannels());
         writer.writeInt    (data.getHeight());
         writer.writeInt    (data.getWidth());
         writer.writeShort  (data.getDepth());

@@ -1,5 +1,7 @@
 
+**/*.png
 src/test/test_data/random_test_files/*.psd
+src/test/test_data/out/
 /out/
 /build/
 src/main/java/in/mcxiv/jpsd/data/common/Image.java

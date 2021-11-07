@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.data.addend;
 
 import in.mcxiv.jpsd.data.primitive.BytesEntry;
+import in.mcxiv.jpsd.exceptions.IllegalSignatureException;
 
 import java.nio.charset.StandardCharsets;
 
@@ -39,6 +40,7 @@ public enum AdditionalInfoKey implements BytesEntry {
 
     EFFECTS_KEY("lrFX", false),
     TYPE_TOOL_INFO_KEY("tySh", false),
+    TYPE_TOOL_OBJECT_KEY("TySh", false),
     OBJECT_BASED_EFFECTS_LAYER_KEY("lfx2", false),
 
     TEXT_ENGINE_DATA("Txt2", false),
@@ -55,7 +57,7 @@ public enum AdditionalInfoKey implements BytesEntry {
         this.isLarge = isLarge;
     }
 
-    public static AdditionalInfoKey of(byte[] bytes) {
+    public static AdditionalInfoKey of(byte[] bytes) throws IllegalSignatureException {
         return BytesEntry.of(bytes, values());
     }
 

@@ -1,5 +1,10 @@
 package in.mcxiv.jpsd.io;
 
+import in.mcxiv.jpsd.data.sections.*;
+import in.mcxiv.jpsd.structure.SectionIO;
+import in.mcxiv.jpsd.structure.sections.ImageDataIO;
+
+import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -97,12 +102,13 @@ public class PSDFileReader {
 
     public static final byte[] ADDITIONAL_LAYER_INFO_SIGNATURE_LONG = {'8', 'B', '6', '4'};
 
-    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL = {0, 0, '8', 'B'};
+    @Deprecated // "Not a good thing to keep hacky methods."
+    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT = {0, 0, '8', 'B'};
 
-    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_LONG = CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL;
+    @Deprecated // "Not a good thing to keep hacky methods."
+    public static final byte[] CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT = {0, '8', 'B', 'I'};
 
     public static UnknownBytesStrategy unknownBytesStrategy = new UnknownBytesStrategy(Skip);
-
 
     public static class UnknownBytesStrategy {
 
@@ -118,6 +124,127 @@ public class PSDFileReader {
 
     }
 
+    private DataReader reader;
+    private boolean readResources;
+
+    private FileHeaderData fileHeaderData;
+    private ColorModeData colorModeData;
+    private ImageResourcesData imageResourcesData;
+    private LayerAndMaskData layerAndMaskData;
+    private ImageData imageData;
+
+    public PSDFileReader(ImageInputStream input) throws IOException {
+        this(input, true);
+    }
+
+    public PSDFileReader(ImageInputStream input, boolean readNow) throws IOException {
+        this(input, readNow, true);
+    }
+
+    public PSDFileReader(ImageInputStream input, boolean readNow, boolean readResources) throws IOException {
+        reader = new DataReader(input);
+        this.readResources = readResources;
+
+        if (!readNow) return;
+
+        fileHeaderData = SectionIO.FILE_HEADER_SECTION.read(reader);
+        colorModeData = SectionIO.COLOR_MODE_DATA_SECTION.read(reader);
+
+        if (readResources) {
+            imageResourcesData = SectionIO.IMAGE_RESOURCES_DATA_SECTION.read(reader);
+        } else {
+            long sectionLength;
+            if (fileHeaderData.getVersion().isLarge()) sectionLength = reader.stream.readLong();
+            else sectionLength = reader.stream.readUnsignedInt();
+            reader.stream.skipBytes(sectionLength);
+            imageResourcesData = new ImageResourcesData(null);
+        }
+
+        if (fileHeaderData.getVersion().isLarge())
+            layerAndMaskData = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSB.read(reader);
+        else layerAndMaskData = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSD.read(reader);
+
+        out.println(reader.stream.getStreamPosition());
+
+        SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fileHeaderData);
+        imageData = IMAGE_DATA_IO.read(reader);
+
+        out.println(reader.stream.getStreamPosition());
+        out.println(reader.stream.length());
+
+        reader.close();
+    }
+
+    public FileHeaderData getFileHeaderData() {
+        if (fileHeaderData == null) {
+            try {
+                fileHeaderData = SectionIO.FILE_HEADER_SECTION.read(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return fileHeaderData;
+    }
+
+    public ColorModeData getColorModeData() {
+        getFileHeaderData();
+        if (colorModeData == null) {
+            try {
+                colorModeData = SectionIO.COLOR_MODE_DATA_SECTION.read(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return colorModeData;
+    }
+
+    public ImageResourcesData getImageResourcesData() {
+        getColorModeData();
+        if (imageResourcesData == null) {
+            try {
+                if (readResources)
+                    imageResourcesData = SectionIO.IMAGE_RESOURCES_DATA_SECTION.read(reader);
+                else {
+                    long sectionLength;
+                    if (fileHeaderData.getVersion().isLarge()) sectionLength = reader.stream.readLong();
+                    else sectionLength = reader.stream.readUnsignedInt();
+                    reader.stream.skipBytes(sectionLength);
+                    imageResourcesData = new ImageResourcesData(null);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return imageResourcesData;
+    }
+
+    public LayerAndMaskData getLayerAndMaskData() {
+        getImageResourcesData();
+        if (layerAndMaskData == null) {
+            try {
+                if (fileHeaderData.getVersion().isLarge())
+                    layerAndMaskData = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSB.read(reader);
+                else layerAndMaskData = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSD.read(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return layerAndMaskData;
+    }
+
+    public ImageData getImageData() {
+        getLayerAndMaskData();
+        if (imageData == null) {
+            try {
+                SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fileHeaderData);
+                imageData = IMAGE_DATA_IO.read(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return imageData;
+    }
+
     private static boolean R_V_DEBUGGING = false;
 
     /**
@@ -131,5 +258,16 @@ public class PSDFileReader {
         R_V_DEBUGGING = rVDebugging;
         if (R_V_DEBUGGING) out = System.out;
         else out = nullStream;
+    }
+
+    @Override
+    public String toString() {
+        return "PSDFileReader{" +
+                "fileHeaderData=" + fileHeaderData +
+                ", colorModeData=" + colorModeData +
+                ", imageResourcesData=" + imageResourcesData +
+                ", layerAndMaskData=" + layerAndMaskData +
+                ", imageData=" + imageData +
+                '}';
     }
 }

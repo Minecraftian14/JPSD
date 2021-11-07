@@ -1,37 +1,16 @@
 package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
+import in.mcxiv.jpsd.data.common.ImageMeta;
+import in.mcxiv.jpsd.data.file.ColorMode;
+import in.mcxiv.jpsd.data.file.DepthEntry;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.primitive.IntEntry;
 import in.mcxiv.jpsd.data.primitive.ShortEntry;
 
-import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class FileHeaderData extends DataObject {
-
-    public enum FileVersion implements ShortEntry {
-        PSD, PSB;
-
-        private final short value;
-
-        FileVersion() {
-            this.value = (short) (ordinal() + 1);
-        }
-
-        public short getValue() {
-            return value;
-        }
-
-        public boolean isLarge() {
-            return value == 2;
-        }
-
-        public static FileVersion of(int version) {
-            // int because we expect an input of unsigned short
-            return ShortEntry.of((short) version, values());
-        }
-    }
 
     public static class ChannelsEntry implements ShortEntry {
         private final short channels;
@@ -104,85 +83,6 @@ public class FileHeaderData extends DataObject {
         }
     }
 
-    public enum DepthEntry implements ShortEntry {
-        O(1), E(8), S(16), T(32);
-        private final short depth;
-
-        DepthEntry(int depth) {
-            this.depth = (short) depth;
-        }
-
-        @Override
-        public short getValue() {
-            return depth;
-        }
-
-        static DepthEntry of(short depth) {
-            switch (depth) {                                                                     //@formatter:off
-                case 1:  return O;
-                case 8:  return E;
-                case 16: return S;
-                case 32: return T;
-                default:
-                    throw new IllegalArgumentException("No such depth possible as " + depth);    //@formatter:on
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "" + depth;
-        }
-    }
-
-    public enum ColorMode implements ShortEntry {
-        Bitmap(0, null, -1),
-        Grayscale(1, null, -1),
-        Indexed(2, null, -1),
-        RGB(3, ColorSpace.getInstance(ColorSpace.CS_sRGB), BufferedImage.TYPE_INT_RGB),
-        CMYK(4, null, -1),
-        Multichannel(7, null, -1),
-        Duotone(8, null, -1),
-        Lab(9, null, -1);
-
-        private final short colorMode;
-        private final ColorSpace colorSpace;
-        private final int BIType;
-
-        ColorMode(int colorMode, ColorSpace colorSpace, int biType) {
-            this.colorMode = (short) colorMode;
-            this.colorSpace = colorSpace;
-            BIType = biType;
-        }
-
-        @Override
-        public short getValue() {
-            return colorMode;
-        }
-
-        public ColorSpace getColorSpace() {
-            return colorSpace;
-        }
-
-        public int getBIType() {
-            return BIType;
-        }
-
-        static ColorMode of(short colorMode) {
-            switch (colorMode) {                                                                         //@formatter:off
-                case 0:  return Bitmap;
-                case 1:  return Grayscale;
-                case 2:  return Indexed;
-                case 3:  return RGB;
-                case 4:  return CMYK;
-                case 7:  return Multichannel;
-                case 8:  return Duotone;
-                case 9:  return Lab;
-                default:
-                    throw new IllegalArgumentException("No such color mode defined as " + colorMode);    //@formatter:on
-            }
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private FileVersion version;
@@ -226,7 +126,7 @@ public class FileHeaderData extends DataObject {
         return version;
     }
 
-    public short getChannels() {
+    public short getNumberOfChannels() {
         return channels.channels;
     }
 
@@ -239,11 +139,24 @@ public class FileHeaderData extends DataObject {
     }
 
     public short getDepth() {
-        return depth.depth;
+        return depth.getValue();
+    }
+
+    public DepthEntry getDepthEntry() {
+        return depth;
     }
 
     public ColorMode getColorMode() {
         return colorMode;
+    }
+
+    public boolean isLarge() {
+        return version.isLarge();
+    }
+
+    public boolean isInvertRequired() {
+        // FIXME: Also include alpha :(
+        return ColorMode.CMYK.equals(colorMode) && channels.channels < colorMode.components();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,6 +172,10 @@ public class FileHeaderData extends DataObject {
     @Override
     public int hashCode() {
         return Objects.hash(version, channels, height, width, depth, colorMode);
+    }
+
+    public ImageMeta toImageMeta() {
+        return new ImageMeta(getWidth(), getHeight(), isLarge(), getColorMode(), getNumberOfChannels(), getDepthEntry());
     }
 
     @Override

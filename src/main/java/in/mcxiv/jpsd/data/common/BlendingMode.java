@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.data.common;
 
 import in.mcxiv.jpsd.data.primitive.BytesEntry;
+import in.mcxiv.jpsd.exceptions.IllegalSignatureException;
 
 import java.nio.charset.StandardCharsets;
 
@@ -16,7 +17,7 @@ public enum BlendingMode implements BytesEntry {
         value = name.getBytes(StandardCharsets.US_ASCII);
     }
 
-    public static BlendingMode of(byte[] value) {
+    public static BlendingMode of(byte[] value) throws IllegalSignatureException {
         return BytesEntry.of(value,values());
     }
 

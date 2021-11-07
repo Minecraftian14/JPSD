@@ -9,7 +9,7 @@ public class LayerMaskInfoFlag extends BitDataEntry {
     public static final byte LAYER_MASK_DISABLED      = 0b0000_0010;
     public static final byte INVERT_LAYER_MASK        = 0b0000_0100;
     public static final byte CAME_FROM_RENDERING_DATA = 0b0000_1000;
-    public static final byte HAVE_PARAMETERS_APPLIED   = 0b0001_0000;
+    public static final byte HAVE_PARAMETERS_APPLIED  = 0b0001_0000;
     //@formatter:on
 
     public LayerMaskInfoFlag(byte value) {

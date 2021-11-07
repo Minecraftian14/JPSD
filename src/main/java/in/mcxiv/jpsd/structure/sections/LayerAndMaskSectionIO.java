@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.structure.sections;
 
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
+import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
@@ -32,9 +33,9 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
      * The length data in header varies according to the file version!
      * For PSD it's 4 bytes and 8 bytes for PSB.
      */
-    public final FileHeaderData.FileVersion version;
+    public final FileVersion version;
 
-    public LayerAndMaskSectionIO(FileHeaderData.FileVersion version) {
+    public LayerAndMaskSectionIO(FileVersion version) {
         super(true);
         this.version = version;
         LAYER_INFO_IO = new LayerInfoIO(this.version);
@@ -62,10 +63,13 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
 //        reader.stream.skipBytes(2);
 
         // NOTE: the above mentioned problem is temporarily fixed by checking of a given string ends with "8B"
-        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL
-        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_LONG
+        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT
+        // PSDFileReader#CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT
 
-        while (expectedEnd - reader.stream.getStreamPosition() > 12) {
+        // Wow, now we are left with a single byte... WTH
+        // reference to custom.psd and there was one more in random tests
+
+        while (expectedEnd - reader.stream.getStreamPosition() >= 12) {
             // 12 = signature:4 + key:4 + length:4||8
             // Therefore, if that's < 12, there can't be any valid data left.
             // Thing is, why is sometimes data less than 12?

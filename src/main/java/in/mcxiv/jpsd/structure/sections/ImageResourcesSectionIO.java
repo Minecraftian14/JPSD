@@ -241,7 +241,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
             allDataWriter.writePascalStringEvenlyPadded(block.getPascalString());
             allDataWriter.writeInt(blockBytes.length);
             allDataWriter.writeBytes(blockBytes);
-            if (blockBytes.length % 2 == 1) allDataWriter.writeZeros(1);
+            if (blockBytes.length % 2 == 1) allDataWriter.fillZeros(1);
 
         }
 

@@ -1,5 +1,6 @@
 package in.mcxiv.jpsd.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,6 +20,10 @@ public class DataWriter implements AutoCloseable, Closeable {
         this.stream = stream;
     }
 
+    public DataWriter() {
+        this(new ByteArrayOutputStream());
+    }
+
     public void writeByte(byte b) {
         try {
             stream.write(b);
@@ -31,15 +36,23 @@ public class DataWriter implements AutoCloseable, Closeable {
         writeByte((byte) b);
     }
 
-    public void writeBytes(byte[] bytes) {
+    public int writeBytes(byte[] bytes) {
         try {
             stream.write(bytes);
+            return bytes.length;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
-    public void writeZeros(int length) {
+    public void fill(int length, byte b) throws IOException {
+        for (int i = 0; i < length; i++) {
+            stream.write(b);
+        }
+    }
+
+    public void fillZeros(int length) {
         switch (length) {
             case 2:
                 writeBytes(zeros(buffer2));
@@ -77,7 +90,7 @@ public class DataWriter implements AutoCloseable, Closeable {
         // Btw, if the length is even, we actually need to write one byte (else not) because we had also
         // written the size of the string as a byte, which makes the even length odd.
         if (length % 2 == 0)
-            writeZeros(1);
+            fillZeros(1);
     }
 
     public void writeUnicodeString(String unicodeString) {
@@ -113,5 +126,10 @@ public class DataWriter implements AutoCloseable, Closeable {
 
     public void writeFFloat(float I_just_wanna_cry_straight_for_an_hour) {
 
+    }
+
+    public byte[] toByteArray() {
+        if(stream instanceof ByteArrayOutputStream) return ((ByteArrayOutputStream) stream).toByteArray();
+        throw new UnsupportedOperationException();
     }
 }
