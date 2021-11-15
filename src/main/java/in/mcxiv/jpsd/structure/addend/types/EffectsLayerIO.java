@@ -47,8 +47,8 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     // This byte block always contain the same data!
                     reader.stream.skipBytes(4 + 7);
                     effects.add(new CommonState());
-                    // FIXME: but that's an odd number!
-                    // after referring to 0a9e420[1].psd, it doesnt look like we need an extra byte...
+                    // FIXED: But that's an odd number of bytes for the size of this block!
+                    // FIX: After referring to 0a9e420[1].psd, it doesn't look like we need an extra byte...
                     // 8BIMcmnS...7....1..8BIMdsdw->...
                     // ^   ^      ^    ^  ^   ^
                     // sig typ    0x7 0x1 sig typ
@@ -156,11 +156,126 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
             }
         }
 
-        return new EffectsLayer(length, effects.toArray(new Effect[0]));
+        return new EffectsLayer(length, version, effects.toArray(new Effect[0]));
     }
 
     @Override
-    public void write(DataWriter writer, EffectsLayer effectsLayer) {
+    public void write(DataWriter writer, EffectsLayer effectsLayer) throws IOException {
 
+        //@formatter:off
+        writer.stream.writeShort(effectsLayer.getVersion());
+        writer.stream.writeShort(effectsLayer.getEffects().length);
+        //@formatter:on
+
+        List<Effect> effects = new ArrayList<>();
+
+        for (Effect effect : effectsLayer.getEffects()) {
+
+            writer.sign(PSDFileReader.RESOURCE);
+
+            writer.writeBytes(effect.getType().getValue());
+
+            switch (effect.getType()) {
+                case CommonState: {
+                    // This byte block always contain the same data!
+                    writer.stream.writeInt(7);        // 7 =
+                    writer.stream.writeInt(0);        //     4
+                    writer.stream.writeBoolean(true); //   + 1
+                    writer.stream.writeShort(0);      //   + 2
+                }
+                break;
+
+                case DropShadow:
+                case InnerShadow:
+                    // Space
+                {
+                    Shadow shadow = (Shadow) effect;
+                    //@formatter:off
+                    writer.stream              .writeInt     (shadow.getNativeColorComponents()==null ?41 :51);
+                    writer.stream              .writeInt     (shadow.getVersion());
+                    writer.stream              .writeInt     (shadow.getBlur());
+                    writer.stream              .writeInt     (shadow.getIntensity());
+                    writer.stream              .writeInt     (shadow.getAngle());
+                    writer.stream              .writeInt     (shadow.getDistance());
+                    ColorComponentsIO.INSTANCE .write        (writer, shadow.getColorComponents());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeBytes   (shadow.getMode().getValue());
+                    writer.stream              .writeBoolean (shadow.isEnabled());
+                    writer.stream              .writeBoolean (shadow.isUseAngleInAllEffects());
+                    writer.stream              .writeBoolean (shadow.isOpacityAsPercent());
+                    //@formatter:on
+                    if (shadow.getNativeColorComponents() != null)
+                        ColorComponentsIO.INSTANCE.write(writer, shadow.getNativeColorComponents());
+                }
+                break;
+
+                case OuterGlow:
+                case InnerGlow:
+                    // Space
+                {
+                    Glow glow = (Glow) effect;
+                    //@formatter:off
+                    writer.stream              .writeInt     (glow.getVersion()==2 ?42 :32);
+                    writer.stream              .writeInt     (glow.getVersion());
+                    writer.stream              .writeInt     (glow.getBlur());
+                    writer.stream              .writeInt     (glow.getIntensity());
+                    ColorComponentsIO.INSTANCE .write(writer, glow.getColorComponents());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeBytes   (glow.getBlendingMode().getValue());
+                    writer.stream              .writeBoolean (glow.isEnabled());
+                    writer.stream              .writeBoolean (glow.isOpacityAsPercent());
+                    //@formatter:on
+                    if (glow.getVersion() == 2) {
+                        if (EffectType.InnerGlow.equals(glow.getType()))
+                            writer.stream.writeBoolean(((InnerGlow) glow).isInvert());
+                        ColorComponentsIO.INSTANCE.write(writer, glow.getNativeColorComponents());
+                    }
+                }
+                break;
+
+                case Bevel: {
+                    Bevel bevel = (Bevel) effect;
+                    //@formatter:off
+                    writer.stream              .writeInt     (bevel.getVersion()==2 ?78 :58);
+                    writer.stream              .writeInt     (bevel.getVersion());
+                    writer.stream              .writeInt     (bevel.getAngle());
+                    writer.stream              .writeInt     (bevel.getStrength());
+                    writer.stream              .writeInt     (bevel.getBlur());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeBytes   (bevel.getHighlightBlendingMode().getValue());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeBytes   (bevel.getShadowBlendingMode().getValue());
+                    ColorComponentsIO.INSTANCE .write(writer, bevel.getHighlightColor());
+                    ColorComponentsIO.INSTANCE .write(writer, bevel.getShadowColor());
+                    writer.stream              .writeByte    (bevel.getBevelStyle());
+                    writer.stream              .writeByte    (bevel.getHighlightOpacity());
+                    writer.stream              .writeByte    (bevel.getShadowOpacity());
+                    writer.stream              .writeBoolean (bevel.isEnabled());
+                    writer.stream              .writeBoolean (bevel.isUseAngleInAllEffect());
+                    writer.stream              .writeBoolean (bevel.isUpOrDown());
+                    //@formatter:on
+                    if (bevel.getVersion() == 2) {
+                        ColorComponentsIO.INSTANCE.write(writer,bevel.getRealHighlightColor());
+                        ColorComponentsIO.INSTANCE.write(writer,bevel.getRealShadowColor());
+                    }
+                }
+                break;
+
+                case SolidFill: {
+                    SolidFill fill = (SolidFill) effect;
+                    //@formatter:off
+                    writer.stream              .writeInt     (SolidFill.SIZE);
+                    writer.stream              .writeInt     (fill.getVersion());
+                    writer                     .sign(PSDFileReader.RESOURCE);
+                    writer                     .writeBytes   (fill.getMode().getValue());
+                    ColorComponentsIO.INSTANCE .write(writer, fill.getColor());
+                    writer.stream              .writeByte    (fill.getOpacity());
+                    writer.stream              .writeBoolean (fill.isEnabled());
+                    ColorComponentsIO.INSTANCE .write(writer, fill.getNativeColor());
+                    //@formatter:on
+                }
+                break;
+            }
+        }
     }
 }

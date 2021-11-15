@@ -10,6 +10,8 @@ import in.mcxiv.jpsd.data.common.ColorComponents;
  */
 public class SolidFill extends Effect {
 
+    public static final int SIZE = 34;
+
     private BlendingMode mode;
     private ColorComponents color;
     private byte opacity;
@@ -20,6 +22,38 @@ public class SolidFill extends Effect {
         this.mode = mode;
         this.color = color;
         this.opacity = opacity;
+        this.nativeColor = nativeColor;
+    }
+
+    public BlendingMode getMode() {
+        return mode;
+    }
+
+    public void setMode(BlendingMode mode) {
+        this.mode = mode;
+    }
+
+    public ColorComponents getColor() {
+        return color;
+    }
+
+    public void setColor(ColorComponents color) {
+        this.color = color;
+    }
+
+    public byte getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(byte opacity) {
+        this.opacity = opacity;
+    }
+
+    public ColorComponents getNativeColor() {
+        return nativeColor;
+    }
+
+    public void setNativeColor(ColorComponents nativeColor) {
         this.nativeColor = nativeColor;
     }
 

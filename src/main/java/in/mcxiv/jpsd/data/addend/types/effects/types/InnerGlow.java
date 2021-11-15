@@ -10,12 +10,10 @@ import in.mcxiv.jpsd.data.common.ColorComponents;
 public class InnerGlow extends Glow {
 
     private boolean invert;
-    protected ColorComponents nativeColorComponents;
 
     public InnerGlow(int version, boolean isEnabled, int blur, int intensity, ColorComponents colorComponents, BlendingMode blendingMode, boolean opacityAsPercent, boolean invert, ColorComponents nativeColorComponents) {
-        super(EffectType.InnerGlow, version, isEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent);
+        super(EffectType.InnerGlow, version, isEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent, nativeColorComponents);
         this.invert = invert;
-        this.nativeColorComponents = nativeColorComponents;
     }
 
     @Override
@@ -30,7 +28,14 @@ public class InnerGlow extends Glow {
                 ", blendingMode=" + blendingMode +
                 ", opacityAsPercent=" + opacityAsPercent +
                 ", invert=" + invert +
-                ", nativeColorComponents=" + nativeColorComponents +
                 '}';
+    }
+
+    public boolean isInvert() {
+        return invert;
+    }
+
+    public void setInvert(boolean invert) {
+        this.invert = invert;
     }
 }

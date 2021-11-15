@@ -44,7 +44,7 @@ public class LayerBlendingRangesIO extends SectionIO<LayerBlendingRanges> {
     }
 
     @Override
-    public void write(DataWriter writer, LayerBlendingRanges layerBlendingRanges) {
+    public void write(DataWriter writer, LayerBlendingRanges layerBlendingRanges) throws IOException {
 
     }
 }

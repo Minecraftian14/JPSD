@@ -122,7 +122,7 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, AdditionalLayerInfo additionalLayerInfo) {
+    public void write(DataWriter writer, AdditionalLayerInfo additionalLayerInfo) throws IOException {
 
     }
 }

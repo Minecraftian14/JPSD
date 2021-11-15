@@ -7,7 +7,6 @@ import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.layer.info.record.*;
 import in.mcxiv.jpsd.data.common.Rectangle;
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDFileReader;
@@ -78,7 +77,7 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
     }
 
     @Override
-    public void write(DataWriter writer, LayerRecord layerRecord) {
+    public void write(DataWriter writer, LayerRecord layerRecord) throws IOException {
 
     }
 }

@@ -182,7 +182,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
     }
 
     @Override
-    public void write(DataWriter writer, ImageResourcesData imageResourcesData) {
+    public void write(DataWriter writer, ImageResourcesData imageResourcesData) throws IOException {
 
         // Issue another writer. This is a highlevel writer.
         // We store just everything in here,

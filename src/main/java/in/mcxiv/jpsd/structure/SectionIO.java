@@ -35,7 +35,7 @@ public abstract class SectionIO<Data extends DataObject> {
 
     public abstract Data read(DataReader reader) throws IOException;
 
-    public abstract void write(DataWriter writer, Data data);
+    public abstract void write(DataWriter writer, Data data) throws IOException;
 
     protected static void checkBytesCount(long expected, long actual) throws BytesReadDidntMatchExpectedCount {
         if (expected != actual)

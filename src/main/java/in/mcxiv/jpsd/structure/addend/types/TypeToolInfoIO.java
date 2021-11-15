@@ -111,7 +111,78 @@ public class TypeToolInfoIO extends SectionIO<TypeToolInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, TypeToolInfo typeToolInfo) {
-
+    public void write(DataWriter writer, TypeToolInfo typeToolInfo) throws IOException {
+        writeTypeToolInfo(writer, typeToolInfo);
     }
+
+    public void writeTypeToolInfo(DataWriter writer, TypeToolInfo typeToolInfo) throws IOException {
+
+        writer.stream.writeShort(typeToolInfo.getVersion());
+        double[] transformInfo = typeToolInfo.getTransformInfo();
+        for (int i = 0; i < 6; writer.stream.writeDouble(transformInfo[i++])) ;
+
+        writer.stream.writeShort(typeToolInfo.getFontVersion());
+        writer.stream.writeShort(typeToolInfo.getNumberOfFaces());
+        FontInfo[] fontInfos = typeToolInfo.getFontInfos();
+        for (int i = 0; i < fontInfos.length; writeFontInfo(writer, fontInfos[i++])) ;
+
+        writer.stream.writeShort(typeToolInfo.getNumberOfStyles());
+        StyleInfo[] styleInfos = typeToolInfo.getStyleInfos();
+        for (int i = 0; i < styleInfos.length; writeStyleInfo(writer, styleInfos[i++])) ;
+
+        //@formatter:off
+        writer.stream .writeShort (typeToolInfo.getType());
+        writer.stream .writeFloat (typeToolInfo.getScalingFactor());
+        writer.stream .writeInt   (typeToolInfo.getCharCount());
+        writer.stream .writeInt   (typeToolInfo.getHorizontalPlacement());
+        writer.stream .writeInt   (typeToolInfo.getVerticalPlacement());
+        writer.stream .writeInt   (typeToolInfo.getSelectionStart());
+        writer.stream .writeInt   (typeToolInfo.getSelectionEnd());
+        writer.stream .writeShort (typeToolInfo.getLineNumber());
+        //@formatter:on
+        LineInfo[] lineInfos = typeToolInfo.getLineInfos();
+        for (int i = 0; i < lineInfos.length; writeLineInfo(writer, lineInfos[i++])) ;
+
+        ColorComponentsIO.INSTANCE.write(writer, typeToolInfo.getColorComponents());
+        writer.stream.writeBoolean(typeToolInfo.isAntiAlias());
+    }
+
+    private void writeFontInfo(DataWriter writer, FontInfo fontInfo) throws IOException {
+        //@formatter:off
+        writer.stream .writeShort           (fontInfo.getMarkValue());
+        writer.stream .writeInt             (fontInfo.getFontTypeData());
+        writer        .writePascalStringRaw (fontInfo.getFontName());
+        writer        .writePascalStringRaw (fontInfo.getFontFamilyName());
+        writer        .writePascalStringRaw (fontInfo.getFontStyleName());
+        writer.stream .writeShort           (fontInfo.getScriptValue());
+        writer.stream .writeInt             (fontInfo.getNumberOfDesignAxis());
+        writer.stream .writeInt             (fontInfo.getDesignVectorValue());
+        //@formatter:on
+    }
+
+    private void writeStyleInfo(DataWriter writer, StyleInfo styleInfo) throws IOException {
+        //@formatter:off
+        writer.stream .writeShort   (styleInfo.getMarkValue());
+        writer.stream .writeShort   (styleInfo.getFaceMarkValue());
+        writer.stream .writeInt     (styleInfo.getSize());
+        writer.stream .writeInt     (styleInfo.getTrackingValue());
+        writer.stream .writeInt     (styleInfo.getKerningValue());
+        writer.stream .writeInt     (styleInfo.getLeadingValue());
+        writer.stream .writeInt     (styleInfo.getBaseShiftValue());
+        writer.stream .writeBoolean (styleInfo.isAutoKern());
+        writer.stream .writeBoolean (styleInfo.isSomething());
+        writer.stream .writeBoolean (styleInfo.isUpOrDown());
+        //@formatter:on
+    }
+
+    private void writeLineInfo(DataWriter writer, LineInfo lineInfo) throws IOException {
+        //@formatter:off
+        writer.stream .writeInt   (lineInfo.getCharCount());
+        writer.stream .writeShort (lineInfo.getOrientation());
+        writer.stream .writeShort (lineInfo.getAlignment());
+        writer        .writeBytes (lineInfo.getActualCharacterBytes());
+        writer.stream .writeShort (lineInfo.getStyle());
+        //@formatter:on
+    }
+
 }

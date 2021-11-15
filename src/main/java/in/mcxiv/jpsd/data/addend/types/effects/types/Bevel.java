@@ -44,6 +44,118 @@ public class Bevel extends Effect {
         this.realShadowColor = realShadowColor;
     }
 
+    public int getAngle() {
+        return angle;
+    }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public int getBlur() {
+        return blur;
+    }
+
+    public void setBlur(int blur) {
+        this.blur = blur;
+    }
+
+    public BlendingMode getHighlightBlendingMode() {
+        return highlightBlendingMode;
+    }
+
+    public void setHighlightBlendingMode(BlendingMode highlightBlendingMode) {
+        this.highlightBlendingMode = highlightBlendingMode;
+    }
+
+    public BlendingMode getShadowBlendingMode() {
+        return shadowBlendingMode;
+    }
+
+    public void setShadowBlendingMode(BlendingMode shadowBlendingMode) {
+        this.shadowBlendingMode = shadowBlendingMode;
+    }
+
+    public ColorComponents getHighlightColor() {
+        return highlightColor;
+    }
+
+    public void setHighlightColor(ColorComponents highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
+    public ColorComponents getShadowColor() {
+        return shadowColor;
+    }
+
+    public void setShadowColor(ColorComponents shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
+    public byte getBevelStyle() {
+        return bevelStyle;
+    }
+
+    public void setBevelStyle(byte bevelStyle) {
+        this.bevelStyle = bevelStyle;
+    }
+
+    public byte getHighlightOpacity() {
+        return highlightOpacity;
+    }
+
+    public void setHighlightOpacity(byte highlightOpacity) {
+        this.highlightOpacity = highlightOpacity;
+    }
+
+    public byte getShadowOpacity() {
+        return shadowOpacity;
+    }
+
+    public void setShadowOpacity(byte shadowOpacity) {
+        this.shadowOpacity = shadowOpacity;
+    }
+
+    public boolean isUseAngleInAllEffect() {
+        return useAngleInAllEffect;
+    }
+
+    public void setUseAngleInAllEffect(boolean useAngleInAllEffect) {
+        this.useAngleInAllEffect = useAngleInAllEffect;
+    }
+
+    public boolean isUpOrDown() {
+        return upOrDown;
+    }
+
+    public void setUpOrDown(boolean upOrDown) {
+        this.upOrDown = upOrDown;
+    }
+
+    public ColorComponents getRealHighlightColor() {
+        return realHighlightColor;
+    }
+
+    public void setRealHighlightColor(ColorComponents realHighlightColor) {
+        this.realHighlightColor = realHighlightColor;
+    }
+
+    public ColorComponents getRealShadowColor() {
+        return realShadowColor;
+    }
+
+    public void setRealShadowColor(ColorComponents realShadowColor) {
+        this.realShadowColor = realShadowColor;
+    }
+
     @Override
     public String toString() {
         return "Bevel{" +

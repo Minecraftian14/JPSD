@@ -38,10 +38,16 @@ public class RawDataDecoder {
                 case RLE_Compression:
                     DataReader rleData = new DataReader(compressedData);
 
+                    /* If we ever require scanLengths for a better algo towards reading raw data.
                     int[] scanLengths = new int[height];
                     if (fhd.isLarge())
                         for (int i = 0; i < height; scanLengths[i++] = rleData.stream.readInt()) ;
                     else for (int i = 0; i < height; scanLengths[i++] = rleData.stream.readUnsignedShort()) ;
+                    */
+
+                    if (fhd.isLarge())
+                        for (int i = 0; i < height; i++) rleData.stream.readInt();
+                    else for (int i = 0; i < height; i++) rleData.stream.readUnsignedShort();
 
                     DataWriter rawWriter = new DataWriter();
 
@@ -57,23 +63,21 @@ public class RawDataDecoder {
                     byte[] rawBytes = rawWriter.toByteArray();
                     DataReader rawData = new DataReader(rawBytes);
 
-                    // I guess the following line is the solution to the issue stated in to-do right after.
+                    // Often there are extra bytes left unread at the end of the whole raw data block.
+                    // **It's not about bytes at the end on each line, but in the extreme end of the file.**
+                    // That's why we skip just as many bytes as extra. (else it creates a funny RGB->BGR effects for first ~1000 pixels along with a translation-ish effect in x-axis.)
                     rawData.stream.skipBytes(rawBytes.length - data.length * depth.getBytes());
 
                     for (int i = 0; i < data.length; data[i++] = rawData.readByBits(depth)) ;
-
-                    // TODO: Hmm, can there be extra bytes left at the end of one line?
-                    // I meant, as we have not used scanLengths it might create an issue...
                     break;
 
                 case ZIP:
                 case ZIP_With_Prediction:
 
-                    // TODO: I think we are near... Currently it still doesnt works.
+                    // TODO: I think we are near... Currently the data retrieved looks like a bunch of dots aligned by the edges.
                     InflaterInputStream stream = new InflaterInputStream(new ByteArrayInputStream(compressedData));
                     DataReader zipReader = new DataReader(stream);
                     for (int i = 0; i < data.length; data[i++] = zipReader.readByBits(depth)) ;
-
                     break;
             }
 
