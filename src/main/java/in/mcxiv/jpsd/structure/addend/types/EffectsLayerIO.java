@@ -167,8 +167,6 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
         writer.stream.writeShort(effectsLayer.getEffects().length);
         //@formatter:on
 
-        List<Effect> effects = new ArrayList<>();
-
         for (Effect effect : effectsLayer.getEffects()) {
 
             writer.sign(PSDFileReader.RESOURCE);

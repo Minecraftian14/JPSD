@@ -14,6 +14,15 @@ public class UnicodeLayerName extends AdditionalLayerInfo {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        // Allow only unicode
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "UnicodeLayerName{" +

@@ -70,6 +70,13 @@ public class DataWriter implements AutoCloseable, Closeable {
         fill(length, (byte) 0);
     }
 
+    public void skipToPadBy(long length, int multiple) throws IOException {
+        int bytesReadExtra = (int) (length % multiple);
+        if (bytesReadExtra == 0) return;
+        int bytesRequiredMoreToCompleteBlock = multiple - bytesReadExtra;
+        fillZeros(bytesRequiredMoreToCompleteBlock);
+    }
+
     public void writeString(String string) throws IOException {
         stream.write(string.getBytes(StandardCharsets.US_ASCII));
     }
@@ -163,4 +170,6 @@ public class DataWriter implements AutoCloseable, Closeable {
         if (stream instanceof ByteArrayOutputStream) return ((ByteArrayOutputStream) stream).toByteArray();
         throw new UnsupportedOperationException();
     }
+
+
 }
