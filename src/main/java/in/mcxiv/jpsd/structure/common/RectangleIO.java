@@ -28,6 +28,9 @@ public class RectangleIO extends SectionIO<Rectangle> {
 
     @Override
     public void write(DataWriter writer, Rectangle rectangle) throws IOException {
-
+        writer.stream.writeInt(rectangle.getTop());
+        writer.stream.writeInt(rectangle.getLef());
+        writer.stream.writeInt(rectangle.getBot());
+        writer.stream.writeInt(rectangle.getRig());
     }
 }

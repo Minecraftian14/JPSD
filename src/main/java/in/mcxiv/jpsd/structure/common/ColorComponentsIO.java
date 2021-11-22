@@ -30,8 +30,10 @@ public class ColorComponentsIO extends SectionIO<ColorComponents> {
 
     @Override
     public void write(DataWriter writer, ColorComponents data) throws IOException {
-
-
-
+        writer.stream.writeShort(data.getColorSpace().getValue());
+        writer.stream.writeShort(data.getColorComponent1());
+        writer.stream.writeShort(data.getColorComponent2());
+        writer.stream.writeShort(data.getColorComponent3());
+        writer.stream.writeShort(data.getColorComponent4());
     }
 }

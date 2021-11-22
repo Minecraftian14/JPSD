@@ -19,32 +19,45 @@ public class LayerBlendingRangesIO extends SectionIO<LayerBlendingRanges> {
 
         int size = reader.stream.readInt();
 
-        short compositeGraySource_Black = reader.stream.readShort();
-        short compositeGraySource_White = reader.stream.readShort();
-        short compositeGrayDest_Black = reader.stream.readShort();
-        short compositeGrayDest_White = reader.stream.readShort();
-
-        Blend grayComposite = new Blend(compositeGraySource_Black, compositeGraySource_White, compositeGrayDest_Black, compositeGrayDest_White);
+        Blend grayComposite = readBlend(reader);
 
         int numberOfRanges = size - 8; // 4 x shorts = 4 x 2 = 8
 
         assert numberOfRanges % 8 == 0;
         Blend[] otherChannels = new Blend[numberOfRanges / 8];
 
-        for (int i = 0, j = 0; i < numberOfRanges; i += 8, j++) {
-            short iThChannelSourceBlack = reader.stream.readShort();
-            short iThChannelSourceWhite = reader.stream.readShort();
-            short iThChannelDestBlack = reader.stream.readShort();
-            short iThChannelDestWhite = reader.stream.readShort();
-
-            otherChannels[j] = new Blend(iThChannelSourceBlack, iThChannelSourceWhite, iThChannelDestBlack, iThChannelDestWhite);
-        }
+        for (int i = 0, j = 0; i < numberOfRanges; i += 8, j++) otherChannels[j] = readBlend(reader);
 
         return new LayerBlendingRanges(grayComposite, otherChannels);
+    }
+
+    public static Blend readBlend(DataReader reader) throws IOException {
+        short source_Black = reader.stream.readShort();
+        short source_White = reader.stream.readShort();
+        short dest_Black = reader.stream.readShort();
+        short dest_White = reader.stream.readShort();
+
+        return new Blend(source_Black, source_White, dest_Black, dest_White);
     }
 
     @Override
     public void write(DataWriter writer, LayerBlendingRanges layerBlendingRanges) throws IOException {
 
+        Blend[] otherChannels = layerBlendingRanges.getOtherChannels();
+
+        writer.stream.writeInt(8 + 8 * otherChannels.length);
+
+        writeBlend(writer, layerBlendingRanges.getCompositeGray());
+
+        for (int i = 0; i < otherChannels.length; i++)
+            writeBlend(writer, otherChannels[i]);
+
+    }
+
+    private void writeBlend(DataWriter writer, Blend blend) throws IOException {
+        writer.stream.writeInt(blend.getSource().getBlack());
+        writer.stream.writeInt(blend.getSource().getWhite());
+        writer.stream.writeInt(blend.getDestination().getBlack());
+        writer.stream.writeInt(blend.getDestination().getWhite());
     }
 }
