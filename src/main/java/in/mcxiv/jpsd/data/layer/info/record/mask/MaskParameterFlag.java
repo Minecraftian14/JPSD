@@ -11,6 +11,10 @@ public class MaskParameterFlag extends BitDataEntry {
     public static final byte VECTOR_MASK_FEATHER = 0b0000_1000;
     //@formatter:on
 
+    public MaskParameterFlag() {
+        super((byte) 0);
+    }
+
     public MaskParameterFlag(byte value) {
         super(value);
     }

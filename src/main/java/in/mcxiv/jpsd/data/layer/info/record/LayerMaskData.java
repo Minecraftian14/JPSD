@@ -12,14 +12,49 @@ public class LayerMaskData extends DataObject {
     private Rectangle maskEncloser;
     private byte defaultColor;
     private LayerMaskInfoFlag layerMaskInfoFlag;
-    private MaskParameterFlag maskParameters; // Present only if layerMaskInfoFlag.has(HAVE_PARAMETERS_APPLIED) is true/
     private MaskParameter maskParameter; // Present only if maskParameters is present
 
-    public LayerMaskData(Rectangle maskEncloser, byte defaultColor, LayerMaskInfoFlag layerMaskInfoFlag, MaskParameterFlag maskParameters, MaskParameter maskParameter) {
+    public LayerMaskData(Rectangle maskEncloser, byte defaultColor, LayerMaskInfoFlag layerMaskInfoFlag, MaskParameter maskParameter) {
         this.maskEncloser = maskEncloser;
         this.defaultColor = defaultColor;
         this.layerMaskInfoFlag = layerMaskInfoFlag;
-        this.maskParameters = maskParameters;
+        this.maskParameter = maskParameter;
+    }
+
+    public Rectangle getMaskEncloser() {
+        return maskEncloser;
+    }
+
+    public void setMaskEncloser(Rectangle maskEncloser) {
+        this.maskEncloser = maskEncloser;
+    }
+
+    public byte getDefaultColor() {
+        return defaultColor;
+    }
+
+    public void setDefaultColor(byte defaultColor) {
+        this.defaultColor = defaultColor;
+    }
+
+    public LayerMaskInfoFlag getLayerMaskInfoFlag() {
+        return layerMaskInfoFlag;
+    }
+
+    public void setLayerMaskInfoFlag(LayerMaskInfoFlag layerMaskInfoFlag) {
+        this.layerMaskInfoFlag = layerMaskInfoFlag;
+    }
+
+    public MaskParameterFlag getMaskParameters() {
+        if(maskParameter == null) return null;
+        return maskParameter.getMaskParameterFlag();
+    }
+
+    public MaskParameter getMaskParameter() {
+        return maskParameter;
+    }
+
+    public void setMaskParameter(MaskParameter maskParameter) {
         this.maskParameter = maskParameter;
     }
 
@@ -29,7 +64,6 @@ public class LayerMaskData extends DataObject {
                 "maskEncloser=" + maskEncloser +
                 ", defaultColor=" + defaultColor +
                 ", layerMaskInfoFlag=" + layerMaskInfoFlag +
-                ", maskParameters=" + maskParameters +
                 ", maskParameter=" + maskParameter +
                 '}';
     }

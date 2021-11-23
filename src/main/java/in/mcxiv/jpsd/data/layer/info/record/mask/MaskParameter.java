@@ -6,10 +6,14 @@ import java.io.IOException;
 
 public class MaskParameter {
 
-    private byte userMaskDensity;
-    private double userMaskFeather;
-    private byte vectorMaskDensity;
-    private double vectorMaskFeather;
+    private byte userMaskDensity = -1;
+    private double userMaskFeather = -1;
+    private byte vectorMaskDensity = -1;
+    private double vectorMaskFeather = -1;
+
+    public MaskParameter() {
+
+    }
 
     public MaskParameter(MaskParameterFlag maskParameters, DataReader reader) throws IOException {
 
@@ -25,6 +29,15 @@ public class MaskParameter {
         if (maskParameters.has(MaskParameterFlag.VECTOR_MASK_FEATHER))
             vectorMaskFeather = reader.stream.readDouble();
 
+    }
+
+    public MaskParameterFlag getMaskParameterFlag() {
+        MaskParameterFlag flag = new MaskParameterFlag();
+        if (userMaskDensity != -1) flag.add(MaskParameterFlag.USER_MASK_DENSITY);
+        if (userMaskFeather != -1) flag.add(MaskParameterFlag.USER_MASK_FEATHER);
+        if (vectorMaskDensity != -1) flag.add(MaskParameterFlag.VECTOR_MASK_DENSITY);
+        if (vectorMaskFeather != -1) flag.add(MaskParameterFlag.VECTOR_MASK_FEATHER);
+        return flag;
     }
 
     @Override

@@ -7,6 +7,7 @@ import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameterFlag;
 import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
+import in.mcxiv.jpsd.io.PSDFileReader;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.common.RectangleIO;
 
@@ -38,7 +39,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
         long mark = reader.stream.getStreamPosition();
 
         if (layerMaskInfoFlag.has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
-            System.err.println("UNTESTED!!! This part of code is not reliable!");
+            PSDFileReader.out.println("UNTESTED!!! This part of code is not reliable!");
             maskParameters = new MaskParameterFlag(reader.stream.readByte());
             maskParameter = new MaskParameter(maskParameters, reader);
         }
@@ -48,7 +49,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
 
         if (size == 20 && dataUnread == 2) {
             reader.stream.skipBytes(2);
-            return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameters, maskParameter);
+            return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameter);
         }
 
         if (dataUnread >= 2) {
@@ -61,11 +62,38 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
             maskEncloser = RectangleIO.INSTANCE.read(reader);
         }
 
-        return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameters, maskParameter);
+        return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameter);
     }
 
     @Override
     public void write(DataWriter writer, LayerMaskData layerMaskData) throws IOException {
+
+        if(layerMaskData == null) {
+            writer.stream.writeInt(0);
+            return;
+        }
+
+//        int size = reader.stream.readInt();
+
+
+        DataWriter buffer = new DataWriter();
+
+        RectangleIO.INSTANCE.write(buffer, layerMaskData.getMaskEncloser());
+        buffer.stream.writeByte(layerMaskData.getDefaultColor());
+
+        LayerMaskInfoFlag layerMaskInfoFlag = layerMaskData.getLayerMaskInfoFlag();
+        buffer.stream.writeByte(layerMaskInfoFlag.getValue());
+
+        if(layerMaskInfoFlag.has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
+            PSDFileReader.out.println("UNTESTED!!! This part of code is not reliable!");
+            buffer.stream.writeByte(layerMaskData.getMaskParameters().getValue());
+        }
+
+        // FIXME: Hmm how do I manage the overwrites?
+
+        byte[] bytes = buffer.toByteArray();
+        writer.stream.writeInt(bytes.length);
+        writer.writeBytes(bytes);
 
     }
 }
