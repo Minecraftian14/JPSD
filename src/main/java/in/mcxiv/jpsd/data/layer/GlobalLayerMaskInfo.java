@@ -39,6 +39,30 @@ public class GlobalLayerMaskInfo extends DataObject {
         this.kind = kind;
     }
 
+    public ColorComponents getColor() {
+        return color;
+    }
+
+    public void setColor(ColorComponents color) {
+        this.color = color;
+    }
+
+    public short getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(short opacity) {
+        this.opacity = opacity;
+    }
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+
     @Override
     public String toString() {
         return "GlobalLayerMaskInfo{" +

@@ -7,6 +7,7 @@ import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.common.ColorComponentsIO;
 
+import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 
 public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
@@ -31,7 +32,24 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, GlobalLayerMaskInfo globalLayerMaskInfo) throws IOException {
+    public void write(DataWriter writer, GlobalLayerMaskInfo info) throws IOException {
 
+        if(info == null) {
+            writer.stream.writeInt(0);
+            return;
+        }
+
+        DataWriter buffer = new DataWriter();
+
+        ColorComponentsIO.INSTANCE.write(buffer, info.getColor());
+        buffer.stream.writeShort(info.getOpacity());
+        buffer.stream.writeByte(info.getKind().getValue());
+
+        byte[] data = buffer.toByteArray();
+        writer.stream.writeInt(data.length);
+        writer.writeBytes(data);
+
+        // Do we have to do something about this?
+        // reader.stream.skipBytes(size - 17); // size:4 + color:10 + opacity:2 + kind:1 = 17
     }
 }
