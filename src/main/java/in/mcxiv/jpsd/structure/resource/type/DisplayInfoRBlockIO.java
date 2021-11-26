@@ -38,7 +38,7 @@ public class DisplayInfoRBlockIO extends ImageResourceBlockIO<DisplayInfoRBlock>
     }
 
     @Override
-    public void write(DataWriter writer, DisplayInfoRBlock displayInfoRBlock) {
+    public void write(DataWriter writer, DisplayInfoRBlock displayInfoRBlock) throws IOException {
 
     }
 }

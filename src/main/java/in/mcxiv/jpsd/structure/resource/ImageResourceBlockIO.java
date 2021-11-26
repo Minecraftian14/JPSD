@@ -17,10 +17,10 @@ public abstract class ImageResourceBlockIO<BlockData extends ImageResourceBlock>
 
     public abstract BlockData read(DataReader reader, ImageResourceID id, String pascalString, long blockLength) throws IOException;
 
-    public abstract void write(DataWriter writer, BlockData data);
+    public abstract void write(DataWriter writer, BlockData data) throws IOException;
 
     @SuppressWarnings("unchecked")
-    public final void write(DataWriter writer, Object data) {
+    public final void write(DataWriter writer, Object data) throws IOException {
         if (!(data instanceof ImageResourceBlock))
             throw new RuntimeException("Cant use a " + data.getClass().getSimpleName() + " on an IRBIO " + getClass().getSimpleName());
         write(writer, (BlockData) data);

@@ -30,7 +30,7 @@ public class PrintScaleRBlockIO extends ImageResourceBlockIO<PrintScaleRBlock> {
     }
 
     @Override
-    public void write(DataWriter writer, PrintScaleRBlock printScaleRBlock) {
+    public void write(DataWriter writer, PrintScaleRBlock printScaleRBlock) throws IOException {
 
     }
 }

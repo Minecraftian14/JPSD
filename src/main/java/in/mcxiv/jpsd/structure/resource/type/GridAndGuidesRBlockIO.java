@@ -35,7 +35,7 @@ public class GridAndGuidesRBlockIO extends ImageResourceBlockIO<GridAndGuidesRBl
     }
 
     @Override
-    public void write(DataWriter writer, GridAndGuidesRBlock data) {
+    public void write(DataWriter writer, GridAndGuidesRBlock data) throws IOException {
         writer.writeInt(data.getVersion());
         writer.writeInt(data.getHorizontal());
         writer.writeInt(data.getVertical());

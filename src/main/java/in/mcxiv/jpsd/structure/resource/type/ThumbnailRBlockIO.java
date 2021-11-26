@@ -44,7 +44,7 @@ public class ThumbnailRBlockIO extends ImageResourceBlockIO<ThumbnailRBlock> {
     }
 
     @Override
-    public void write(DataWriter writer, ThumbnailRBlock data) {
+    public void write(DataWriter writer, ThumbnailRBlock data) throws IOException {
 //        writer.writeInt(data.getFormat().getValue());
 //        writer.writeInt(data.getWidth());
 //        writer.writeInt(data.getHeight());

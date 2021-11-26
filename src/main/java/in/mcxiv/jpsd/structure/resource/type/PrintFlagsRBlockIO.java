@@ -33,7 +33,7 @@ public class PrintFlagsRBlockIO extends ImageResourceBlockIO<PrintFlagsRBlock> {
     }
 
     @Override
-    public void write(DataWriter writer, PrintFlagsRBlock printFlagsRBlock) {
+    public void write(DataWriter writer, PrintFlagsRBlock printFlagsRBlock) throws IOException {
 
     }
 }

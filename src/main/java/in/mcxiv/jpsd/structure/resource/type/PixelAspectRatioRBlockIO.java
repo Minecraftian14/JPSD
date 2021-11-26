@@ -24,7 +24,7 @@ public class PixelAspectRatioRBlockIO extends ImageResourceBlockIO<PixelAspectRa
     }
 
     @Override
-    public void write(DataWriter writer, PixelAspectRatioRBlock pixelAspectRatioRBlock) {
+    public void write(DataWriter writer, PixelAspectRatioRBlock pixelAspectRatioRBlock) throws IOException {
 
     }
 }

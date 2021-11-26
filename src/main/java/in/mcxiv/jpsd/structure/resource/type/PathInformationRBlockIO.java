@@ -86,7 +86,7 @@ public class PathInformationRBlockIO extends ImageResourceBlockIO<PathInformatio
     }
 
     @Override
-    public void write(DataWriter writer, PathInformationRBlock pathInformationRBlock) {
+    public void write(DataWriter writer, PathInformationRBlock pathInformationRBlock) throws IOException {
 
     }
 }

@@ -30,7 +30,7 @@ public class AlphaChannelsNamesRBlockIO extends ImageResourceBlockIO<AlphaChanne
     }
 
     @Override
-    public void write(DataWriter writer, AlphaChannelsNamesRBlock alphaChannelsNamesRBlock) {
+    public void write(DataWriter writer, AlphaChannelsNamesRBlock alphaChannelsNamesRBlock) throws IOException {
         for (String channelName : alphaChannelsNamesRBlock.getNames())
             writer.writePascalStringRaw(channelName);
     }
