@@ -67,7 +67,42 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, LayerInfo layerInfo) {
+    public void write(DataWriter writer, LayerInfo layerInfo) throws IOException {
 
+        if (layerInfo == null) {
+            if (version.isLarge()) writer.stream.writeLong(0);
+            else writer.stream.writeInt(0);
+            return;
+        }
+
+        DataWriter buffer = new DataWriter();
+
+        LayerRecord[] recordList = layerInfo.getLayerRecords();
+        short layers = (short) recordList.length;
+
+        if (layerInfo.hasAlpha()) layers *= -1;
+
+        buffer.stream.writeShort(layers);
+
+        for (int i = 0; i < layers; i++)
+            LAYER_RECORD_IO.write(buffer, recordList[i]);
+
+        for (int i = 0; i < layers; i++) {
+            for (ChannelInfo channelInfo : recordList[i].getChannelInfo()) {
+                buffer.stream.writeShort(channelInfo.getData().getCompression().getValue());
+                buffer.writeBytes(channelInfo.getData().getData());
+            }
+        }
+
+        byte[] bytes = buffer.toByteArray();
+        int length = bytes.length;
+        boolean writeZero = length % 2 == 1;
+        if (writeZero) length++;
+
+        if (version.isLarge()) writer.stream.writeLong(length);
+        else writer.stream.writeInt(length);
+
+        writer.writeBytes(bytes);
+        if (writeZero) writer.stream.writeByte(0);
     }
 }

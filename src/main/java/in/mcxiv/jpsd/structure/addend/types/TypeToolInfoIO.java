@@ -111,7 +111,7 @@ public class TypeToolInfoIO extends SectionIO<TypeToolInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, TypeToolInfo typeToolInfo) {
+    public void write(DataWriter writer, TypeToolInfo typeToolInfo) throws IOException {
 
     }
 }

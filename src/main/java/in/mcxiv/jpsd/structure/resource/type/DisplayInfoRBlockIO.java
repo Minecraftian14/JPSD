@@ -25,9 +25,10 @@ public class DisplayInfoRBlockIO extends ImageResourceBlockIO<DisplayInfoRBlock>
         byte kind = reader.stream.readByte();
         reader.stream.skipBytes(1); // Pad to make even.
 
-        PSDFileReader.out.println("DisplayInfoRBlock is an untested part! There have been doubts about the number of bytes to be read and number of bytes to be skipped (padding)."); // FIXME
-
+        PSDFileReader.out.println("DisplayInfoRBlock is an untested part! There have been doubts about the number of bytes to be read and number of bytes to be skipped (padding).");
+        // FIXME: why skip bytes?
         long remainingBytes = blockLength - 14;
+
         if (remainingBytes > 0) {
             PSDFileReader.out.println("Bytes skipped" + remainingBytes);
             reader.stream.skipBytes(remainingBytes);
@@ -37,7 +38,7 @@ public class DisplayInfoRBlockIO extends ImageResourceBlockIO<DisplayInfoRBlock>
     }
 
     @Override
-    public void write(DataWriter writer, DisplayInfoRBlock displayInfoRBlock) {
+    public void write(DataWriter writer, DisplayInfoRBlock displayInfoRBlock) throws IOException {
 
     }
 }

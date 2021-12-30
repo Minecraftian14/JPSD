@@ -29,7 +29,7 @@ public class ImageDataIO extends SectionIO<ImageData> {
     }
 
     @Override
-    public void write(DataWriter writer, ImageData imageData) {
+    public void write(DataWriter writer, ImageData imageData) throws IOException {
 
     }
 

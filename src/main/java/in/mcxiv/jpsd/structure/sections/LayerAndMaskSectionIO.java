@@ -4,7 +4,6 @@ import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.data.sections.LayerAndMaskData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
@@ -87,7 +86,7 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
     }
 
     @Override
-    public void write(DataWriter writer, LayerAndMaskData layerAndMaskData) {
+    public void write(DataWriter writer, LayerAndMaskData layerAndMaskData) throws IOException {
 
     }
 }

@@ -15,4 +15,7 @@ public class SubPathLengthRecord extends PathRecord {
             throw new IllegalArgumentException();
     }
 
+    public short getLength() {
+        return length;
+    }
 }

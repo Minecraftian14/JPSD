@@ -28,6 +28,46 @@ public abstract class Glow extends Effect {
         this.opacityAsPercent = opacityAsPercent;
     }
 
+    public int getBlur() {
+        return blur;
+    }
+
+    public void setBlur(int blur) {
+        this.blur = blur;
+    }
+
+    public int getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(int intensity) {
+        this.intensity = intensity;
+    }
+
+    public ColorComponents getColorComponents() {
+        return colorComponents;
+    }
+
+    public void setColorComponents(ColorComponents colorComponents) {
+        this.colorComponents = colorComponents;
+    }
+
+    public BlendingMode getBlendingMode() {
+        return blendingMode;
+    }
+
+    public void setBlendingMode(BlendingMode blendingMode) {
+        this.blendingMode = blendingMode;
+    }
+
+    public boolean isOpacityAsPercent() {
+        return opacityAsPercent;
+    }
+
+    public void setOpacityAsPercent(boolean opacityAsPercent) {
+        this.opacityAsPercent = opacityAsPercent;
+    }
+
     @Override
     public String toString() {
         return "Glow{" +

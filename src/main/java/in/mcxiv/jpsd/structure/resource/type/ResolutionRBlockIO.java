@@ -34,7 +34,7 @@ public class ResolutionRBlockIO extends ImageResourceBlockIO<ResolutionRBlock> {
     }
 
     @Override
-    public void write(DataWriter writer, ResolutionRBlock data) {
+    public void write(DataWriter writer, ResolutionRBlock data) throws IOException {
         //@formatter:off
 
         writer. writeFFloat (data.  getHDpi                 ());

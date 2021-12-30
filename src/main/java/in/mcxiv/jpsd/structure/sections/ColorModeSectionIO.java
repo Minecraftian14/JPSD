@@ -34,7 +34,7 @@ public class ColorModeSectionIO extends SectionIO<ColorModeData> {
     }
 
     @Override
-    public void write(DataWriter writer, ColorModeData data) {
+    public void write(DataWriter writer, ColorModeData data) throws IOException {
 
         writer.writeInt(data.getLength());
         if (data.hasData())

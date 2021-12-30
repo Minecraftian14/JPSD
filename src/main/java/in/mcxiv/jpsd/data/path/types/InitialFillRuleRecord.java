@@ -14,4 +14,12 @@ public class InitialFillRuleRecord extends PathRecord {
         super(Selector.INITIAL_FILL_RULE_RECORD);
         this.fillStart = fillStart;
     }
+
+    public short getFillStart() {
+        return fillStart;
+    }
+
+    public void setFillStart(short fillStart) {
+        this.fillStart = fillStart;
+    }
 }

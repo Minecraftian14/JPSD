@@ -29,7 +29,7 @@ public class ColorComponentsIO extends SectionIO<ColorComponents> {
     }
 
     @Override
-    public void write(DataWriter writer, ColorComponents data) {
+    public void write(DataWriter writer, ColorComponents data) throws IOException {
 
 
 

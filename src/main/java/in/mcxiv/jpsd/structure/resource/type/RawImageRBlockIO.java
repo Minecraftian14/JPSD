@@ -2,7 +2,6 @@ package in.mcxiv.jpsd.structure.resource.type;
 
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.types.RawImageRBlock;
-import in.mcxiv.jpsd.data.sections.ImageData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDFileReader;
@@ -26,7 +25,7 @@ public class RawImageRBlockIO extends ImageResourceBlockIO<RawImageRBlock> {
     }
 
     @Override
-    public void write(DataWriter writer, RawImageRBlock data) {
+    public void write(DataWriter writer, RawImageRBlock data) throws IOException {
         writer.writeBytes(data.getData());
     }
 }

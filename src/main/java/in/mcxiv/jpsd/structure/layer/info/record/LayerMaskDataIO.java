@@ -65,7 +65,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
     }
 
     @Override
-    public void write(DataWriter writer, LayerMaskData layerMaskData) {
+    public void write(DataWriter writer, LayerMaskData layerMaskData) throws IOException {
 
     }
 }

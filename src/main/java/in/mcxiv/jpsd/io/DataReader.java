@@ -16,9 +16,7 @@ import java.util.Arrays;
 
 public class DataReader implements AutoCloseable, Closeable {
 
-    private static final double something = 1. / (1 << 24);
-
-    public final ImageInputStream stream;
+    private static final double INVERSE_CONSTANT = 1. / (1 << 24);
 
     private final byte[] buffer0 = new byte[0];
     private final byte[] buffer2 = new byte[2];
@@ -26,6 +24,7 @@ public class DataReader implements AutoCloseable, Closeable {
     private final byte[] buffer4 = new byte[4];
     private final byte[] buffer6 = new byte[6];
 
+    public final ImageInputStream stream;
 
     public DataReader(ImageInputStream stream) {
         this.stream = stream;
@@ -150,7 +149,7 @@ public class DataReader implements AutoCloseable, Closeable {
         int integral_part = preserve_sign;
         stream.read(buffer4, 1, 3);
         int fractional_part = ByteBuffer.wrap(buffer4).getInt();
-        return integral_part + fractional_part * something;
+        return integral_part + fractional_part * INVERSE_CONSTANT;
     }
 
     public float readFFloat() throws IOException {

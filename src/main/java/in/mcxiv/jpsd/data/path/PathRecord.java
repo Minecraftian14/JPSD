@@ -8,6 +8,10 @@ public class PathRecord {
         this.selector = selector;
     }
 
+    public Selector getSelector() {
+        return selector;
+    }
+
     @Override
     public String toString() {
         return "PathRecord{" +

@@ -86,7 +86,58 @@ public class PathInformationRBlockIO extends ImageResourceBlockIO<PathInformatio
     }
 
     @Override
-    public void write(DataWriter writer, PathInformationRBlock pathInformationRBlock) {
+    public void write(DataWriter writer, PathInformationRBlock pathInformationRBlock) throws IOException {
+//        if (blockLength % 26 != 0) throw new IOException();
 
+        PathRecord[] records = pathInformationRBlock.getRecords();
+
+        for (int i = 0, s = records.length; i < s; i++) {
+
+            PathRecord record = records[i];
+            writer.writeEntry(record.getSelector());
+
+            switch (record.getSelector()) {
+
+                case PATH_FILL_RULE_RECORD:
+                    // Um what do we do here?
+                    break;
+
+                case CLOSED_SUB_PATH_LENGTH_RECORD:
+                case OPEN_SUB_PATH_LENGTH_RECORD:
+                    writer.stream.writeShort(((SubPathLengthRecord) record).getLength());
+                    break;
+
+                case CLOSED_SUB_PATH_BEZIER_KNOT_LINKED:
+                case CLOSED_SUB_PATH_BEZIER_KNOT_UNLINKED:
+                case OPEN_SUB_PATH_BEZIER_KNOT_LINKED:
+                case OPEN_SUB_PATH_BEZIER_KNOT_UNLINKED:
+                    BezierKnotRecord bezierKnotRecord = (BezierKnotRecord) record;
+                    writePoint(writer, bezierKnotRecord.getPreceding_control());
+                    writePoint(writer, bezierKnotRecord.getAnchor());
+                    writePoint(writer, bezierKnotRecord.getLeaving_control());
+                    break;
+
+                case CLIPBOARD_RECORD:
+                    // FIXME: Umm? We had to use writeFFloat only, right?
+                    ClipboardRecord clipboardRecord = (ClipboardRecord) record;
+                    writer.writeFFloat(clipboardRecord.getTop());
+                    writer.writeFFloat(clipboardRecord.getLef());
+                    writer.writeFFloat(clipboardRecord.getBot());
+                    writer.writeFFloat(clipboardRecord.getRig());
+                    writer.writeFFloat(clipboardRecord.getRes());
+                    break;
+
+                case INITIAL_FILL_RULE_RECORD:
+                    writer.stream.writeShort(((InitialFillRuleRecord) record).getFillStart());
+                    break;
+            }
+
+        }
     }
+
+    private void writePoint(DataWriter writer, PointData pointData) throws IOException {
+        writer.writeFDouble(pointData.getPosition_x());
+        writer.writeFDouble(pointData.getPosition_y());
+    }
+
 }

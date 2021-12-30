@@ -37,7 +37,7 @@ public class UnicodeAlphaNamesRBlockIO extends ImageResourceBlockIO<UnicodeAlpha
     }
 
     @Override
-    public void write(DataWriter writer, UnicodeAlphaNamesRBlock data) {
+    public void write(DataWriter writer, UnicodeAlphaNamesRBlock data) throws IOException {
         for (String name : data.getNames())
             writer.writeUnicodeString(name + "\0");
     }

@@ -19,4 +19,44 @@ public class ClipboardRecord extends PathRecord {
         this.rig = rig;
         this.res = res;
     }
+
+    public float getTop() {
+        return top;
+    }
+
+    public void setTop(float top) {
+        this.top = top;
+    }
+
+    public float getLef() {
+        return lef;
+    }
+
+    public void setLef(float lef) {
+        this.lef = lef;
+    }
+
+    public float getBot() {
+        return bot;
+    }
+
+    public void setBot(float bot) {
+        this.bot = bot;
+    }
+
+    public float getRig() {
+        return rig;
+    }
+
+    public void setRig(float rig) {
+        this.rig = rig;
+    }
+
+    public float getRes() {
+        return res;
+    }
+
+    public void setRes(float res) {
+        this.res = res;
+    }
 }

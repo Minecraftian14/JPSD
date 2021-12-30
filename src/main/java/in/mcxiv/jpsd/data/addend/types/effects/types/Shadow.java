@@ -35,6 +35,78 @@ public class Shadow extends Effect {
         this.nativeColorComponents = nativeColorComponents;
     }
 
+    public int getBlur() {
+        return blur;
+    }
+
+    public void setBlur(int blur) {
+        this.blur = blur;
+    }
+
+    public int getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(int intensity) {
+        this.intensity = intensity;
+    }
+
+    public int getAngle() {
+        return angle;
+    }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public ColorComponents getColorComponents() {
+        return colorComponents;
+    }
+
+    public void setColorComponents(ColorComponents colorComponents) {
+        this.colorComponents = colorComponents;
+    }
+
+    public BlendingMode getMode() {
+        return mode;
+    }
+
+    public void setMode(BlendingMode mode) {
+        this.mode = mode;
+    }
+
+    public boolean isUseAngleInAllEffects() {
+        return useAngleInAllEffects;
+    }
+
+    public void setUseAngleInAllEffects(boolean useAngleInAllEffects) {
+        this.useAngleInAllEffects = useAngleInAllEffects;
+    }
+
+    public boolean isOpacityAsPercent() {
+        return opacityAsPercent;
+    }
+
+    public void setOpacityAsPercent(boolean opacityAsPercent) {
+        this.opacityAsPercent = opacityAsPercent;
+    }
+
+    public ColorComponents getNativeColorComponents() {
+        return nativeColorComponents;
+    }
+
+    public void setNativeColorComponents(ColorComponents nativeColorComponents) {
+        this.nativeColorComponents = nativeColorComponents;
+    }
+
     @Override
     public String toString() {
         return "Shadow{" +

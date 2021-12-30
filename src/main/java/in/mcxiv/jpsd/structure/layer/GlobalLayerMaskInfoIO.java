@@ -31,7 +31,7 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, GlobalLayerMaskInfo globalLayerMaskInfo) {
+    public void write(DataWriter writer, GlobalLayerMaskInfo globalLayerMaskInfo) throws IOException {
 
     }
 }

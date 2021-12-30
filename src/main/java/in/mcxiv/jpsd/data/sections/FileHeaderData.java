@@ -155,7 +155,6 @@ public class FileHeaderData extends DataObject {
     }
 
     public boolean isInvertRequired() {
-        // FIXME: Also include alpha :(
         return ColorMode.CMYK.equals(colorMode) && channels.channels < colorMode.components();
     }
 

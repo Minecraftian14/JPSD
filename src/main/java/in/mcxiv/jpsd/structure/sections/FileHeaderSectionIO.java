@@ -50,7 +50,7 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
     }
 
     @Override
-    public void write(DataWriter writer, FileHeaderData data) {
+    public void write(DataWriter writer, FileHeaderData data) throws IOException {
 
         //@formatter:off
 

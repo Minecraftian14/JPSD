@@ -27,7 +27,7 @@ public class RectangleIO extends SectionIO<Rectangle> {
     }
 
     @Override
-    public void write(DataWriter writer, Rectangle rectangle) {
+    public void write(DataWriter writer, Rectangle rectangle) throws IOException {
 
     }
 }

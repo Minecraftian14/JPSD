@@ -27,6 +27,23 @@ public class PathInformationRBlock extends ImageResourceBlock {
     }
 
     @Override
+    public short getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(short identity) {
+        this.identity = identity;
+    }
+
+    public PathRecord[] getRecords() {
+        return records;
+    }
+
+    public void setRecords(PathRecord[] records) {
+        this.records = records;
+    }
+
+    @Override
     public String toString() {
         return "PathInformationRBlock{" +
                 "identity=" + identity +

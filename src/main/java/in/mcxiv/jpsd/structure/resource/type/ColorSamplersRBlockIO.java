@@ -42,7 +42,7 @@ public class ColorSamplersRBlockIO extends ImageResourceBlockIO<ColorSamplersRBl
     }
 
     @Override
-    public void write(DataWriter writer, ColorSamplersRBlock data) {
+    public void write(DataWriter writer, ColorSamplersRBlock data) throws IOException {
 
         writer.writeInt(data.getVersion().getValue());
         writer.writeInt(data.getNumberOfColorSamples());

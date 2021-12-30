@@ -26,4 +26,24 @@ public abstract class Effect {
                 ", isEnabled=" + isEnabled +
                 '}';
     }
+
+    public EffectType getType() {
+        return type;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
 }
