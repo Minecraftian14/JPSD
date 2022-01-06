@@ -70,9 +70,9 @@ public class RawDataDecoder {
                         PSDFileReader.out.println("Spare bytes = " + spareBytes);
                     if (spareBytes > 0) {
                         rawData.stream.skipBytes(spareBytes);
-                    } else {
+                    } /*else {
                         System.out.println("Boom");
-                    }
+                    }*/
 
                     for (int i = 0; i < data.length; data[i++] = rawData.readByBits(depth)) ;
                     break;
