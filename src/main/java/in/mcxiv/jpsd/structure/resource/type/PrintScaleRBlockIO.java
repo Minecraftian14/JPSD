@@ -31,6 +31,9 @@ public class PrintScaleRBlockIO extends ImageResourceBlockIO<PrintScaleRBlock> {
 
     @Override
     public void write(DataWriter writer, PrintScaleRBlock printScaleRBlock) throws IOException {
-
+        writer.writeEntry(printScaleRBlock.getStyle());
+        writer.stream.writeFloat(printScaleRBlock.getXOffset());
+        writer.stream.writeFloat(printScaleRBlock.getYOffset());
+        writer.stream.writeFloat(printScaleRBlock.getScale());
     }
 }

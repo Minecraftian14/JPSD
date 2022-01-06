@@ -20,15 +20,47 @@ public class PrintScaleRBlock extends ImageResourceBlock {
     }
 
     private Style style;
-    private float x_offset;
-    private float y_offset;
+    private float xOffset;
+    private float yOffset;
     private float scale;
 
     public PrintScaleRBlock(String pascalString, long length, Style style, float x_offset, float y_offset, float scale) {
         super(ImageResourceID.PrintScale, pascalString, length);
         this.style = style;
-        this.x_offset = x_offset;
-        this.y_offset = y_offset;
+        this.xOffset = x_offset;
+        this.yOffset = y_offset;
+        this.scale = scale;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
+    }
+
+    public float getXOffset() {
+        return xOffset;
+    }
+
+    public void setXOffset(float xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    public float getYOffset() {
+        return yOffset;
+    }
+
+    public void setYOffset(float yOffset) {
+        this.yOffset = yOffset;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
         this.scale = scale;
     }
 }

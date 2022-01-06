@@ -54,14 +54,14 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
 
         //@formatter:off
 
-        writer.writeBytes  (PSDFileReader.FILE_SIGNATURE_8BPS);
-        writer.writeShort  (data.getVersion().getValue());
-        writer.fillZeros  (6);
-        writer.writeShort  (data.getNumberOfChannels());
-        writer.writeInt    (data.getHeight());
-        writer.writeInt    (data.getWidth());
-        writer.writeShort  (data.getDepth());
-        writer.writeShort  (data.getColorMode().getValue());
+        writer.sign               (PSDFileReader.FILE_SIGNATURE_8BPS);
+        writer.stream.writeShort  (data.getVersion().getValue());
+        writer.fillZeros          (6);
+        writer.stream.writeShort  (data.getNumberOfChannels());
+        writer.stream.writeInt    (data.getHeight());
+        writer.stream.writeInt    (data.getWidth());
+        writer.stream.writeShort  (data.getDepth());
+        writer.stream.writeShort  (data.getColorMode().getValue());
 
         //@formatter:on
 

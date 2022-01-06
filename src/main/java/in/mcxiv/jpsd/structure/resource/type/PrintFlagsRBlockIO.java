@@ -34,6 +34,14 @@ public class PrintFlagsRBlockIO extends ImageResourceBlockIO<PrintFlagsRBlock> {
 
     @Override
     public void write(DataWriter writer, PrintFlagsRBlock printFlagsRBlock) throws IOException {
-
+        writer.stream.writeBoolean(printFlagsRBlock.isLabels());
+        writer.stream.writeBoolean(printFlagsRBlock.isCropMasks());
+        writer.stream.writeBoolean(printFlagsRBlock.isColorBars());
+        writer.stream.writeBoolean(printFlagsRBlock.isRegistrationMarks());
+        writer.stream.writeBoolean(printFlagsRBlock.isNegative());
+        writer.stream.writeBoolean(printFlagsRBlock.isFlip());
+        writer.stream.writeBoolean(printFlagsRBlock.isInterpolate());
+        writer.stream.writeBoolean(printFlagsRBlock.isCaption());
+        writer.stream.writeBoolean(printFlagsRBlock.isPrintFlags());
     }
 }

@@ -95,6 +95,37 @@ public class RawDataDecoder {
         return data;
     }
 
+    public static byte[] encode(Compression compression, int[] data, FileHeaderData fhd) {
+        return encode(compression, data, fhd.toImageMeta());
+    }
+
+    public static byte[] encode(Compression compression, int[] data, ImageMeta fhd) {
+        int height = fhd.getHeight();
+        int width = fhd.getWidth();
+        DepthEntry depth = fhd.getDepthEntry();
+        try {
+            assert data.length == height * width * fhd.getChannels();
+//            byte[] bytes = new byte[data.length * depth.getValue()];
+            switch (compression) {
+                case Raw_Data:
+                    DataWriter writer = new DataWriter();
+                    for (int i = 0; i < data.length; i++)
+                        writer.writeByBits(depth, data[i]);
+                    return writer.toByteArray();
+
+                case RLE_Compression:
+                case ZIP:
+                case ZIP_With_Prediction:
+                    throw new IllegalStateException();
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException();
+    }
+
     private static void invert(int[] data, DepthEntry depth) {
         switch (depth) {
             case O:
@@ -114,6 +145,5 @@ public class RawDataDecoder {
                 break;
         }
     }
-
 
 }

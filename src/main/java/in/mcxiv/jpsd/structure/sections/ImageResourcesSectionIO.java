@@ -237,9 +237,9 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
             byte[] blockBytes = blockData.toByteArray();
 
             allDataWriter.writeBytes(PSDFileReader.RESOURCE);
-            allDataWriter.writeShort(block.getIdentity().getIdentity());
+            allDataWriter.stream.writeShort(block.getIdentity().getIdentity());
             allDataWriter.writePascalStringEvenlyPadded(block.getPascalString());
-            allDataWriter.writeInt(blockBytes.length);
+            allDataWriter.stream.writeInt(blockBytes.length);
             allDataWriter.writeBytes(blockBytes);
             if (blockBytes.length % 2 == 1) allDataWriter.fillZeros(1);
 
@@ -247,7 +247,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
 
         byte[] addDataBytes = allData.toByteArray();
 
-        writer.writeInt(addDataBytes.length);
+        writer.stream.writeInt(addDataBytes.length);
         writer.writeBytes(addDataBytes);
 
     }

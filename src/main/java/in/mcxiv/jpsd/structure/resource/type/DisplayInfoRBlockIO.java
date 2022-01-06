@@ -39,6 +39,12 @@ public class DisplayInfoRBlockIO extends ImageResourceBlockIO<DisplayInfoRBlock>
 
     @Override
     public void write(DataWriter writer, DisplayInfoRBlock displayInfoRBlock) throws IOException {
+        ColorComponentsIO.INSTANCE.write(writer, displayInfoRBlock.getColor());
+        writer.stream.writeShort(displayInfoRBlock.getOpacity());
+        writer.stream.writeByte(displayInfoRBlock.getKind());
+        writer.stream.writeByte(0);
+
+        // TODO: Pad more bytes?
 
     }
 }

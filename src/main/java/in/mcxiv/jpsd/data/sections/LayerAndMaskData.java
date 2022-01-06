@@ -34,6 +34,14 @@ public class LayerAndMaskData extends DataObject {
         return layerInfo;
     }
 
+    public GlobalLayerMaskInfo getGlobalLayerMaskInfo() {
+        return globalLayerMaskInfo;
+    }
+
+    public AdditionalLayerInfo[] getAdditionalLayerInfo() {
+        return additionalLayerInfo;
+    }
+
     public LayerInfo justGetALayerInfo() {
         if (layerInfo != null) return layerInfo;
         for (AdditionalLayerInfo info : additionalLayerInfo)

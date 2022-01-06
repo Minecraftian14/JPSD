@@ -30,10 +30,10 @@ public class VersionInfoRBlockIO extends ImageResourceBlockIO<VersionInfoRBlock>
 
     @Override
     public void write(DataWriter writer, VersionInfoRBlock data) throws IOException {
-        writer.writeInt(data.getVersion());
-        writer.writeByteBoolean(data.hasMergedData());
+        writer.stream.writeInt(data.getVersion());
+        writer.stream.writeBoolean(data.hasMergedData());
         writer.writeUnicodeString(data.getReaderName());
         writer.writeUnicodeString(data.getWriterName());
-        writer.writeInt(data.getFileVersion());
+        writer.stream.writeInt(data.getFileVersion());
     }
 }

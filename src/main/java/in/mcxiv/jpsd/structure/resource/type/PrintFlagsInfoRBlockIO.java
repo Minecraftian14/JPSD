@@ -30,6 +30,10 @@ public class PrintFlagsInfoRBlockIO extends ImageResourceBlockIO<PrintFlagsInfoR
 
     @Override
     public void write(DataWriter writer, PrintFlagsInfoRBlock printFlagsInfoRBlock) throws IOException {
-
+    writer.stream.writeInt(printFlagsInfoRBlock.getVersion());
+    writer.stream.writeByte(printFlagsInfoRBlock.getCropMarks());
+    writer.fillZeros(1);
+    writer.stream.writeLong(printFlagsInfoRBlock.getBleedWidth());
+    writer.stream.writeInt(printFlagsInfoRBlock.getBleedScale());
     }
 }

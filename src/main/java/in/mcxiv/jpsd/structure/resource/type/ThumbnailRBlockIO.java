@@ -45,14 +45,14 @@ public class ThumbnailRBlockIO extends ImageResourceBlockIO<ThumbnailRBlock> {
 
     @Override
     public void write(DataWriter writer, ThumbnailRBlock data) throws IOException {
-//        writer.writeInt(data.getFormat().getValue());
-//        writer.writeInt(data.getWidth());
-//        writer.writeInt(data.getHeight());
-//        writer.writeInt(data.getWidthBytes());
-//        writer.writeInt(data.getTotalSize());
-//        writer.writeInt(data.getCompressedSize());
-//        writer.writeShort(data.getBitsPerPixel());
-//        writer.writeShort(data.getNumberOfPlanes());
-//        writer.writeBytes(data.getData());
+        writer.stream.writeInt(data.getFormat().getValue());
+        writer.stream.writeInt(data.getWidth());
+        writer.stream.writeInt(data.getHeight());
+        writer.stream.writeInt(data.getWidthBytes());
+        writer.stream.writeInt(data.getTotalSize());
+        writer.stream.writeInt(data.getCompressedSize());
+        writer.stream.writeShort(data.getBitsPerPixel());
+        writer.stream.writeShort(data.getNumberOfPlanes());
+        writer.writeBytes(data.getImageData());
     }
 }

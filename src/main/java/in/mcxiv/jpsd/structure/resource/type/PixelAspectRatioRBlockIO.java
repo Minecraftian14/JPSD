@@ -25,6 +25,7 @@ public class PixelAspectRatioRBlockIO extends ImageResourceBlockIO<PixelAspectRa
 
     @Override
     public void write(DataWriter writer, PixelAspectRatioRBlock pixelAspectRatioRBlock) throws IOException {
-
+        writer.stream.writeInt(pixelAspectRatioRBlock.getVersion());
+        writer.stream.writeDouble(pixelAspectRatioRBlock.getRatio());
     }
 }

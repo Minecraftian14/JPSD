@@ -37,12 +37,12 @@ public class ResolutionRBlockIO extends ImageResourceBlockIO<ResolutionRBlock> {
     public void write(DataWriter writer, ResolutionRBlock data) throws IOException {
         //@formatter:off
 
-        writer. writeFFloat (data.  getHDpi                 ());
-        writer. writeShort  (data.  getHResDisplayUnit      ().getValue());
-        writer. writeShort  (data.  getWidthDisplayUnit     ().getValue());
-        writer. writeFFloat (data.  getVDpi                 ());
-        writer. writeShort  (data.  getVResDisplayUnit      ().getValue());
-        writer. writeShort  (data.  getHeightDisplayUnit    ().getValue());
+        writer.        writeFFloat (data.  getHDpi                 ());
+        writer.stream. writeShort  (data.  getHResDisplayUnit      ().getValue());
+        writer.stream. writeShort  (data.  getWidthDisplayUnit     ().getValue());
+        writer.        writeFFloat (data.  getVDpi                 ());
+        writer.stream. writeShort  (data.  getVResDisplayUnit      ().getValue());
+        writer.stream. writeShort  (data.  getHeightDisplayUnit    ().getValue());
 
         //@formatter:on
     }

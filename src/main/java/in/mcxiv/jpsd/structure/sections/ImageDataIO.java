@@ -31,6 +31,9 @@ public class ImageDataIO extends SectionIO<ImageData> {
     @Override
     public void write(DataWriter writer, ImageData imageData) throws IOException {
 
+        writer.writeEntry(Compression.Raw_Data);
+        writer.writeBytes(RawDataDecoder.encode(Compression.Raw_Data, imageData.getData(), header));
+
     }
 
 }

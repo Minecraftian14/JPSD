@@ -16,4 +16,28 @@ public class DisplayInfoRBlock extends ImageResourceBlock {
         this.opacity = opacity;
         this.kind = kind;
     }
+
+    public ColorComponents getColor() {
+        return color;
+    }
+
+    public void setColor(ColorComponents color) {
+        this.color = color;
+    }
+
+    public short getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(short opacity) {
+        this.opacity = opacity;
+    }
+
+    public byte getKind() {
+        return kind;
+    }
+
+    public void setKind(byte kind) {
+        this.kind = kind;
+    }
 }

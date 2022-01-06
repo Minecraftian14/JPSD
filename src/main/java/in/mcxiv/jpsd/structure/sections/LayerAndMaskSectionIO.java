@@ -88,5 +88,22 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
     @Override
     public void write(DataWriter writer, LayerAndMaskData layerAndMaskData) throws IOException {
 
+        DataWriter buffer = new DataWriter();
+
+        LAYER_INFO_IO.write(buffer, layerAndMaskData.getLayerInfo());
+        GLOBAL_LAYER_MASK_INFO_IO.write(buffer, layerAndMaskData.getGlobalLayerMaskInfo());
+
+        // FIXME:
+        // figure out why there is a 1-2 byte spacing after reading global...
+        // and add them here if that's really required!
+
+        for (AdditionalLayerInfo additionalLayerInfo : layerAndMaskData.getAdditionalLayerInfo()) {
+            ADDITIONAL_LAYER_INFO_IO.write(buffer, additionalLayerInfo);
+        }
+
+        byte[] bytes = buffer.toByteArray();
+
+        if (version.isLarge()) writer.stream.writeLong(bytes.length);
+        else writer.stream.writeInt(bytes.length);
     }
 }
