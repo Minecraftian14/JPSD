@@ -10,6 +10,8 @@ import in.mcxiv.jpsd.data.common.ColorComponents;
  */
 public class SolidFill extends Effect {
 
+    public static final int SIZE = 34;
+
     private BlendingMode mode;
     private ColorComponents color;
     private byte opacity;

@@ -67,6 +67,126 @@ public class TypeToolInfo extends AdditionalLayerInfo {
         return lineInfos.length;
     }
 
+    public short getVersion() {
+        return version;
+    }
+
+    public void setVersion(short version) {
+        this.version = version;
+    }
+
+    public double[] getTransformInfo() {
+        return transformInfo;
+    }
+
+    public void setTransformInfo(double[] transformInfo) {
+        this.transformInfo = transformInfo;
+    }
+
+    public short getFontVersion() {
+        return fontVersion;
+    }
+
+    public void setFontVersion(short fontVersion) {
+        this.fontVersion = fontVersion;
+    }
+
+    public FontInfo[] getFontInfos() {
+        return fontInfos;
+    }
+
+    public void setFontInfos(FontInfo[] fontInfos) {
+        this.fontInfos = fontInfos;
+    }
+
+    public StyleInfo[] getStyleInfos() {
+        return styleInfos;
+    }
+
+    public void setStyleInfos(StyleInfo[] styleInfos) {
+        this.styleInfos = styleInfos;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
+
+    public float getScalingFactor() {
+        return scalingFactor;
+    }
+
+    public void setScalingFactor(float scalingFactor) {
+        this.scalingFactor = scalingFactor;
+    }
+
+    public int getCharCount() {
+        return charCount;
+    }
+
+    public void setCharCount(int charCount) {
+        this.charCount = charCount;
+    }
+
+    public int getHorizontalPlacement() {
+        return horizontalPlacement;
+    }
+
+    public void setHorizontalPlacement(int horizontalPlacement) {
+        this.horizontalPlacement = horizontalPlacement;
+    }
+
+    public int getVerticalPlacement() {
+        return verticalPlacement;
+    }
+
+    public void setVerticalPlacement(int verticalPlacement) {
+        this.verticalPlacement = verticalPlacement;
+    }
+
+    public int getSelectionStart() {
+        return selectionStart;
+    }
+
+    public void setSelectionStart(int selectionStart) {
+        this.selectionStart = selectionStart;
+    }
+
+    public int getSelectionEnd() {
+        return selectionEnd;
+    }
+
+    public void setSelectionEnd(int selectionEnd) {
+        this.selectionEnd = selectionEnd;
+    }
+
+    public LineInfo[] getLineInfos() {
+        return lineInfos;
+    }
+
+    public void setLineInfos(LineInfo[] lineInfos) {
+        this.lineInfos = lineInfos;
+    }
+
+    public ColorComponents getColorComponents() {
+        return colorComponents;
+    }
+
+    public void setColorComponents(ColorComponents colorComponents) {
+        this.colorComponents = colorComponents;
+    }
+
+    public boolean isAntiAlias() {
+        return antiAlias;
+    }
+
+    public void setAntiAlias(boolean antiAlias) {
+        this.antiAlias = antiAlias;
+    }
+
     @Override
     public String toString() {
         return "TypeToolInfo{" +

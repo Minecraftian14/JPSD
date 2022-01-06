@@ -16,6 +16,22 @@ public class LayerBlendingRanges extends DataObject {
             this.destination = new Range(blackDestination, whiteDestination);
         }
 
+        public Range getSource() {
+            return source;
+        }
+
+        public void setSource(Range source) {
+            this.source = source;
+        }
+
+        public Range getDestination() {
+            return destination;
+        }
+
+        public void setDestination(Range destination) {
+            this.destination = destination;
+        }
+
         @Override
         public String toString() {
             return "Blend{" +
@@ -34,6 +50,22 @@ public class LayerBlendingRanges extends DataObject {
             this.white = white;
         }
 
+        public short getBlack() {
+            return black;
+        }
+
+        public void setBlack(short black) {
+            this.black = black;
+        }
+
+        public short getWhite() {
+            return white;
+        }
+
+        public void setWhite(short white) {
+            this.white = white;
+        }
+
         @Override
         public String toString() {
             return "Range{" +
@@ -48,6 +80,22 @@ public class LayerBlendingRanges extends DataObject {
 
     public LayerBlendingRanges(Blend compositeGray, Blend[] otherChannels) {
         this.compositeGray = compositeGray;
+        this.otherChannels = otherChannels;
+    }
+
+    public Blend getCompositeGray() {
+        return compositeGray;
+    }
+
+    public void setCompositeGray(Blend compositeGray) {
+        this.compositeGray = compositeGray;
+    }
+
+    public Blend[] getOtherChannels() {
+        return otherChannels;
+    }
+
+    public void setOtherChannels(Blend[] otherChannels) {
         this.otherChannels = otherChannels;
     }
 

@@ -22,6 +22,70 @@ public class FontInfo {
         this.designVectorValue = designVectorValue;
     }
 
+    public short getMarkValue() {
+        return markValue;
+    }
+
+    public void setMarkValue(short markValue) {
+        this.markValue = markValue;
+    }
+
+    public int getFontTypeData() {
+        return fontTypeData;
+    }
+
+    public void setFontTypeData(int fontTypeData) {
+        this.fontTypeData = fontTypeData;
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+    }
+
+    public String getFontFamilyName() {
+        return fontFamilyName;
+    }
+
+    public void setFontFamilyName(String fontFamilyName) {
+        this.fontFamilyName = fontFamilyName;
+    }
+
+    public String getFontStyleName() {
+        return fontStyleName;
+    }
+
+    public void setFontStyleName(String fontStyleName) {
+        this.fontStyleName = fontStyleName;
+    }
+
+    public short getScriptValue() {
+        return scriptValue;
+    }
+
+    public void setScriptValue(short scriptValue) {
+        this.scriptValue = scriptValue;
+    }
+
+    public int getNumberOfDesignAxis() {
+        return numberOfDesignAxis;
+    }
+
+    public void setNumberOfDesignAxis(int numberOfDesignAxis) {
+        this.numberOfDesignAxis = numberOfDesignAxis;
+    }
+
+    public int getDesignVectorValue() {
+        return designVectorValue;
+    }
+
+    public void setDesignVectorValue(int designVectorValue) {
+        this.designVectorValue = designVectorValue;
+    }
+
     @Override
     public String toString() {
         return "FontInfo{" +

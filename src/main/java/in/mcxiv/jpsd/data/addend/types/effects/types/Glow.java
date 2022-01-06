@@ -89,6 +89,7 @@ public abstract class Glow extends Effect {
                 ", colorComponents=" + colorComponents +
                 ", blendingMode=" + blendingMode +
                 ", opacityAsPercent=" + opacityAsPercent +
+                ", nativeColorComponents=" + nativeColorComponents +
                 '}';
     }
 }

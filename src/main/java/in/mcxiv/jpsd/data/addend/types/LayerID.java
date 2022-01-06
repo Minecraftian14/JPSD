@@ -14,6 +14,10 @@ public class LayerID extends AdditionalLayerInfo {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "LayerID{" +
