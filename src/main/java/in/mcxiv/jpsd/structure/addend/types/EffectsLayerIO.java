@@ -219,80 +219,61 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     writer.stream              .writeInt     (glow.getVersion());
                     writer.stream              .writeInt     (glow.getBlur());
                     writer.stream              .writeInt     (glow.getIntensity());
-
-                    // CONTINUE HERE
-
-                    int             versionS         = reader.stream.readInt();
-                    int             blur             = reader.stream.readInt();
-                    int             intensity        = reader.stream.readInt(); // FIXME: um? float?
-                    ColorComponents colorComponents  = ColorComponentsIO.INSTANCE.read(reader);
-                    reader.verifySignature(PSDFileReader.RESOURCE);
-                    BlendingMode    blendingMode     = BlendingMode.of(reader.readBytes(4, false));
-                    boolean         effectEnabled    = reader.stream.readBoolean();
-                    boolean         opacityAsPercent = reader.stream.readBoolean();
+                    ColorComponentsIO.INSTANCE .write(writer, glow.getColorComponents());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeEntry   (glow.getBlendingMode());
+                    writer.stream              .writeBoolean (glow.isEnabled());
+                    writer.stream              .writeBoolean (glow.isOpacityAsPercent());
                     //@formatter:on
-                    boolean invert = false;
-                    ColorComponents nativeColorComponents;
-                    if (versionS == 2) {
-                        if (EffectType.InnerGlow.equals(type)) invert = reader.stream.readBoolean();
-                        nativeColorComponents = ColorComponentsIO.INSTANCE.read(reader);
-                    } else /* versionS == 0 */ nativeColorComponents = null;
-                    if (EffectType.OuterGlow.equals(type))
-                        effects.add(new OuterGlow(versionS, effectEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent, nativeColorComponents));
-                    else
-                        effects.add(new InnerGlow(versionS, effectEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent, invert, nativeColorComponents));
-
+                    if (glow.getVersion() == 2) {
+                        if (EffectType.InnerGlow.equals(glow.getType())) writer.stream.writeBoolean(((InnerGlow) glow).isInvert());
+                        ColorComponentsIO.INSTANCE.write(writer, glow.getNativeColorComponents());
+                    }
                 }
                 break;
 
                 case Bevel: {
+                    Bevel bevel = (Bevel) effect;
                     //@formatter:off
-                    reader.stream.skipBytes(4);
-                    int             versionS              = reader.stream.readInt();
-                    int             angle                 = reader.stream.readInt();
-                    int             strength              = reader.stream.readInt();
-                    int             blur                  = reader.stream.readInt();
-                    reader.verifySignature(PSDFileReader.RESOURCE);
-                    BlendingMode    highlightBlendingMode = BlendingMode.of(reader.readBytes(4, false));;
-                    reader.verifySignature(PSDFileReader.RESOURCE);
-                    BlendingMode    shadowBlendingMode    = BlendingMode.of(reader.readBytes(4, false));;
-                    ColorComponents highlightColor        = ColorComponentsIO.INSTANCE.read(reader);;
-                    ColorComponents shadowColor           = ColorComponentsIO.INSTANCE.read(reader);;
-                    byte            bevelStyle            = reader.stream.readByte();
-                    byte            highlightOpacity      = reader.stream.readByte();
-                    byte            shadowOpacity         = reader.stream.readByte();
-                    boolean         effectEnabled         = reader.stream.readBoolean();
-                    boolean         useAngleInAllEffect   = reader.stream.readBoolean();;
-                    boolean         upOrDown              = reader.stream.readBoolean();;
+                    writer.stream              .writeInt     (bevel.getVersion()==2 ?78 :58);
+                    writer.stream              .writeInt     (bevel.getVersion());
+                    writer.stream              .writeInt     (bevel.getAngle());
+                    writer.stream              .writeInt     (bevel.getStrength());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeEntry   (bevel.getHighlightBlendingMode());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeEntry   (bevel.getShadowBlendingMode());
+                    ColorComponentsIO.INSTANCE .write        (writer, bevel.getHighlightColor());
+                    ColorComponentsIO.INSTANCE .write        (writer, bevel.getShadowColor());
+                    writer.stream              .writeByte    (bevel.getBevelStyle());
+                    writer.stream              .writeByte    (bevel.getHighlightOpacity());
+                    writer.stream              .writeByte    (bevel.getShadowOpacity());
+                    writer.stream              .writeBoolean (bevel.isEnabled());
+                    writer.stream              .writeBoolean (bevel.isUseAngleInAllEffect());
+                    writer.stream              .writeBoolean (bevel.isUpOrDown());
                     //@formatter:on
-                    ColorComponents realHighlightColor = null;
-                    ColorComponents realShadowColor = null;
-                    if (versionS == 2) {
-                        realHighlightColor = ColorComponentsIO.INSTANCE.read(reader);
-                        realShadowColor = ColorComponentsIO.INSTANCE.read(reader);
+                    if (bevel.getVersion() == 2) {
+                        ColorComponentsIO.INSTANCE.write(writer, bevel.getRealHighlightColor());
+                        ColorComponentsIO.INSTANCE.write(writer, bevel.getRealShadowColor());
                     }
-                    effects.add(new Bevel(versionS, effectEnabled, angle, strength, blur, highlightBlendingMode, shadowBlendingMode, highlightColor, shadowColor, bevelStyle, highlightOpacity, shadowOpacity, useAngleInAllEffect, upOrDown, realHighlightColor, realShadowColor));
                 }
                 break;
 
                 case SolidFill: {
+                    SolidFill solidFill = (SolidFill) effect;
                     //@formatter:off
-                    reader.stream.skipBytes(4);
-                    int             versionS              = reader.stream.readInt();
-                    reader.verifySignature(PSDFileReader.RESOURCE);
-                    BlendingMode    mode                  = BlendingMode.of(reader.readBytes(4, false));
-                    ColorComponents color                 = ColorComponentsIO.INSTANCE.read(reader);
-                    byte            opacity               = reader.stream.readByte();
-                    boolean         effectEnabled         = reader.stream.readBoolean();
-                    ColorComponents nativeColor           = ColorComponentsIO.INSTANCE.read(reader);
+                    writer.stream              .writeInt     (34);
+                    writer.stream              .writeInt     (solidFill.getVersion());
+                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .writeEntry   (solidFill.getMode());
+                    ColorComponentsIO.INSTANCE .write(writer, solidFill.getColor());
+                    writer.stream              .writeByte    (solidFill.getOpacity());
+                    writer.stream              .writeBoolean (solidFill.isEnabled());
+                    ColorComponentsIO.INSTANCE .write(writer, solidFill.getNativeColor());
                     //@formatter:on
-                    effects.add(new SolidFill(versionS, effectEnabled, mode, color, opacity, nativeColor));
                 }
                 break;
             }
         }
-
-        return new EffectsLayer(length, version, effects.toArray(new Effect[0]));
-
     }
 }

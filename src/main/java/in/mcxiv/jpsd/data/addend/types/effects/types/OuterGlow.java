@@ -9,11 +9,8 @@ import in.mcxiv.jpsd.data.common.ColorComponents;
  */
 public class OuterGlow extends Glow {
 
-    protected ColorComponents nativeColorComponents;
-
     public OuterGlow(int version, boolean isEnabled, int blur, int intensity, ColorComponents colorComponents, BlendingMode blendingMode, boolean opacityAsPercent, ColorComponents nativeColorComponents) {
-        super(EffectType.OuterGlow, version, isEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent);
-        this.nativeColorComponents = nativeColorComponents;
+        super(EffectType.OuterGlow, version, isEnabled, blur, intensity, colorComponents, blendingMode, opacityAsPercent, nativeColorComponents);
     }
 
     @Override

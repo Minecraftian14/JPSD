@@ -1,16 +1,13 @@
 package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
-import in.mcxiv.jpsd.data.file.ColorMode;
-import in.mcxiv.jpsd.data.file.DepthEntry;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ImageData extends DataObject {
 
     private int[] imageData;
 
     public ImageData(byte[] data) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     public ImageData(int[] imgData) {

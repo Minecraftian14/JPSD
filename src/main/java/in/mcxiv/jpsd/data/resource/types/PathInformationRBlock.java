@@ -26,12 +26,11 @@ public class PathInformationRBlock extends ImageResourceBlock {
         return identity;
     }
 
-    @Override
-    public short getIdentity() {
+    public short getSIdentity() {
         return identity;
     }
 
-    public void setIdentity(short identity) {
+    public void setSIdentity(short identity) {
         this.identity = identity;
     }
 
