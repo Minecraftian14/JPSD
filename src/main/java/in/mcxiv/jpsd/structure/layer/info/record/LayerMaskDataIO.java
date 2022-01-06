@@ -48,7 +48,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
 
         if (size == 20 && dataUnread == 2) {
             reader.stream.skipBytes(2);
-            return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameters, maskParameter);
+            return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameter);
         }
 
         if (dataUnread >= 2) {
@@ -61,7 +61,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
             maskEncloser = RectangleIO.INSTANCE.read(reader);
         }
 
-        return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameters, maskParameter);
+        return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameter);
     }
 
     @Override

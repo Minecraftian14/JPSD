@@ -226,7 +226,8 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     writer.stream              .writeBoolean (glow.isOpacityAsPercent());
                     //@formatter:on
                     if (glow.getVersion() == 2) {
-                        if (EffectType.InnerGlow.equals(glow.getType())) writer.stream.writeBoolean(((InnerGlow) glow).isInvert());
+                        if (EffectType.InnerGlow.equals(glow.getType()))
+                            writer.stream.writeBoolean(((InnerGlow) glow).isInvert());
                         ColorComponentsIO.INSTANCE.write(writer, glow.getNativeColorComponents());
                     }
                 }

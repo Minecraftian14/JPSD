@@ -70,43 +70,4 @@ public class ColorComponents extends DataObject {
                 '}';
     }
 
-    public ColorSpace getColorSpace() {
-        return colorSpace;
-    }
-
-    public void setColorSpace(ColorSpace colorSpace) {
-        this.colorSpace = colorSpace;
-    }
-
-    public short getColorComponent1() {
-        return colorComponent1;
-    }
-
-    public void setColorComponent1(short colorComponent1) {
-        this.colorComponent1 = colorComponent1;
-    }
-
-    public short getColorComponent2() {
-        return colorComponent2;
-    }
-
-    public void setColorComponent2(short colorComponent2) {
-        this.colorComponent2 = colorComponent2;
-    }
-
-    public short getColorComponent3() {
-        return colorComponent3;
-    }
-
-    public void setColorComponent3(short colorComponent3) {
-        this.colorComponent3 = colorComponent3;
-    }
-
-    public short getColorComponent4() {
-        return colorComponent4;
-    }
-
-    public void setColorComponent4(short colorComponent4) {
-        this.colorComponent4 = colorComponent4;
-    }
 }

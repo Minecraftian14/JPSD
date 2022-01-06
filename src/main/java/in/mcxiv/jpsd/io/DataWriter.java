@@ -26,13 +26,15 @@ public class DataWriter implements AutoCloseable, Closeable {
     private final byte[] buffer6 = new byte[6];
 
     public final ImageOutputStream stream;
+    public Object __stream__=null;
 
     public DataWriter(ImageOutputStream stream) {
-        this.stream = stream;
+        this.__stream__=this.stream = stream;
     }
 
     public DataWriter(OutputStream stream) {
         this(new MemoryCacheImageOutputStream(stream));
+        this.__stream__ = stream;
     }
 
     public DataWriter() {
@@ -174,7 +176,7 @@ public class DataWriter implements AutoCloseable, Closeable {
     }
 
     public byte[] toByteArray() {
-        if (stream instanceof ByteArrayOutputStream) return ((ByteArrayOutputStream) stream).toByteArray();
-        throw new UnsupportedOperationException();
+        if (__stream__ instanceof ByteArrayOutputStream) return ((ByteArrayOutputStream) __stream__).toByteArray();
+        throw new UnsupportedOperationException("stream must be ByteArrayOutputStream instead of " + this.__stream__.getClass().getSimpleName());
     }
 }
