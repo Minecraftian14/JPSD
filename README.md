@@ -45,4 +45,4 @@ reader.getLayerAndMaskData().setLayerInfo(new LayerInfo(true, new LayerRecord[]{
 reader.write(ios);
 ```
 
-# The first two arguments of newDefaultRecord are the offset of the layer from top left corner in pixels.
+#### The first two arguments of newDefaultRecord are the offset of the layer from top left corner in pixels.
