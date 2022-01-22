@@ -46,5 +46,22 @@ public class LayerBlendingRangesIO extends SectionIO<LayerBlendingRanges> {
     @Override
     public void write(DataWriter writer, LayerBlendingRanges layerBlendingRanges) throws IOException {
 
+        DataWriter buffer = new DataWriter();
+
+        buffer.stream.writeShort(layerBlendingRanges.getCompositeGray().getSource().getBlack());
+        buffer.stream.writeShort(layerBlendingRanges.getCompositeGray().getSource().getWhite());
+        buffer.stream.writeShort(layerBlendingRanges.getCompositeGray().getDestination().getBlack());
+        buffer.stream.writeShort(layerBlendingRanges.getCompositeGray().getDestination().getWhite());
+
+        for (Blend otherChannel : layerBlendingRanges.getOtherChannels()) {
+            buffer.stream.writeShort(otherChannel.getSource().getBlack());
+            buffer.stream.writeShort(otherChannel.getSource().getWhite());
+            buffer.stream.writeShort(otherChannel.getDestination().getBlack());
+            buffer.stream.writeShort(otherChannel.getDestination().getWhite());
+        }
+
+        byte[] bytes = buffer.toByteArray();
+        writer.stream.writeInt(bytes.length);
+        writer.writeBytes(bytes);
     }
 }

@@ -84,12 +84,13 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
 
         buffer.stream.writeShort(layers);
 
+        if (layerInfo.hasAlpha()) layers *= -1;
         for (int i = 0; i < layers; i++)
             LAYER_RECORD_IO.write(buffer, recordList[i]);
 
         for (int i = 0; i < layers; i++) {
             for (ChannelInfo channelInfo : recordList[i].getChannelInfo()) {
-                buffer.stream.writeShort(channelInfo.getData().getCompression().getValue());
+                buffer.writeEntry(channelInfo.getData().getCompression());
                 buffer.writeBytes(channelInfo.getData().getData());
             }
         }

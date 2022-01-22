@@ -189,8 +189,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
         // We keep this as separate so that we have to
         // write the data in the actual writer, we can write
         // the length before it.
-        ByteArrayOutputStream allData = new ByteArrayOutputStream();
-        DataWriter allDataWriter = new DataWriter(allData);
+        DataWriter allDataWriter = new DataWriter();
 
         for (ImageResourceBlock block : imageResourcesData.getBlocks()) {
 
@@ -198,8 +197,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
             // a low level writer to write data specific to only
             // the IRB blocks. And again, we do this to store the
             // length beforehand.
-            ByteArrayOutputStream blockData = new ByteArrayOutputStream();
-            DataWriter blockWriter = new DataWriter(blockData);
+            DataWriter blockWriter = new DataWriter();
 
             switch (block.getIdentity()) {
                 case GridAndGuides:
@@ -234,7 +232,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
                 default:
                     continue;
             }
-            byte[] blockBytes = blockData.toByteArray();
+            byte[] blockBytes = blockWriter.toByteArray();
 
             allDataWriter.writeBytes(PSDFileReader.RESOURCE);
             allDataWriter.stream.writeShort(block.getIdentity().getIdentity());
@@ -245,7 +243,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
 
         }
 
-        byte[] addDataBytes = allData.toByteArray();
+        byte[] addDataBytes = allDataWriter.toByteArray();
 
         writer.stream.writeInt(addDataBytes.length);
         writer.writeBytes(addDataBytes);

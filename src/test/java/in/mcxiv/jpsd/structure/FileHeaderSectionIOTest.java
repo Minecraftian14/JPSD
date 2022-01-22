@@ -46,9 +46,8 @@ class FileHeaderSectionIOTest {
 
         // Writing to cache
         FileHeaderData data = new FileHeaderData(2, 39, 1234, 4321, 32, 9);
-        ByteArrayOutputStream cache = new ByteArrayOutputStream();
         try {
-            io.write(new DataWriter(cache), data);
+            io.write(new DataWriter(), data);
         } catch (IOException e) {
             e.printStackTrace();
         }

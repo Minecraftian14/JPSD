@@ -47,6 +47,12 @@ public class ChannelInfo {
         this.dataLength = dataLength;
     }
 
+    public ChannelInfo(ChannelID id, ChannelImageData data) {
+        this.id = id;
+        this.data = data;
+        this.dataLength = data.getData().length+2;
+    }
+
     public long getDataLength() {
         return dataLength;
     }

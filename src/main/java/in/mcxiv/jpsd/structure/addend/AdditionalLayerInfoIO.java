@@ -3,10 +3,7 @@ package in.mcxiv.jpsd.structure.addend;
 import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.addend.UnknownAdditionalLayerInfo;
-import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
-import in.mcxiv.jpsd.data.addend.types.LayerID;
-import in.mcxiv.jpsd.data.addend.types.TypeToolInfo;
-import in.mcxiv.jpsd.data.addend.types.UnicodeLayerName;
+import in.mcxiv.jpsd.data.addend.types.*;
 import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
@@ -122,7 +119,49 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
     }
 
     @Override
-    public void write(DataWriter writer, AdditionalLayerInfo additionalLayerInfo) throws IOException {
+    public void write(DataWriter writer, AdditionalLayerInfo alInfo) throws IOException {
 
+        writer.sign(PSDFileReader.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL);
+
+        writer.writeEntry(alInfo.getKey());
+
+        boolean isLargeResource = false; // init to true if signed with ADDITIONAL_LAYER_INFO_SIGNATURE_LONG
+
+        if (version.isLarge()) {
+            if (alInfo.getKey().isLarge())
+                isLargeResource = true;
+        }
+        DataWriter buffer = new DataWriter();
+
+        switch (alInfo.getKey()) {
+
+            case EFFECTS_KEY:
+                EFFECTS_LAYER_IO.write(buffer, ((EffectsLayer) alInfo));
+                break;
+
+            case LAYER_AND_MASK_INFO_16:
+                LAYER_INFO_IO.write(buffer, ((LayerAndMaskInfo) alInfo).getLayerInfo());
+                buffer.fillToPadBy(buffer.toByteArray().length, 4);
+                break;
+
+            case LAYER_ID_KEY:
+                buffer.stream.writeInt(((LayerID) alInfo).getId());
+                break;
+
+            case TYPE_TOOL_INFO_KEY:
+                TYPE_TOOL_INFO_IO.write(buffer, ((TypeToolInfo) alInfo));
+                buffer.fillToPadBy(buffer.toByteArray().length, 4);
+                break;
+
+            case UNICODE_LAYER_NAME_KEY:
+                UnicodeLayerName unicodeLayerName = (UnicodeLayerName) alInfo;
+                buffer.writeUnicodeString(unicodeLayerName.getName()+"\0");
+                break;
+        }
+
+        byte[] bytes = buffer.toByteArray();
+        if (isLargeResource) writer.stream.writeLong(bytes.length);
+        else writer.stream.writeInt(bytes.length);
+        writer.writeBytes(bytes);
     }
 }

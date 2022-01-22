@@ -9,6 +9,7 @@ import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.common.RectangleIO;
+import in.mcxiv.jpsd.structure.layer.info.record.mask.MaskParameterIO;
 
 import java.io.IOException;
 
@@ -40,7 +41,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
         if (layerMaskInfoFlag.has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
             System.err.println("UNTESTED!!! This part of code is not reliable!");
             maskParameters = new MaskParameterFlag(reader.stream.readByte());
-            maskParameter = new MaskParameter(maskParameters, reader);
+            maskParameter = MaskParameterIO.read(maskParameters, reader);
         }
 
         long bytesReadSinceLastMark = reader.stream.getStreamPosition() - mark;
@@ -67,5 +68,24 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
     @Override
     public void write(DataWriter writer, LayerMaskData layerMaskData) throws IOException {
 
+        if (layerMaskData == null) {
+            writer.stream.writeInt(0);
+            return;
+        }
+
+        DataWriter buffer = new DataWriter();
+
+        RectangleIO.INSTANCE.write(buffer, layerMaskData.getMaskEncloser());
+        buffer.stream.writeByte(layerMaskData.getDefaultColor());
+        buffer.writeEntry(layerMaskData.getLayerMaskInfoFlag());
+
+        if(layerMaskData.getLayerMaskInfoFlag().has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
+            buffer.writeEntry(layerMaskData.getMaskParameters());
+            MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
+        }
+
+        byte[] bytes = buffer.toByteArray();
+        writer.stream.writeInt(bytes.length);
+        writer.writeBytes(bytes);
     }
 }

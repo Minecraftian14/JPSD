@@ -42,7 +42,7 @@ public class GridAndGuidesRBlock extends ImageResourceBlock {
         this.version = version;
         this.horizontal = horizontal;
         this.vertical = vertical;
-        this.blocks = blocks;
+        this.blocks = blocks == null ? new GuideSubBlock[0] : blocks;
     }
 
     public int getGuideCount() {

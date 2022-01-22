@@ -105,5 +105,6 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
 
         if (version.isLarge()) writer.stream.writeLong(bytes.length);
         else writer.stream.writeInt(bytes.length);
+        writer.writeBytes(bytes);
     }
 }

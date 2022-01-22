@@ -35,6 +35,7 @@ public class DataWriter implements AutoCloseable, Closeable {
     public DataWriter(OutputStream stream) {
         this(new MemoryCacheImageOutputStream(stream));
         this.__stream__ = stream;
+
     }
 
     public DataWriter() {
@@ -86,6 +87,13 @@ public class DataWriter implements AutoCloseable, Closeable {
         fill(length, (byte) 0);
     }
 
+    public void fillToPadBy(int length, int multiple) throws IOException {
+        int bytesWroteExtra = length % multiple;
+        if(bytesWroteExtra == 0)return;
+        int bytesRequiredMoreToCompleteBlock = multiple - bytesWroteExtra;
+        fillZeros(bytesRequiredMoreToCompleteBlock);
+    }
+
     public void writeString(String string) throws IOException {
         stream.write(string.getBytes(StandardCharsets.US_ASCII));
     }
@@ -95,8 +103,9 @@ public class DataWriter implements AutoCloseable, Closeable {
     }
 
     public void writePascalStringRaw(String pascalString) throws IOException {
-        stream.write(pascalString.length());
-        stream.write(pascalString.getBytes(StandardCharsets.US_ASCII));
+        int length = (byte) pascalString.length();
+        stream.writeByte(length);
+        writeBytes(pascalString.substring(0, length).getBytes(StandardCharsets.US_ASCII));
     }
 
     /**
@@ -104,22 +113,22 @@ public class DataWriter implements AutoCloseable, Closeable {
      */
     public void writePascalStringEvenlyPadded(String pascalString) throws IOException {
         int length = ((byte) pascalString.length());
-        stream.write(length);
-        stream.write(pascalString.substring(0, length).getBytes(StandardCharsets.US_ASCII));
+        stream.writeByte(length);
+        writeBytes(pascalString.substring(0, length).getBytes(StandardCharsets.US_ASCII));
         if (length % 2 == 0) stream.write(0);
     }
 
     public void writePascalStringPaddedTo4(String pascalString) throws IOException {
         int length = ((byte) pascalString.length());
         stream.write(length);
-        stream.write(pascalString.substring(0, length).getBytes(StandardCharsets.US_ASCII));
-        int extra = 4 - (length % 4);
+        writeBytes(pascalString.substring(0, length).getBytes(StandardCharsets.US_ASCII));
+        int extra = 4 - (++length % 4);
         if (extra != 4) fillZeros(extra);
     }
 
     public void writeUnicodeString(String unicodeString) throws IOException {
         stream.writeInt(unicodeString.length());
-        stream.write(unicodeString.getBytes(StandardCharsets.UTF_16BE));
+        writeBytes(unicodeString.getBytes(StandardCharsets.UTF_16BE));
     }
 
     public void writeFDouble(double value) throws IOException {
@@ -187,4 +196,5 @@ public class DataWriter implements AutoCloseable, Closeable {
         }
         throw new UnsupportedOperationException("stream must be ByteArrayOutputStream instead of " + this.__stream__.getClass().getSimpleName());
     }
+
 }

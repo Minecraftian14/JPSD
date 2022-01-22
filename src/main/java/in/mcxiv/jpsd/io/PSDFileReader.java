@@ -5,6 +5,7 @@ import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.sections.ImageDataIO;
 
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -133,6 +134,14 @@ public class PSDFileReader {
     private LayerAndMaskData layerAndMaskData;
     private ImageData imageData;
 
+    public PSDFileReader(FileHeaderData fileHeaderData, ColorModeData colorModeData, ImageResourcesData imageResourcesData, LayerAndMaskData layerAndMaskData, ImageData imageData) {
+        this.fileHeaderData = fileHeaderData;
+        this.colorModeData = colorModeData;
+        this.imageResourcesData = imageResourcesData;
+        this.layerAndMaskData = layerAndMaskData;
+        this.imageData = imageData;
+    }
+
     public PSDFileReader(ImageInputStream input) throws IOException {
         this(input, true);
     }
@@ -243,6 +252,23 @@ public class PSDFileReader {
             }
         }
         return imageData;
+    }
+
+    public void write(ImageOutputStream output) throws IOException {
+        DataWriter writer = new DataWriter(output);
+
+        SectionIO.FILE_HEADER_SECTION.write(writer, fileHeaderData);
+        SectionIO.COLOR_MODE_DATA_SECTION.write(writer, colorModeData);
+        SectionIO.IMAGE_RESOURCES_DATA_SECTION.write(writer, imageResourcesData);
+
+        if (fileHeaderData.getVersion().isLarge())
+            SectionIO.LAYER_AND_MASK_DATA_SECTION_PSB.write(writer, layerAndMaskData);
+        else SectionIO.LAYER_AND_MASK_DATA_SECTION_PSD.write(writer, layerAndMaskData);
+
+        SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fileHeaderData);
+        IMAGE_DATA_IO.write(writer, imageData);
+
+        writer.close();
     }
 
     private static boolean R_V_DEBUGGING = false;

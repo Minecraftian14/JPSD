@@ -33,5 +33,14 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
     @Override
     public void write(DataWriter writer, GlobalLayerMaskInfo globalLayerMaskInfo) throws IOException {
 
+        if(globalLayerMaskInfo == null) {
+            writer.stream.writeInt(0);
+            return;
+        }
+
+        writer.stream.writeInt(13);
+        ColorComponentsIO.INSTANCE.write(writer, globalLayerMaskInfo.getColor());
+        writer.stream.writeShort(globalLayerMaskInfo.getOpacity());
+        writer.writeEntry(globalLayerMaskInfo.getKind());
     }
 }

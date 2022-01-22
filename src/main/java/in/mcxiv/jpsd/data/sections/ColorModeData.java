@@ -18,6 +18,10 @@ public class ColorModeData extends DataObject {
      */
     private boolean hasData;
 
+    public ColorModeData() {
+        this(0, null);
+    }
+
     public ColorModeData(int length, byte[] data) {
         if (data == null) data = new byte[0];
         if (data.length != length)

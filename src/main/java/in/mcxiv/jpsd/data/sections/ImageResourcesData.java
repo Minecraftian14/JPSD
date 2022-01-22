@@ -14,6 +14,7 @@ public class ImageResourcesData extends DataObject {
     private ImageResourceBlock[] blocks;
 
     public ImageResourcesData(ImageResourceBlock[] blocks) {
+        if (blocks == null) blocks = new ImageResourceBlock[0];
         this.blocks = blocks;
     }
 

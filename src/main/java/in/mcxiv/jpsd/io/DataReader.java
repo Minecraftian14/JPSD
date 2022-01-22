@@ -141,7 +141,7 @@ public class DataReader implements AutoCloseable, Closeable {
         int stringLength = stream.readInt();
         if (stringLength == 0) return "";
         byte[] data = readBytes(2 * stringLength, true);
-        return new String(data, StandardCharsets.UTF_16);
+        return new String(data, StandardCharsets.UTF_16BE);
     }
 
     public double readFDouble() throws IOException {

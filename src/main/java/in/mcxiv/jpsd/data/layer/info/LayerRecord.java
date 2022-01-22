@@ -2,8 +2,10 @@ package in.mcxiv.jpsd.data.layer.info;
 
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
+import in.mcxiv.jpsd.data.addend.types.UnicodeLayerName;
 import in.mcxiv.jpsd.data.common.BlendingMode;
 import in.mcxiv.jpsd.data.common.Clipping;
+import in.mcxiv.jpsd.data.common.Compression;
 import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.data.file.ColorMode;
 import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
@@ -13,7 +15,9 @@ import in.mcxiv.jpsd.data.layer.info.record.LayerRecordInfoFlag;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.data.sections.ImageData;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -35,6 +39,52 @@ public class LayerRecord extends DataObject {
     private LayerBlendingRanges layerBlendingRanges;
     private String layerName;
     private AdditionalLayerInfo[] additionalLayerInfos;
+
+    public static byte[] extractChannel(int dta, BufferedImage image) {
+        int offset = dta * 8, mask = 255 << offset;
+        int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        byte[] chl = new byte[data.length];
+        for (int i = 0; i < chl.length; i++)
+            chl[i] = (byte) ((data[i] & mask) >> offset);
+        return chl;
+    }
+
+    public static ChannelInfo[] createDefaultChannelInfo(BufferedImage image) {
+        if (image.getTransparency() == Transparency.OPAQUE)
+            return new ChannelInfo[]{
+                    new ChannelInfo(ChannelInfo.ChannelID.Channel1, new ChannelImageData(Compression.Raw_Data, extractChannel(2, image))),
+                    new ChannelInfo(ChannelInfo.ChannelID.Channel2, new ChannelImageData(Compression.Raw_Data, extractChannel(1, image))),
+                    new ChannelInfo(ChannelInfo.ChannelID.Channel3, new ChannelImageData(Compression.Raw_Data, extractChannel(0, image)))
+            };
+        return new ChannelInfo[]{
+                new ChannelInfo(ChannelInfo.ChannelID.TransparencyMask, new ChannelImageData(Compression.Raw_Data, extractChannel(3, image))),
+                new ChannelInfo(ChannelInfo.ChannelID.Channel1, new ChannelImageData(Compression.Raw_Data, extractChannel(2, image))),
+                new ChannelInfo(ChannelInfo.ChannelID.Channel2, new ChannelImageData(Compression.Raw_Data, extractChannel(1, image))),
+                new ChannelInfo(ChannelInfo.ChannelID.Channel3, new ChannelImageData(Compression.Raw_Data, extractChannel(0, image)))
+        };
+    }
+
+    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, String layerName, BufferedImage image) {
+        return newDefaultRecord(topLefX, topLefY, topLefX + image.getWidth(), topLefY + image.getHeight(), layerName, image);
+    }
+
+    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, int botRhtX, int botRightY, String layerName, BufferedImage image) {
+        return new LayerRecord(
+                new Rectangle(topLefY, topLefX, botRightY, botRhtX),
+                createDefaultChannelInfo(image),
+                BlendingMode.norm,
+                (byte) -1,
+                Clipping.Base,
+                new LayerRecordInfoFlag(LayerRecordInfoFlag.HAS_FOURTH),
+                (byte) 0,
+                null,
+                LayerBlendingRanges.DEFAULT,
+                layerName,
+                new AdditionalLayerInfo[]{
+                        new UnicodeLayerName(layerName, 0)
+                }
+        );
+    }
 
     public LayerRecord(Rectangle content, ChannelInfo[] info, BlendingMode blendingMode, byte opacity, Clipping clipping, LayerRecordInfoFlag layerRecordInfoFlag, byte filler, LayerMaskData layerMaskData, LayerBlendingRanges layerBlendingRanges, String layerName, AdditionalLayerInfo[] additionalLayerInfos) {
         this.content = content;
@@ -86,7 +136,7 @@ public class LayerRecord extends DataObject {
         for (ChannelInfo channelInfo : info)
             if (channelInfo.getId().equals(id))
                 return channelInfo;
-        throw new NoSuchElementException("No channel present with the id "+id);
+        throw new NoSuchElementException("No channel present with the id " + id);
     }
 
     public BlendingMode getBlendingMode() {

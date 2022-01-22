@@ -1,5 +1,7 @@
 package in.mcxiv.jpsd.structure;
 
+import in.mcxiv.jpsd.data.common.Rectangle;
+import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.io.DataReader;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.FileImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +39,10 @@ class SectionIOTest {
 
     static FileImageInputStream get(String res) throws IOException {
         return new FileImageInputStream(new File(System.getProperty("user.dir") + "/src/test/test_data" + res));
+    }
+
+    static FileImageOutputStream put(String res) throws IOException {
+        return new FileImageOutputStream(new File(System.getProperty("user.dir") + "/src/test/test_data/out" + res));
     }
 
     static FileImageInputStream get(Path res) throws IOException {
@@ -66,7 +74,7 @@ class SectionIOTest {
 
         DataReader reader = new DataReader(in);
 
-        PSDFileReader.unknownBytesStrategy.action = PSDFileReader.UnknownBytesStrategy.Action.ExcludeData;
+        PSDFileReader.unknownBytesStrategy.action = PSDFileReader.UnknownBytesStrategy.Action.Skip;
 
         FileHeaderData fhd = SectionIO.FILE_HEADER_SECTION.read(reader);
         pj(fhd.toString());
@@ -107,7 +115,7 @@ class SectionIOTest {
                 .filter(Objects::nonNull)
                 .map(iis -> get(() -> new PSDFileReader(iis)))
                 .filter(Objects::nonNull)
-                .map(psdFileReader -> get(() -> ImageMakerStudio.createImage(psdFileReader)))
+                .map(psdFileReader -> get(() -> ImageMakerStudio.toImage(psdFileReader)))
 //                .forEach(ints -> System.out.println(Arrays.toString(ints)));
                 .filter(Objects::nonNull)
                 .forEach(image -> run(() -> ImageIO.write(image, "PNG", new File(file("/out/" + getName(builder) + "_" + count.getAndIncrement() + ".png")))));
@@ -135,12 +143,46 @@ class SectionIOTest {
                 .filter(pair -> pair.getValue() != null)
                 .map(pair -> new SimpleEntry<>(pair.getKey(), pair.getValue().getLayerRecords()))
                 .flatMap(pair -> Stream.of(pair.getValue()).map(record -> new SimpleEntry<>(pair.getKey(), record)))
-                .map(pair -> ImageMakerStudio.createImage(pair.getValue(), pair.getKey()))
+                .map(pair -> ImageMakerStudio.toImage(pair.getValue(), pair.getKey()))
                 .forEach(image -> run(() -> ImageIO.write(image, "PNG", new File(file("/out/" + getName(builder) + "_" + count.getAndIncrement() + ".png")))));
     }
 
     private String getName(StringBuilder builder) {
         return builder.substring(builder.lastIndexOf("\\") + 1, builder.lastIndexOf("."));
+    }
+
+    @Test
+    void writingASimpleImage() throws IOException {
+        BufferedImage image = new BufferedImage(10, 20, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < image.getHeight(); i++)
+            for (int j = 0; j < image.getWidth(); j++)
+                image.setRGB(j, i, ((i + j) / 2) % 2 == 0 ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
+        ImageIO.write(image, "PNG", new File(file("/out/writingASimpleImage.png")));
+        ImageMakerStudio.fromImage(image).write(put("/writingASimpleImage.psd"));
+        new PSDFileReader(put("/writingASimpleImage.psd"));
+    }
+
+    @Test
+    void writingABilayeredImage() throws IOException {
+        BufferedImage layer1 = new BufferedImage(10, 20, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < layer1.getHeight(); i++)
+            for (int j = 0; j < layer1.getWidth(); j++)
+                layer1.setRGB(j, i, ((i + j) / 2) % 2 == 0 ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
+        BufferedImage layer2 = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+        for (int i = 0; i < layer2.getHeight(); i++)
+            for (int j = 0; j < layer2.getWidth(); j++)
+                layer2.setRGB(j, i, new Color(i * 1f / layer2.getHeight(), (layer2.getHeight() - i) * 1f / layer2.getHeight(), j * 1f / layer2.getWidth(), (layer2.getWidth() - j) * 1f / layer2.getWidth()).getRGB());
+
+        LayerRecord layerRecord1 = LayerRecord.newDefaultRecord(0, 0, "BGHI", layer1);
+        LayerRecord layerRecord2 = LayerRecord.newDefaultRecord(0, 5, "REDT", layer2);
+
+        ImageIO.write(layer1, "PNG", new File(file("/out/writingABilayeredImage_l1.png")));
+        ImageIO.write(layer2, "PNG", new File(file("/out/writingABilayeredImage_2.png")));
+
+        PSDFileReader reader = ImageMakerStudio.fromImage(layer1);
+        reader.getLayerAndMaskData().setLayerInfo(new LayerInfo(true, new LayerRecord[]{layerRecord1, layerRecord2}));
+        reader.write(put("/writingASimpleImage.psd"));
+        new PSDFileReader(put("/writingASimpleImage.psd"));
     }
 
     @Test

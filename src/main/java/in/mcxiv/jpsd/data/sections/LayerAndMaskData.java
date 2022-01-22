@@ -34,6 +34,10 @@ public class LayerAndMaskData extends DataObject {
         return layerInfo;
     }
 
+    public void setLayerInfo(LayerInfo layerInfo) {
+        this.layerInfo = layerInfo;
+    }
+
     public GlobalLayerMaskInfo getGlobalLayerMaskInfo() {
         return globalLayerMaskInfo;
     }

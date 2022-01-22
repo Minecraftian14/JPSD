@@ -7,11 +7,18 @@ import java.util.Arrays;
 
 public class LayerBlendingRanges extends DataObject {
 
+    public static final LayerBlendingRanges DEFAULT;
+
+    static {
+        Blend blend = new Blend((short) 0, (short) -1, (short) 0, (short) -1);
+        DEFAULT = new LayerBlendingRanges(blend, new Blend[]{blend, blend, blend, blend});
+    }
+
     public static class Blend {
         private Range source;
         private Range destination;
 
-        public Blend(short blackSource,short whiteSource,short blackDestination,short whiteDestination ) {
+        public Blend(short blackSource, short whiteSource, short blackDestination, short whiteDestination) {
             this.source = new Range(blackSource, whiteSource);
             this.destination = new Range(blackDestination, whiteDestination);
         }
