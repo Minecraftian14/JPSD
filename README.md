@@ -33,7 +33,7 @@ ImageMakerStudio
 
 ## Writing a PSD file with multiple layers
 
-```
+```js
 BufferedImage layer1 = ...
 BufferedImage layer2 = ...
 
