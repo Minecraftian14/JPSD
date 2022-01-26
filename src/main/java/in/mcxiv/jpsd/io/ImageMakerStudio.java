@@ -61,6 +61,12 @@ public class ImageMakerStudio {
                         shorts[i][j] = (short) data[shorts[i].length * i + j];
                 break;
             case T:
+//                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_INT, hasAlpha, false).createBufferedImage(w, h);
+//                int[][] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getBankData();
+//                for (int i = 0; i < ints.length; i++)
+//                    for (int j = 0; j < ints[i].length; j++)
+//                        ints[i][j] = data[ints[i].length * i + j];
+
                 BufferedImage out = new BufferedImage(fhd.getWidth(), fhd.getHeight(), BufferedImage.TYPE_INT_RGB);
                 int s = fhd.getHeight() * fhd.getWidth();
                 for (int x = 0; x < fhd.getWidth(); x++) {
@@ -177,9 +183,6 @@ public class ImageMakerStudio {
         }
         return image;
     }
-
-
-
 
 
 }

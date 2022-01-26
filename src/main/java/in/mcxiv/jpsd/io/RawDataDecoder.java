@@ -147,7 +147,7 @@ public class RawDataDecoder {
                 break;
             case T:
                 for (int i = 0; i < data.length; i++)
-                    data[i] = 0xffffffff - data[i];
+                    data[i] = 0xffff_ffff - data[i];
                 break;
         }
     }

@@ -1,7 +1,15 @@
 plugins {
     id 'java'
+//    id 'maven'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+sourceCompatibility = 1.8 // java 8
+targetCompatibility = 1.8
 
 group 'in.mcxiv.jpsd'
 version '0.1'
@@ -11,11 +19,23 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'com.twelvemonkeys.imageio:imageio:3.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
 test {
     useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    manifest {
+        attributes 'Implementation-Title': 'JPSD',
+                'Implementation-Version': version
+    }
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+artifacts {
+    archives sourcesJar
 }
