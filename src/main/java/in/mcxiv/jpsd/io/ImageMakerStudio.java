@@ -108,9 +108,9 @@ public class ImageMakerStudio {
         ColorModeData colorModeData = new ColorModeData();
 
         List<ImageResourceBlock> blocks = new ArrayList<>();
-        blocks.add(new ResolutionRBlock(ImageResourceID.Resolution, "", 0, 299.99942f, ResolutionRBlock.ResUnit.PxPerInch, ResolutionRBlock.Unit.Inches, 299.99942f, ResolutionRBlock.ResUnit.PxPerInch, ResolutionRBlock.Unit.Inches));
-        blocks.add(new GridAndGuidesRBlock(ImageResourceID.GridAndGuides, "", 0, 1, 576, 576, null));
-        blocks.add(new VersionInfoRBlock(ImageResourceID.VersionInfo, "", 0, 1, true, "JPSD", "JPSD", 1));
+        blocks.add(new ResolutionRBlock(ImageResourceID.Resolution, "", -1, 299.99942f, ResolutionRBlock.ResUnit.PxPerInch, ResolutionRBlock.Unit.Inches, 299.99942f, ResolutionRBlock.ResUnit.PxPerInch, ResolutionRBlock.Unit.Inches));
+        blocks.add(new GridAndGuidesRBlock(ImageResourceID.GridAndGuides, "", -1, 1, 576, 576, null));
+        blocks.add(new VersionInfoRBlock(ImageResourceID.VersionInfo, "", -1, 1, true, "JPSD", "JPSD", 1));
 
         ImageResourcesData imageResourcesData = new ImageResourcesData(blocks.toArray(new ImageResourceBlock[0]));
 

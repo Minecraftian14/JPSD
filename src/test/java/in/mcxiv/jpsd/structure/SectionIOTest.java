@@ -69,13 +69,13 @@ class SectionIOTest {
     @Test
     void reading() throws IOException {
 
-        FileImageInputStream in = get(resources[4]);
+        FileImageInputStream in = get(resources[3]);
 
         System.out.println("in.available() = " + in.length());
 
         DataReader reader = new DataReader(in);
 
-        PSDFileReader.unknownBytesStrategy.action = PSDFileReader.UnknownBytesStrategy.Action.Skip;
+        PSDFileReader.unknownBytesStrategy.action = PSDFileReader.UnknownBytesStrategy.Action.ExcludeData;
 
         FileHeaderData fhd = SectionIO.FILE_HEADER_SECTION.read(reader);
         pj(fhd.toString());

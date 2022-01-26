@@ -79,9 +79,9 @@ public class LayerRecord extends DataObject {
         return newDefaultRecord(topLefX, topLefY, topLefX + image.getWidth(), topLefY + image.getHeight(), layerName, image);
     }
 
-    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, int botRhtX, int botRightY, String layerName, BufferedImage image) {
+    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image) {
         return new LayerRecord(
-                new Rectangle(topLefY, topLefX, botRightY, botRhtX),
+                new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
                 createDefaultChannelInfo(image),
                 BlendingMode.norm,
                 (byte) -1,
@@ -97,6 +97,21 @@ public class LayerRecord extends DataObject {
         );
     }
 
+    /**
+     * A Layer Record is a collection of data representing a single layer in PS.
+     *
+     * @param content              A Rectangle defining the position of this Layer's contents. The origin is kept at Top-Left corner of the background layer.
+     * @param info                 An array of channel information, each element representing one color component.
+     * @param blendingMode         The way how an image blends with lower layers. Check out all the possible blends in {@link BlendingMode}.
+     * @param opacity              A layer specific record of transparency.
+     * @param clipping             Default value is {@link Clipping}.Base. //TODO
+     * @param layerRecordInfoFlag  A BitDataEntry containing few bits of information regarding {@link LayerRecordInfoFlag}.
+     * @param filler               This probably is just a filler to make bytes even.
+     * @param layerMaskData        Information regarding how masks are placed on the layer.
+     * @param layerBlendingRanges  Default value is {@link LayerBlendingRanges}.DEFAULT. //TODO
+     * @param layerName            Name of this layer.
+     * @param additionalLayerInfos Additional layer information blocks. Refer subclasses of {@link AdditionalLayerInfo}.
+     */
     public LayerRecord(Rectangle content, ChannelInfo[] info, BlendingMode blendingMode, byte opacity, Clipping clipping, LayerRecordInfoFlag layerRecordInfoFlag, byte filler, LayerMaskData layerMaskData, LayerBlendingRanges layerBlendingRanges, String layerName, AdditionalLayerInfo[] additionalLayerInfos) {
         this.content = content;
         this.info = info;
