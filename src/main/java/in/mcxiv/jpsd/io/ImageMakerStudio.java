@@ -117,12 +117,12 @@ public class ImageMakerStudio {
         LayerAndMaskData layerAndMaskData = new LayerAndMaskData(null, null, new AdditionalLayerInfo[0]);
 
         int data[] = new int[width * height * channels];
-        boolean success = true;
+//        boolean success = true;
 
         if (sampleModel instanceof SinglePixelPackedSampleModel) {
-            SinglePixelPackedSampleModel spsm = ((SinglePixelPackedSampleModel) sampleModel);
-            DataBuffer dataBuffer = image.getRaster().getDataBuffer();
-            int buf[] = new int[channels];
+//            SinglePixelPackedSampleModel spsm = ((SinglePixelPackedSampleModel) sampleModel);
+//            DataBuffer dataBuffer = image.getRaster().getDataBuffer();
+//            int buf[] = new int[channels];
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
 //                    spsm.getPixel(i, j, buf, dataBuffer);
@@ -158,7 +158,7 @@ public class ImageMakerStudio {
                             data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = ints[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
                 break;
             case O:
-                success = false;
+                throw new UnsupportedOperationException();
         }
 
         ImageData imageData = new ImageData(data);
