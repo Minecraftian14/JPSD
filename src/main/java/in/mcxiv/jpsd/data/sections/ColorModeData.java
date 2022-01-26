@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 public class ColorModeData extends DataObject {
 
-    private int length;
     private byte[] data;
 
     /**
@@ -26,17 +25,21 @@ public class ColorModeData extends DataObject {
         if (data == null) data = new byte[0];
         if (data.length != length)
             throw new IllegalArgumentException("Data byte's length(" + data.length + ") and the given length(" + length + ") should be same! And don't ask why!!");
-        this.length = length;
         this.data = data;
         this.hasData = length != 0;
     }
 
     public int getLength() {
-        return length;
+        return data.length;
     }
 
     public byte[] getData() {
         return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+        this.hasData = data.length!=0;
     }
 
     public boolean hasData() {
@@ -46,7 +49,7 @@ public class ColorModeData extends DataObject {
     @Override
     public String toString() {
         return "ColorModeData{" +
-                "length=" + length +
+                "length=" + data.length +
                 ", data=" + Arrays.toString(data) +
                 ", hasData=" + hasData +
                 '}';

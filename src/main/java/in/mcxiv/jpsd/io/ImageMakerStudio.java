@@ -14,11 +14,12 @@ import in.mcxiv.jpsd.data.resource.types.ResolutionRBlock;
 import in.mcxiv.jpsd.data.resource.types.VersionInfoRBlock;
 import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.data.file.DepthEntry;
+import in.mcxiv.jpsd.io.Utility.FunctionII;
+import in.mcxiv.jpsd.io.Utility.Map2Dto1D;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,21 +48,21 @@ public class ImageMakerStudio {
         BufferedImage image;
         switch (depth) { //@formatter:off
             case E:
-                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_BYTE, hasAlpha, false).createBufferedImage(w, h);
+                image = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
                 byte[][] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < bytes.length; i++)
                     for (int j = 0; j < bytes[i].length; j++)
                         bytes[i][j] = (byte) data[bytes[i].length * i + j];
                 break;
             case S:
-                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_USHORT, hasAlpha, false).createBufferedImage(w, h);
+                image = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
                 short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < shorts.length; i++)
                     for (int j = 0; j < shorts[i].length; j++)
                         shorts[i][j] = (short) data[shorts[i].length * i + j];
                 break;
             case T:
-//                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_INT, hasAlpha, false).createBufferedImage(w, h);
+//                image = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
 //                int[][] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getBankData();
 //                for (int i = 0; i < ints.length; i++)
 //                    for (int j = 0; j < ints[i].length; j++)
@@ -96,8 +97,13 @@ public class ImageMakerStudio {
         short channels = 3;
         int width = image.getWidth();
         int height = image.getHeight();
+        DepthEntry depth = DepthEntry.of(image);
+        ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+        SampleModel sampleModel = image.getSampleModel();
+        Map2Dto1D indexMap = Utility.getIndexMap(sampleModel);
+        FunctionII componentMap = Utility.getComponentMap(image);
 
-        FileHeaderData fhd = new FileHeaderData(FileVersion.PSD, channels, height, width, DepthEntry.E.getValue(), ColorMode.RGB.getValue());
+        FileHeaderData fhd = new FileHeaderData(FileVersion.PSD, channels, height, width, depth.getValue(), ColorMode.RGB.getValue());
 
         ColorModeData colorModeData = new ColorModeData();
 
@@ -111,13 +117,48 @@ public class ImageMakerStudio {
         LayerAndMaskData layerAndMaskData = new LayerAndMaskData(null, null, new AdditionalLayerInfo[0]);
 
         int data[] = new int[width * height * channels];
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++) {
-                Color c = new Color(image.getRGB(i, j));
-                data[j * width + i] = c.getRed();
-                data[j * width + i + width * height] = c.getGreen();
-                data[j * width + i + 2 * width * height] = c.getBlue();
+
+        if (sampleModel instanceof SinglePixelPackedSampleModel) {
+            SinglePixelPackedSampleModel spsm = ((SinglePixelPackedSampleModel) sampleModel);
+            DataBuffer dataBuffer = image.getRaster().getDataBuffer();
+            int buf[] = new int[channels];
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+//                    spsm.getPixel(i, j, buf, dataBuffer);
+//                    for (int c = 0; c < channels; c++)
+//                        data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = buf[c];
+                    Color c = new Color(image.getRGB(i, j));
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 0)] = c.getRed();
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 1)] = c.getGreen();
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 2)] = c.getBlue();
+                }
             }
+        } else switch (depth) {
+            case E:
+                byte[] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                        for (int c = 0; c < channels; c++)
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = bytes[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
+                break;
+            case S:
+                short[] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                        for (int c = 0; c < channels; c++)
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
+                                    shorts[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
+                break;
+            case T:
+                int[] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                        for (int c = 0; c < channels; c++)
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = ints[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
+                break;
+            case O:
+                throw new UnsupportedOperationException();
+        }
 
         ImageData imageData = new ImageData(data);
 
@@ -147,14 +188,14 @@ public class ImageMakerStudio {
         BufferedImage image;
         switch (depth) { //@formatter:off
             case E:
-                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_BYTE, hasAlpha, false).createBufferedImage(w, h);
+                image = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
                 byte[][] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < bytes.length; i++)
                     for (int j = 0; j < bytes[i].length; j++)
                         bytes[i][j] = (byte) data[i][j]; // data[bytes[i].length * i + j];
                 break;
             case S:
-                image = createBanded(cs, bankIndices, bandOffsets, DataBuffer.TYPE_USHORT, hasAlpha, false).createBufferedImage(w, h);
+                image = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
                 short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < shorts.length; i++)
                     for (int j = 0; j < shorts[i].length; j++)

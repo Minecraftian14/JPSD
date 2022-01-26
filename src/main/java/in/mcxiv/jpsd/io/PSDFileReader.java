@@ -254,6 +254,8 @@ public class PSDFileReader {
         return imageData;
     }
 
+
+
     public void write(ImageOutputStream output) throws IOException {
         DataWriter writer = new DataWriter(output);
 

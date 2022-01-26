@@ -33,6 +33,7 @@ class SectionIOTest {
             "/2x2_Green.psd",
             "/2x2_Yellow_(Reg+Green).psd",
             "/2x2_Yellow_over_2x4_Red_centered_(2_layers).psd",
+            "/IUGFCJCFUJG.psd",
             "/test_files/custom.psd",
             "/test_files/10x11.psb",
     };
@@ -68,7 +69,7 @@ class SectionIOTest {
     @Test
     void reading() throws IOException {
 
-        FileImageInputStream in = get(resources[3]);
+        FileImageInputStream in = get(resources[4]);
 
         System.out.println("in.available() = " + in.length());
 
@@ -156,19 +157,22 @@ class SectionIOTest {
         BufferedImage image = new BufferedImage(10, 20, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < image.getHeight(); i++)
             for (int j = 0; j < image.getWidth(); j++)
-                image.setRGB(j, i, ((i + j) / 2) % 2 == 0 ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
+                image.setRGB(j, i, new Color(i * 1f / image.getHeight(), (image.getHeight() - i) * 1f / image.getHeight(), j * 1f / image.getWidth(), (image.getWidth() - j) * 1f / image.getWidth()).getRGB());
         ImageIO.write(image, "PNG", new File(file("/out/writingASimpleImage.png")));
-        ImageMakerStudio.fromImage(image).write(put("/writingASimpleImage.psd"));
+        PSDFileReader reader = ImageMakerStudio.fromImage(image);
+//        reader.getColorModeData().setData(new byte[]{104, 100, 114, 116, 0, 0, 0, 3, 62, 107, -123, 31, 0, 0, 0, 2, 0, 0, 0, 8, 0, 68, 0, 101, 0, 102, 0, 97, 0, 117, 0, 108, 0, 116, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, -1, 0, -1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 65, -128, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 63, -128, 0, 0, 104, 100, 114, 97, 0, 0, 0, 6, 0, 0, 0, 0, 65, -96, 0, 0, 65, -16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, -128, 0, 0, 0, 0, 0, 0, 0, 0});
+        pj(reader.toString());
+        reader.write(put("/writingASimpleImage.psd"));
         new PSDFileReader(put("/writingASimpleImage.psd"));
     }
 
     @Test
     void writingABilayeredImage() throws IOException {
-        BufferedImage layer1 = new BufferedImage(10, 20, BufferedImage.TYPE_INT_RGB);
+        BufferedImage layer1 = new BufferedImage(10, 20, BufferedImage.TYPE_USHORT_555_RGB);
         for (int i = 0; i < layer1.getHeight(); i++)
             for (int j = 0; j < layer1.getWidth(); j++)
                 layer1.setRGB(j, i, ((i + j) / 2) % 2 == 0 ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
-        BufferedImage layer2 = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage layer2 = new BufferedImage(10, 10, BufferedImage.TYPE_4BYTE_ABGR);
         for (int i = 0; i < layer2.getHeight(); i++)
             for (int j = 0; j < layer2.getWidth(); j++)
                 layer2.setRGB(j, i, new Color(i * 1f / layer2.getHeight(), (layer2.getHeight() - i) * 1f / layer2.getHeight(), j * 1f / layer2.getWidth(), (layer2.getWidth() - j) * 1f / layer2.getWidth()).getRGB());
@@ -181,8 +185,8 @@ class SectionIOTest {
 
         PSDFileReader reader = ImageMakerStudio.fromImage(layer1);
         reader.getLayerAndMaskData().setLayerInfo(new LayerInfo(true, new LayerRecord[]{layerRecord1, layerRecord2}));
-        reader.write(put("/writingASimpleImage.psd"));
-        new PSDFileReader(put("/writingASimpleImage.psd"));
+        reader.write(put("/writingABilayeredImage.psd"));
+        new PSDFileReader(put("/writingABilayeredImage.psd"));
     }
 
     @Test

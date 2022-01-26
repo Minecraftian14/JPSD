@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 public class LayerRecord extends DataObject {
 
@@ -41,11 +42,21 @@ public class LayerRecord extends DataObject {
     private AdditionalLayerInfo[] additionalLayerInfos;
 
     public static byte[] extractChannel(int dta, BufferedImage image) {
+        if (!(image.getRaster().getDataBuffer() instanceof DataBufferInt)) return __extractChannelBackup(dta, image);
         int offset = dta * 8, mask = 255 << offset;
         int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         byte[] chl = new byte[data.length];
         for (int i = 0; i < chl.length; i++)
             chl[i] = (byte) ((data[i] & mask) >> offset);
+        return chl;
+    }
+
+    private static byte[] __extractChannelBackup(int dta, BufferedImage image) {
+        int offset = dta * 8, mask = 255 << offset;
+        byte[] chl = new byte[image.getWidth() * image.getHeight()];
+        for (int i = 0; i < image.getWidth(); i++)
+            for (int j = 0; j < image.getHeight(); j++)
+                chl[i + j * image.getWidth()] = (byte) ((image.getRGB(i, j) & mask) >> offset);
         return chl;
     }
 
