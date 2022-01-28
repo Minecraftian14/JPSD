@@ -42,7 +42,7 @@
     layerRecord.setMask(mask);
 ```
 
-## Writing a PSD file
+### Writing a PSD file
 
 ```js
     BufferedImage image = ...;
@@ -53,7 +53,7 @@
     document.writeTo(destination);    
 ```
 
-## Writing a PSD file with multiple layers
+### Writing a PSD file with multiple layers
 
 ```js
     // composite, layer1, layer2, layer3 are BufferedImage 
