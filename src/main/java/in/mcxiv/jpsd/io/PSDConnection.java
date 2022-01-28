@@ -4,15 +4,16 @@ import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.sections.ImageDataIO;
 
+import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import static in.mcxiv.jpsd.io.PSDFileReader.UnknownBytesStrategy.Action.Skip;
+import static in.mcxiv.jpsd.io.PSDConnection.UnknownBytesStrategy.Action.Skip;
 
-public class PSDFileReader {
+public class PSDConnection {
 
     private static final PrintStream nullStream = new PrintStream(new OutputStream() {
         private volatile boolean closed;
@@ -134,7 +135,7 @@ public class PSDFileReader {
     private LayerAndMaskData layerAndMaskData;
     private ImageData imageData;
 
-    public PSDFileReader(FileHeaderData fileHeaderData, ColorModeData colorModeData, ImageResourcesData imageResourcesData, LayerAndMaskData layerAndMaskData, ImageData imageData) {
+    public PSDConnection(FileHeaderData fileHeaderData, ColorModeData colorModeData, ImageResourcesData imageResourcesData, LayerAndMaskData layerAndMaskData, ImageData imageData) {
         this.fileHeaderData = fileHeaderData;
         this.colorModeData = colorModeData;
         this.imageResourcesData = imageResourcesData;
@@ -142,15 +143,15 @@ public class PSDFileReader {
         this.imageData = imageData;
     }
 
-    public PSDFileReader(ImageInputStream input) throws IOException {
+    public PSDConnection(ImageInputStream input) throws IOException {
         this(input, true);
     }
 
-    public PSDFileReader(ImageInputStream input, boolean readNow) throws IOException {
+    public PSDConnection(ImageInputStream input, boolean readNow) throws IOException {
         this(input, readNow, true);
     }
 
-    public PSDFileReader(ImageInputStream input, boolean readNow, boolean readResources) throws IOException {
+    public PSDConnection(ImageInputStream input, boolean readNow, boolean readResources) throws IOException {
         reader = new DataReader(input);
         this.readResources = readResources;
 
@@ -241,9 +242,14 @@ public class PSDFileReader {
         return layerAndMaskData;
     }
 
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
+    }
+
     public ImageData getImageData() {
         getLayerAndMaskData();
         if (imageData == null) {
+            if(reader==null)return null;
             try {
                 SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fileHeaderData);
                 imageData = IMAGE_DATA_IO.read(reader);
@@ -253,8 +259,6 @@ public class PSDFileReader {
         }
         return imageData;
     }
-
-
 
     public void write(ImageOutputStream output) throws IOException {
         DataWriter writer = new DataWriter(output);

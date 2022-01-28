@@ -4,7 +4,7 @@ import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
     public FileHeaderData read(DataReader reader) throws IOException {
 
         //@formatter:off
-                          reader.verifySignature       (PSDFileReader.FILE_SIGNATURE_8BPS);
+                          reader.verifySignature       (PSDConnection.FILE_SIGNATURE_8BPS);
         int   version   = reader.verifyShortVersion    (FileVersion.PSD.getValue(), FileVersion.PSB.getValue());
                           reader.verifyZeros           (6);
         short channels  = reader.stream.readShort      ();
@@ -54,7 +54,7 @@ public class FileHeaderSectionIO extends SectionIO<FileHeaderData> {
 
         //@formatter:off
 
-        writer.sign               (PSDFileReader.FILE_SIGNATURE_8BPS);
+        writer.sign               (PSDConnection.FILE_SIGNATURE_8BPS);
         writer.stream.writeShort  (data.getVersion().getValue());
         writer.fillZeros          (6);
         writer.stream.writeShort  (data.getNumberOfChannels());

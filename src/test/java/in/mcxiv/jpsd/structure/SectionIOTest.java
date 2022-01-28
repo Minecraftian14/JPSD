@@ -1,13 +1,19 @@
 package in.mcxiv.jpsd.structure;
 
-import in.mcxiv.jpsd.data.common.Rectangle;
+import in.mcxiv.jpsd.PSDDocument;
+import in.mcxiv.jpsd.data.common.ImageMeta;
+import in.mcxiv.jpsd.data.file.ColorMode;
+import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
+import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
 import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.ImageMakerStudio;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
+import in.mcxiv.jpsd.io.RawDataDecoder;
 import in.mcxiv.jpsd.structure.sections.ImageDataIO;
+import open.OpenSimplexNoise;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -17,6 +23,7 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,31 +33,35 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-class SectionIOTest {
+public class githSectionIOTest {
 
-    static String[] resources = {
-            "/2x2_Red.psd",
-            "/2x2_Green.psd",
-            "/2x2_Yellow_(Reg+Green).psd",
-            "/2x2_Yellow_over_2x4_Red_centered_(2_layers).psd",
-            "/IUGFCJCFUJG.psd",
-            "/test_files/custom.psd",
-            "/test_files/10x11.psb",
+    public static String[] resources = {
+            /*0*/ "/2x2_Red.psd",
+            /*1*/ "/2x2_Green.psd",
+            /*2*/ "/2x2_Yellow_(Reg+Green).psd",
+            /*3*/ "/2x2_Yellow_over_2x4_Red_centered_(2_layers).psd",
+            /*4*/ "/custom rgb depth8.psd",
+            /*5*/ "/custom rgb depth16.psd",
+            /*6*/ "/custom rgb depth32.psd",
+            /*7*/ "/IUGFCJCFUJG.psd",
+            /*8*/ "/ImageWithMask.psd",
+            /*9*/ "/test_files/custom.psd",
+            /*10*/ "/test_files/10x11.psb",
     };
 
-    static FileImageInputStream get(String res) throws IOException {
+    public static FileImageInputStream get(String res) throws IOException {
         return new FileImageInputStream(new File(System.getProperty("user.dir") + "/src/test/test_data" + res));
     }
 
-    static FileImageOutputStream put(String res) throws IOException {
+    public static FileImageOutputStream put(String res) throws IOException {
         return new FileImageOutputStream(new File(System.getProperty("user.dir") + "/src/test/test_data/out" + res));
     }
 
-    static FileImageInputStream get(Path res) throws IOException {
+    public static FileImageInputStream get(Path res) throws IOException {
         return new FileImageInputStream(res.toFile());
     }
 
-    static String file(String resnm) {
+    public static String file(String resnm) {
         String s = System.getProperty("user.dir") + "/src/test/test_data" + resnm;
         System.err.println(s);
         return s;
@@ -58,7 +69,7 @@ class SectionIOTest {
 
     @BeforeAll
     static void beforeAll() {
-        PSDFileReader.setDebuggingMode(true);
+        PSDConnection.setDebuggingMode(true);
     }
 
     @Test
@@ -68,36 +79,9 @@ class SectionIOTest {
 
     @Test
     void reading() throws IOException {
-
-        FileImageInputStream in = get(resources[3]);
-
-        System.out.println("in.available() = " + in.length());
-
-        DataReader reader = new DataReader(in);
-
-        PSDFileReader.unknownBytesStrategy.action = PSDFileReader.UnknownBytesStrategy.Action.ExcludeData;
-
-        FileHeaderData fhd = SectionIO.FILE_HEADER_SECTION.read(reader);
-        pj(fhd.toString());
-
-        ColorModeData cmd = SectionIO.COLOR_MODE_DATA_SECTION.read(reader);
-        pj(cmd.toString());
-
-        ImageResourcesData ird = SectionIO.IMAGE_RESOURCES_DATA_SECTION.read(reader);
-        pj(ird.toString());
-
-        LayerAndMaskData lmd;
-        if (fhd.getVersion().isLarge())
-            lmd = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSB.read(reader);
-        else lmd = SectionIO.LAYER_AND_MASK_DATA_SECTION_PSD.read(reader);
-        pj(lmd.toString());
-
-        SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fhd);
-        ImageData id = IMAGE_DATA_IO.read(reader);
-        pj(id.toString());
-
-        System.out.println("reader.getPosition() = " + reader.stream.getStreamPosition());
-
+        FileImageInputStream in = get(resources[8]);
+        PSDConnection con = new PSDConnection(in);
+        pj(con.toString());
     }
 
     @Test
@@ -114,7 +98,7 @@ class SectionIOTest {
                     return get(() -> get(path));
                 })
                 .filter(Objects::nonNull)
-                .map(iis -> get(() -> new PSDFileReader(iis)))
+                .map(iis -> get(() -> new PSDConnection(iis)))
                 .filter(Objects::nonNull)
                 .map(psdFileReader -> get(() -> ImageMakerStudio.toImage(psdFileReader)))
 //                .forEach(ints -> System.out.println(Arrays.toString(ints)));
@@ -136,7 +120,7 @@ class SectionIOTest {
                     return get(() -> get(path));
                 })
                 .filter(Objects::nonNull)
-                .map(iis -> get(() -> new PSDFileReader(iis)))
+                .map(iis -> get(() -> new PSDConnection(iis)))
                 .filter(Objects::nonNull)
                 .map(psdFileReader -> new SimpleEntry<>(psdFileReader, psdFileReader.getLayerAndMaskData()))
 //                .forEach(System.out::println);
@@ -146,6 +130,24 @@ class SectionIOTest {
                 .flatMap(pair -> Stream.of(pair.getValue()).map(record -> new SimpleEntry<>(pair.getKey(), record)))
                 .map(pair -> ImageMakerStudio.toImage(pair.getValue(), pair.getKey()))
                 .forEach(image -> run(() -> ImageIO.write(image, "PNG", new File(file("/out/" + getName(builder) + "_" + count.getAndIncrement() + ".png")))));
+    }
+
+    @Test
+    void readingMaskData() throws IOException {
+
+        FileImageInputStream in = get(resources[8]);
+        PSDConnection con = new PSDConnection(in);
+
+        LayerRecord layerRecord = con.getLayerAndMaskData().getLayerInfo().getLayerRecords()[1];
+
+        int w = layerRecord.getWidth();
+        int h = layerRecord.getHeight();
+        ImageMeta meta = new ImageMeta(w, h, con.getFileHeaderData().isLarge(), ColorMode.RGB, 1, con.getFileHeaderData().getDepthEntry());
+        for (ChannelInfo channelInfo : layerRecord.getChannelInfo())
+            System.out.printf("%30s : %d\n", channelInfo.getId().toString(), RawDataDecoder.decode(channelInfo.getData().getCompression(), channelInfo.getData().getData(), meta).length);
+
+        ImageIO.write(ImageMakerStudio.toImageMask(layerRecord, con), "PNG", new File(file("/out/ImageWithMask_TheMask.png")));
+
     }
 
     private String getName(StringBuilder builder) {
@@ -159,11 +161,11 @@ class SectionIOTest {
             for (int j = 0; j < image.getWidth(); j++)
                 image.setRGB(j, i, new Color(i * 1f / image.getHeight(), (image.getHeight() - i) * 1f / image.getHeight(), j * 1f / image.getWidth(), (image.getWidth() - j) * 1f / image.getWidth()).getRGB());
         ImageIO.write(image, "PNG", new File(file("/out/writingASimpleImage.png")));
-        PSDFileReader reader = ImageMakerStudio.fromImage(image);
+        PSDConnection reader = ImageMakerStudio.fromImage(image);
 //        reader.getColorModeData().setData(new byte[]{104, 100, 114, 116, 0, 0, 0, 3, 62, 107, -123, 31, 0, 0, 0, 2, 0, 0, 0, 8, 0, 68, 0, 101, 0, 102, 0, 97, 0, 117, 0, 108, 0, 116, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, -1, 0, -1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 65, -128, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 63, -128, 0, 0, 104, 100, 114, 97, 0, 0, 0, 6, 0, 0, 0, 0, 65, -96, 0, 0, 65, -16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, -128, 0, 0, 0, 0, 0, 0, 0, 0});
         pj(reader.toString());
         reader.write(put("/writingASimpleImage.psd"));
-        new PSDFileReader(put("/writingASimpleImage.psd"));
+        new PSDConnection(put("/writingASimpleImage.psd"));
     }
 
     @Test
@@ -177,79 +179,18 @@ class SectionIOTest {
             for (int j = 0; j < layer2.getWidth(); j++)
                 layer2.setRGB(j, i, new Color(i * 1f / layer2.getHeight(), (layer2.getHeight() - i) * 1f / layer2.getHeight(), j * 1f / layer2.getWidth(), (layer2.getWidth() - j) * 1f / layer2.getWidth()).getRGB());
 
-        LayerRecord layerRecord1 = LayerRecord.newDefaultRecord(0, 0, "BGHI", layer1);
-        LayerRecord layerRecord2 = LayerRecord.newDefaultRecord(0, 5, "REDT", layer2);
+        LayerRecord layerRecord1 = new LayerRecord(0, 0, "BGHI", layer1);
+        LayerRecord layerRecord2 = new LayerRecord(0, 5, "REDT", layer2);
 
         ImageIO.write(layer1, "PNG", new File(file("/out/writingABilayeredImage_l1.png")));
         ImageIO.write(layer2, "PNG", new File(file("/out/writingABilayeredImage_2.png")));
 
-        PSDFileReader reader = ImageMakerStudio.fromImage(layer1);
+        PSDConnection reader = ImageMakerStudio.fromImage(layer1);
         reader.getLayerAndMaskData().setLayerInfo(new LayerInfo(true, new LayerRecord[]{layerRecord1, layerRecord2}));
         reader.write(put("/writingABilayeredImage.psd"));
-        new PSDFileReader(put("/writingABilayeredImage.psd"));
+        new PSDConnection(put("/writingABilayeredImage.psd"));
     }
 
-    @Test
-    void writing() {
-/*
-
-        InputStream in = FileHeaderSectionIOTest.class.getResourceAsStream("/2x2_Yellow_(Reg+Green).psd");
-        DataReader reader = new DataReader(in);
-
-        FileHeaderData fhd = null;
-        try {
-            fhd = SectionIO.FILE_HEADER_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ColorModeData cmd = null;
-        try {
-            cmd = SectionIO.COLOR_MODE_DATA_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImageResourcesData ird = null;
-        try {
-            ird = SectionIO.IMAGE_RESOURCES_DATA_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DataWriter writer = new DataWriter(out);
-
-        SectionIO.FILE_HEADER_SECTION.write(writer, fhd);
-        SectionIO.COLOR_MODE_DATA_SECTION.write(writer, cmd);
-        SectionIO.IMAGE_RESOURCES_DATA_SECTION.write(writer, ird);
-
-        in = new ByteArrayInputStream(out.toByteArray());
-        reader = new DataReader(in);
-
-        FileHeaderData fhd2 = null;
-        try {
-            fhd2 = SectionIO.FILE_HEADER_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ColorModeData cmd2 = null;
-        try {
-            cmd2 = SectionIO.COLOR_MODE_DATA_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImageResourcesData ird2 = null;
-        try {
-            ird2 = SectionIO.IMAGE_RESOURCES_DATA_SECTION.read(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Assertions.assertEquals(fhd.toString(), fhd2.toString());
-        Assertions.assertEquals(cmd.toString(), cmd2.toString());
-        Assertions.assertEquals(ird.toString(), ird2.toString());
-*/
-
-    }
 
     public static void pj(String str) {
         char[] chars = str.toCharArray();
@@ -302,6 +243,33 @@ class SectionIOTest {
 
     public interface DangerousRunnable {
         void run() throws Throwable;
+    }
+
+    private static final double scl = 20;
+    private static final int delta = 5;
+
+    static OpenSimplexNoise noise = new OpenSimplexNoise(new Random().nextLong());
+
+    private static int eval255(int x, int y, int z) {
+        return Math.max(0, Math.min(255, (int) (noise.eval(x / scl, y / scl, z / scl) * 128 + 128)));
+    }
+
+    public static BufferedImage getRandom(int w, int h, boolean alpha) {
+        noise = new OpenSimplexNoise(new Random().nextLong());
+        BufferedImage image = new BufferedImage(w, h, alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+        int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                int r = eval255(x, y, 0);
+                int g = eval255(x, y, delta);
+                int b = eval255(x, y, 2 * delta);
+                int a = alpha ? eval255(x, y, 3 * delta) : 255;
+                int i = y * w + x;
+                data[i] = (a << 24) | (r << 16) | (g << 8) | b;
+//                image.setRGB(x, y, new Color(0, g, b).getRGB());
+            }
+        }
+        return image;
     }
 
 }

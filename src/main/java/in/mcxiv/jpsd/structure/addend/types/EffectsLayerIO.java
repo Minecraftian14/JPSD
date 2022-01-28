@@ -8,7 +8,7 @@ import in.mcxiv.jpsd.data.common.BlendingMode;
 import in.mcxiv.jpsd.data.common.ColorComponents;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.common.ColorComponentsIO;
 
@@ -38,7 +38,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
 
         for (int i = 0; i < count; i++) {
 
-            reader.verifySignature(PSDFileReader.RESOURCE);
+            reader.verifySignature(PSDConnection.RESOURCE);
 
             EffectType type = EffectType.of(reader.readBytes(4, false));
 
@@ -67,7 +67,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     int             angle                 = reader.stream.readInt();
                     int             distance              = reader.stream.readInt();
                     ColorComponents colorComponents       = ColorComponentsIO.INSTANCE.read(reader);
-                    reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDConnection.RESOURCE);
                     BlendingMode    mode                  = BlendingMode.of(reader.readBytes(4, false));
                     boolean         effectEnabled         = reader.stream.readBoolean();
                     boolean         useAngleInAllEffects  = reader.stream.readBoolean();
@@ -90,7 +90,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     int             blur             = reader.stream.readInt();
                     int             intensity        = reader.stream.readInt(); // FIXME: um? float?
                     ColorComponents colorComponents  = ColorComponentsIO.INSTANCE.read(reader);
-                    reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDConnection.RESOURCE);
                     BlendingMode    blendingMode     = BlendingMode.of(reader.readBytes(4, false));
                     boolean         effectEnabled    = reader.stream.readBoolean();
                     boolean         opacityAsPercent = reader.stream.readBoolean();
@@ -116,9 +116,9 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     int             angle                 = reader.stream.readInt();
                     int             strength              = reader.stream.readInt();
                     int             blur                  = reader.stream.readInt();
-                    reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDConnection.RESOURCE);
                     BlendingMode    highlightBlendingMode = BlendingMode.of(reader.readBytes(4, false));;
-                    reader.verifySignature(PSDFileReader.RESOURCE);
+                    reader.verifySignature(PSDConnection.RESOURCE);
                     BlendingMode    shadowBlendingMode    = BlendingMode.of(reader.readBytes(4, false));;
                     ColorComponents highlightColor        = ColorComponentsIO.INSTANCE.read(reader);;
                     ColorComponents shadowColor           = ColorComponentsIO.INSTANCE.read(reader);;
@@ -143,7 +143,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     //@formatter:off
                     reader.stream.skipBytes(4);
                     int             versionS              = reader.stream.readInt();
-                                                            reader.verifySignature(PSDFileReader.RESOURCE);
+                                                            reader.verifySignature(PSDConnection.RESOURCE);
                     BlendingMode    mode                  = BlendingMode.of(reader.readBytes(4, false));
                     ColorComponents color                 = ColorComponentsIO.INSTANCE.read(reader);
                     byte            opacity               = reader.stream.readByte();
@@ -171,7 +171,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
 
         for (Effect effect : effectsLayer.getEffects()) {
 
-            writer.sign(PSDFileReader.RESOURCE);
+            writer.sign(PSDConnection.RESOURCE);
 
             writer.writeBytes(effect.getType().getValue());
 
@@ -198,7 +198,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     writer.stream              .writeInt     (shadow.getAngle());
                     writer.stream              .writeInt     (shadow.getDistance());
                     ColorComponentsIO.INSTANCE .write        (writer, shadow.getColorComponents());
-                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .sign         (PSDConnection.RESOURCE);
                     writer                     .writeBytes   (shadow.getMode().getValue());
                     writer.stream              .writeBoolean (shadow.isEnabled());
                     writer.stream              .writeBoolean (shadow.isUseAngleInAllEffects());
@@ -220,7 +220,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     writer.stream              .writeInt     (glow.getBlur());
                     writer.stream              .writeInt     (glow.getIntensity());
                     ColorComponentsIO.INSTANCE .write(writer, glow.getColorComponents());
-                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .sign         (PSDConnection.RESOURCE);
                     writer                     .writeEntry   (glow.getBlendingMode());
                     writer.stream              .writeBoolean (glow.isEnabled());
                     writer.stream              .writeBoolean (glow.isOpacityAsPercent());
@@ -240,9 +240,9 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     writer.stream              .writeInt     (bevel.getVersion());
                     writer.stream              .writeInt     (bevel.getAngle());
                     writer.stream              .writeInt     (bevel.getStrength());
-                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .sign         (PSDConnection.RESOURCE);
                     writer                     .writeEntry   (bevel.getHighlightBlendingMode());
-                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .sign         (PSDConnection.RESOURCE);
                     writer                     .writeEntry   (bevel.getShadowBlendingMode());
                     ColorComponentsIO.INSTANCE .write        (writer, bevel.getHighlightColor());
                     ColorComponentsIO.INSTANCE .write        (writer, bevel.getShadowColor());
@@ -265,7 +265,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     //@formatter:off
                     writer.stream              .writeInt     (34);
                     writer.stream              .writeInt     (solidFill.getVersion());
-                    writer                     .sign         (PSDFileReader.RESOURCE);
+                    writer                     .sign         (PSDConnection.RESOURCE);
                     writer                     .writeEntry   (solidFill.getMode());
                     ColorComponentsIO.INSTANCE .write(writer, solidFill.getColor());
                     writer.stream              .writeByte    (solidFill.getOpacity());

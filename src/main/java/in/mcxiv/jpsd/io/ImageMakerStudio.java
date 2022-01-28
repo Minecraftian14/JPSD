@@ -7,6 +7,7 @@ import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.ChannelImageData;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
+import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
 import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.types.GridAndGuidesRBlock;
@@ -17,17 +18,19 @@ import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.io.Utility.FunctionII;
 import in.mcxiv.jpsd.io.Utility.Map2Dto1D;
 
+import javax.imageio.ImageTypeSpecifier;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static javax.imageio.ImageTypeSpecifier.createBanded;
 
 public class ImageMakerStudio {
 
-    public static BufferedImage toImage(PSDFileReader file) {
+    public static BufferedImage toImage(PSDConnection file) {
         // We expect only RGB info present inside data.
         // TODO: support CMYK (by preprocessing the data into RGB)
 
@@ -90,7 +93,7 @@ public class ImageMakerStudio {
         return image;
     }
 
-    public static PSDFileReader fromImage(BufferedImage image) {
+    public static PSDConnection fromImage(BufferedImage image) {
         // We expect only RGB info present inside data.
         // TODO: support CMYK (by preprocessing the data into RGB)
 
@@ -98,10 +101,6 @@ public class ImageMakerStudio {
         int width = image.getWidth();
         int height = image.getHeight();
         DepthEntry depth = DepthEntry.of(image);
-        ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-        SampleModel sampleModel = image.getSampleModel();
-        Map2Dto1D indexMap = Utility.getIndexMap(sampleModel);
-        FunctionII componentMap = Utility.getComponentMap(image);
 
         FileHeaderData fhd = new FileHeaderData(FileVersion.PSD, channels, height, width, depth.getValue(), ColorMode.RGB.getValue());
 
@@ -114,59 +113,93 @@ public class ImageMakerStudio {
 
         ImageResourcesData imageResourcesData = new ImageResourcesData(blocks.toArray(new ImageResourceBlock[0]));
 
-        LayerAndMaskData layerAndMaskData = new LayerAndMaskData(null, null, new AdditionalLayerInfo[0]);
+        LayerAndMaskData layerAndMaskData = new LayerAndMaskData();
+
+        ImageData imageData = new ImageData(convertToRawData(image));
+
+        return new PSDConnection(fhd, colorModeData, imageResourcesData, layerAndMaskData, imageData);
+    }
+
+    public static int[] convertToRawData(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int channels = 3;
+
+        DepthEntry depth = DepthEntry.of(image);
+        ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+        SampleModel sampleModel = image.getSampleModel();
+        Map2Dto1D indexMap = Utility.getIndexMap(sampleModel);
+        FunctionII componentMap = Utility.getComponentMap(image);
 
         int data[] = new int[width * height * channels];
-//        boolean success = true;
+
+        /*if (true) {
+
+            boolean hasAlpha = image.getTransparency() != Transparency.OPAQUE;
+
+            int[] bankIndices = hasAlpha ? new int[]{0, 1, 2, 3} : new int[]{0, 1, 2};
+            int[] bandOffsets = hasAlpha ? new int[4] : new int[3];
+
+            BufferedImage buffer = createBanded(cs, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(width, height);
+            Graphics2D graphics = buffer.createGraphics();
+            graphics.drawImage(image, 0, 0, null);
+            graphics.dispose();
+
+            image = buffer;
+        }*/
 
         if (sampleModel instanceof SinglePixelPackedSampleModel) {
-//            SinglePixelPackedSampleModel spsm = ((SinglePixelPackedSampleModel) sampleModel);
-//            DataBuffer dataBuffer = image.getRaster().getDataBuffer();
-//            int buf[] = new int[channels];
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-//                    spsm.getPixel(i, j, buf, dataBuffer);
-//                    for (int c = 0; c < channels; c++)
-//                        data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = buf[c];
                     Color c = new Color(image.getRGB(i, j));
                     data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 0)] = c.getRed();
                     data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 1)] = c.getGreen();
                     data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 2)] = c.getBlue();
                 }
             }
-        } else switch (depth) {
+        } else if (sampleModel instanceof BandedSampleModel) switch (depth) {
             case E:
-                byte[] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-                for (int i = 0; i < width; i++)
-                    for (int j = 0; j < height; j++)
-                        for (int c = 0; c < channels; c++)
-                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = bytes[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
-                break;
-            case S:
-                short[] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
+                byte[][] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                         for (int c = 0; c < channels; c++)
                             data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
-                                    shorts[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
+                                    bytes[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
                 break;
-            case T:
-                int[] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+            case S:
+                short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                         for (int c = 0; c < channels; c++)
-                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] = ints[indexMap.map(width, i, height, j, channels, componentMap.map(c))];
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
+                                    shorts[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
+                break;
+            case T:
+                int[][] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getBankData();
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                        for (int c = 0; c < channels; c++)
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
+                                    ints[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
                 break;
             case O:
                 throw new UnsupportedOperationException();
         }
 
-        ImageData imageData = new ImageData(data);
-
-        return new PSDFileReader(fhd, colorModeData, imageResourcesData, layerAndMaskData, imageData);
+        return data;
     }
 
-    public static BufferedImage toImage(LayerRecord layer, PSDFileReader file) {
+    public static BufferedImage toImage(LayerRecord layer, PSDConnection file) {
+        return toImage(layer, file, false);
+    }
+
+    public static BufferedImage toImageMask(LayerRecord layer, PSDConnection file) {
+        if (layer.hasInfo(ChannelInfo.ChannelID.UserSuppliedMask))
+            return toImage(layer, file, true);
+        return null;
+    }
+
+    private static BufferedImage toImage(LayerRecord layer, PSDConnection file, boolean mask) {
 
         int w = layer.getWidth();
         int h = layer.getHeight();
@@ -181,7 +214,11 @@ public class ImageMakerStudio {
         int[][] data = new int[bandOffsets.length][];  // === hasAlpha ? new int[4][] : new int[3][];
         ImageMeta meta = new ImageMeta(w, h, file.getFileHeaderData().isLarge(), ColorMode.RGB, 1, depth);
 
-        for (int i = 0; i < data.length; i++) {
+        if (mask) {
+            ChannelImageData cid = layer.getInfo(ChannelInfo.ChannelID.UserSuppliedMask).getData();
+            int[] decode = RawDataDecoder.decode(cid.getCompression(), cid.getData(), meta);
+            Arrays.fill(data, decode);
+        } else for (int i = 0; i < data.length; i++) {
             ChannelImageData cid = layer.getInfo(i == 3 ? -1 : i).getData();
             data[i] = RawDataDecoder.decode(cid.getCompression(), cid.getData(), meta);
         }

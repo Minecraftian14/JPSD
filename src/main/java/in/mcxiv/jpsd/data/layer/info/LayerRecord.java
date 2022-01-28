@@ -1,5 +1,6 @@
 package in.mcxiv.jpsd.data.layer.info;
 
+import in.mcxiv.jpsd.PSDDocument;
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.addend.types.UnicodeLayerName;
@@ -7,20 +8,18 @@ import in.mcxiv.jpsd.data.common.BlendingMode;
 import in.mcxiv.jpsd.data.common.Clipping;
 import in.mcxiv.jpsd.data.common.Compression;
 import in.mcxiv.jpsd.data.common.Rectangle;
-import in.mcxiv.jpsd.data.file.ColorMode;
 import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
 import in.mcxiv.jpsd.data.layer.info.record.LayerBlendingRanges;
 import in.mcxiv.jpsd.data.layer.info.record.LayerMaskData;
 import in.mcxiv.jpsd.data.layer.info.record.LayerRecordInfoFlag;
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
-import in.mcxiv.jpsd.data.sections.ImageData;
+import in.mcxiv.jpsd.io.ImageMakerStudio;
+import in.mcxiv.jpsd.io.PSDConnection;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 public class LayerRecord extends DataObject {
 
@@ -30,7 +29,7 @@ public class LayerRecord extends DataObject {
      * where (0, 0) as point -> top-left point of base layer.
      */
     private Rectangle content;
-    private ChannelInfo[] info; // info.length == numberOfChannels
+    private ArrayList<ChannelInfo> info; // info.length == numberOfChannels
     private BlendingMode blendingMode;
     private byte opacity;
     private Clipping clipping;
@@ -39,7 +38,7 @@ public class LayerRecord extends DataObject {
     private LayerMaskData layerMaskData;
     private LayerBlendingRanges layerBlendingRanges;
     private String layerName;
-    private AdditionalLayerInfo[] additionalLayerInfos;
+    private ArrayList<AdditionalLayerInfo> additionalLayerInfos;
 
     public static byte[] extractChannel(int dta, BufferedImage image) {
         if (!(image.getRaster().getDataBuffer() instanceof DataBufferInt)) return __extractChannelBackup(dta, image);
@@ -60,29 +59,35 @@ public class LayerRecord extends DataObject {
         return chl;
     }
 
-    public static ChannelInfo[] createDefaultChannelInfo(BufferedImage image) {
-        if (image.getTransparency() == Transparency.OPAQUE)
-            return new ChannelInfo[]{
-                    new ChannelInfo(ChannelInfo.ChannelID.Channel1, new ChannelImageData(Compression.Raw_Data, extractChannel(2, image))),
-                    new ChannelInfo(ChannelInfo.ChannelID.Channel2, new ChannelImageData(Compression.Raw_Data, extractChannel(1, image))),
-                    new ChannelInfo(ChannelInfo.ChannelID.Channel3, new ChannelImageData(Compression.Raw_Data, extractChannel(0, image)))
-            };
-        return new ChannelInfo[]{
-                new ChannelInfo(ChannelInfo.ChannelID.TransparencyMask, new ChannelImageData(Compression.Raw_Data, extractChannel(3, image))),
-                new ChannelInfo(ChannelInfo.ChannelID.Channel1, new ChannelImageData(Compression.Raw_Data, extractChannel(2, image))),
-                new ChannelInfo(ChannelInfo.ChannelID.Channel2, new ChannelImageData(Compression.Raw_Data, extractChannel(1, image))),
-                new ChannelInfo(ChannelInfo.ChannelID.Channel3, new ChannelImageData(Compression.Raw_Data, extractChannel(0, image)))
-        };
+    public static ArrayList<ChannelInfo> createDefaultChannelInfo(BufferedImage image) {
+        ArrayList<ChannelInfo> list = new ArrayList<>();
+        list.add(new ChannelInfo(ChannelInfo.ChannelID.Channel1, new ChannelImageData(Compression.Raw_Data, extractChannel(2, image))));
+        list.add(new ChannelInfo(ChannelInfo.ChannelID.Channel2, new ChannelImageData(Compression.Raw_Data, extractChannel(1, image))));
+        list.add(new ChannelInfo(ChannelInfo.ChannelID.Channel3, new ChannelImageData(Compression.Raw_Data, extractChannel(0, image))));
+        return list;
     }
 
-    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, String layerName, BufferedImage image) {
-        return newDefaultRecord(topLefX, topLefY, topLefX + image.getWidth(), topLefY + image.getHeight(), layerName, image);
+    public static ArrayList<ChannelInfo> createChannelInfo(BufferedImage image) {
+        ArrayList<ChannelInfo> list = createDefaultChannelInfo(image);
+        if (image.getTransparency() == Transparency.OPAQUE) return list;
+        list.add(0, new ChannelInfo(ChannelInfo.ChannelID.TransparencyMask, new ChannelImageData(Compression.Raw_Data, extractChannel(3, image))));
+        return list;
     }
 
-    public static LayerRecord newDefaultRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image) {
-        return new LayerRecord(
+    public static ArrayList<ChannelInfo> createChannelInfo(BufferedImage image, BufferedImage mask) {
+        ArrayList<ChannelInfo> list = createChannelInfo(image);
+        list.add(new ChannelInfo(ChannelInfo.ChannelID.UserSuppliedMask, new ChannelImageData(Compression.Raw_Data, extractChannel(0, mask))));
+        return list;
+    }
+
+    public LayerRecord(int topLefX, int topLefY, String layerName, BufferedImage image) {
+        this(topLefX, topLefY, topLefX + image.getWidth(), topLefY + image.getHeight(), layerName, image);
+    }
+
+    public LayerRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image) {
+        this(
                 new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
-                createDefaultChannelInfo(image),
+                createChannelInfo(image),
                 BlendingMode.norm,
                 (byte) -1,
                 Clipping.Base,
@@ -91,9 +96,23 @@ public class LayerRecord extends DataObject {
                 null,
                 LayerBlendingRanges.DEFAULT,
                 layerName,
-                new AdditionalLayerInfo[]{
-                        new UnicodeLayerName(layerName, 0)
-                }
+                new ArrayList<>()
+        );
+    }
+
+    public LayerRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image, BufferedImage mask) {
+        this(
+                new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
+                createChannelInfo(image, mask),
+                BlendingMode.norm,
+                (byte) -1,
+                Clipping.Base,
+                new LayerRecordInfoFlag(LayerRecordInfoFlag.HAS_FOURTH),
+                (byte) 0,
+                null,
+                LayerBlendingRanges.DEFAULT,
+                layerName,
+                new ArrayList<>()
         );
     }
 
@@ -112,7 +131,7 @@ public class LayerRecord extends DataObject {
      * @param layerName            Name of this layer.
      * @param additionalLayerInfos Additional layer information blocks. Refer subclasses of {@link AdditionalLayerInfo}.
      */
-    public LayerRecord(Rectangle content, ChannelInfo[] info, BlendingMode blendingMode, byte opacity, Clipping clipping, LayerRecordInfoFlag layerRecordInfoFlag, byte filler, LayerMaskData layerMaskData, LayerBlendingRanges layerBlendingRanges, String layerName, AdditionalLayerInfo[] additionalLayerInfos) {
+    public LayerRecord(Rectangle content, ArrayList<ChannelInfo> info, BlendingMode blendingMode, byte opacity, Clipping clipping, LayerRecordInfoFlag layerRecordInfoFlag, byte filler, LayerMaskData layerMaskData, LayerBlendingRanges layerBlendingRanges, String layerName, ArrayList<AdditionalLayerInfo> additionalLayerInfos) {
         this.content = content;
         this.info = info;
         this.blendingMode = blendingMode;
@@ -124,18 +143,67 @@ public class LayerRecord extends DataObject {
         this.layerBlendingRanges = layerBlendingRanges;
         this.layerName = layerName;
         this.additionalLayerInfos = additionalLayerInfos;
+        this.additionalLayerInfos.add(new UnicodeLayerName(layerName, 0));
+    }
+
+    public void setContent(Rectangle content) {
+        this.content = content;
+    }
+
+    public void setBlendingMode(BlendingMode blendingMode) {
+        this.blendingMode = blendingMode;
+    }
+
+    public void setOpacity(int opacity) {
+        if (opacity < 0 || opacity > 100)
+            throw new IllegalArgumentException("Opacity must be in the range [0, 255]");
+        setOpacity((byte) (opacity * 255 / 100d));
+    }
+
+    public void setOpacity(float opacity) {
+        if (opacity < 0 || opacity > 1)
+            throw new IllegalArgumentException("Opacity must be in the range [0, 1]");
+        setOpacity((byte) (opacity * 255));
+    }
+
+    public void setOpacity(byte opacity) {
+        this.opacity = opacity;
+    }
+
+    public void setClipping(Clipping clipping) {
+        this.clipping = clipping;
+    }
+
+    public void setLayerRecordInfoFlag(LayerRecordInfoFlag layerRecordInfoFlag) {
+        this.layerRecordInfoFlag = layerRecordInfoFlag;
+    }
+
+    public void setFiller(byte filler) {
+        this.filler = filler;
+    }
+
+    public void setLayerMaskData(LayerMaskData layerMaskData) {
+        this.layerMaskData = layerMaskData;
+    }
+
+    public void setLayerBlendingRanges(LayerBlendingRanges layerBlendingRanges) {
+        this.layerBlendingRanges = layerBlendingRanges;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
     }
 
     public Rectangle getContent() {
         return content;
     }
 
-    public ChannelInfo[] getChannelInfo() {
+    public ArrayList<ChannelInfo> getChannelInfo() {
         return info;
     }
 
     public int getChannelsCount() {
-        return info.length;
+        return info.size();
     }
 
     /**
@@ -150,12 +218,19 @@ public class LayerRecord extends DataObject {
         return count;
     }
 
-    public ChannelInfo[] getInfo() {
+    public ArrayList<ChannelInfo> getInfo() {
         return info;
     }
 
     public ChannelInfo getInfo(int id) {
         return getInfo(ChannelInfo.ChannelID.of((short) id));
+    }
+
+    public boolean hasInfo(ChannelInfo.ChannelID id) {
+        for (ChannelInfo channelInfo : info)
+            if (channelInfo.getId().equals(id))
+                return true;
+        return false;
     }
 
     public ChannelInfo getInfo(ChannelInfo.ChannelID id) {
@@ -197,8 +272,45 @@ public class LayerRecord extends DataObject {
         return layerName;
     }
 
-    public AdditionalLayerInfo[] getAdditionalLayerInfos() {
+    public ArrayList<AdditionalLayerInfo> getAdditionalLayerInfos() {
         return additionalLayerInfos;
+    }
+
+    public BufferedImage getImage(PSDDocument document) {
+        return getImage(document.getConnection());
+    }
+
+    public BufferedImage getImage(PSDConnection connection) {
+        return ImageMakerStudio.toImage(this, connection);
+    }
+
+    public boolean hasMask() {
+        for (ChannelInfo channelInfo : info)
+            if (channelInfo.getId().equals(ChannelInfo.ChannelID.UserSuppliedMask))
+                return true;
+        return false;
+    }
+
+    public void setMask(BufferedImage mask) {
+        info.removeIf(channelInfo -> channelInfo.getId().equals(ChannelInfo.ChannelID.UserSuppliedMask));
+        info.add(new ChannelInfo(ChannelInfo.ChannelID.UserSuppliedMask, new ChannelImageData(Compression.Raw_Data, extractChannel(0, mask))));
+    }
+
+    public ChannelInfo getMask() {
+        for (ChannelInfo channelInfo : info)
+            if (channelInfo.getId().equals(ChannelInfo.ChannelID.UserSuppliedMask))
+                return channelInfo;
+        return null;
+    }
+
+    public BufferedImage getMaskImage(PSDDocument document) {
+        return getMaskImage(document.getConnection());
+    }
+
+    public BufferedImage getMaskImage(PSDConnection connection) {
+        if (hasMask())
+            return ImageMakerStudio.toImageMask(this, connection);
+        return null;
     }
 
     public int getWidth() {
@@ -217,7 +329,7 @@ public class LayerRecord extends DataObject {
     public String toString() {
         return "LayerRecord{" +
                 "content=" + content +
-                ", info=" + Arrays.toString(info) +
+                ", info=" + info +
                 ", blendingMode=" + blendingMode +
                 ", opacity=" + opacity +
                 ", clipping=" + clipping +
@@ -226,7 +338,7 @@ public class LayerRecord extends DataObject {
                 ", layerMaskData=" + layerMaskData +
                 ", layerBlendingRanges=" + layerBlendingRanges +
                 ", layerName='" + layerName + '\'' +
-                ", additionalLayerInfos=" + Arrays.toString(additionalLayerInfos) +
+                ", additionalLayerInfos=" + additionalLayerInfos +
                 '}';
     }
 }

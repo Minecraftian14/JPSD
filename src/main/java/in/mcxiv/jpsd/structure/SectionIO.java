@@ -9,7 +9,7 @@ import in.mcxiv.jpsd.data.sections.LayerAndMaskData;
 import in.mcxiv.jpsd.exceptions.BytesReadDidntMatchExpectedCount;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.sections.ColorModeSectionIO;
 import in.mcxiv.jpsd.structure.sections.FileHeaderSectionIO;
 import in.mcxiv.jpsd.structure.sections.ImageResourcesSectionIO;
@@ -25,7 +25,7 @@ public abstract class SectionIO<Data extends DataObject> {
     public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSD = new LayerAndMaskSectionIO(FileVersion.PSD);
     public static final SectionIO<LayerAndMaskData> LAYER_AND_MASK_DATA_SECTION_PSB = new LayerAndMaskSectionIO(FileVersion.PSB);
 
-    protected PSDFileReader.UnknownBytesStrategy unknownBytesStrategy = PSDFileReader.unknownBytesStrategy;
+    protected PSDConnection.UnknownBytesStrategy unknownBytesStrategy = PSDConnection.unknownBytesStrategy;
 
     private final boolean hasVariableLength;
 

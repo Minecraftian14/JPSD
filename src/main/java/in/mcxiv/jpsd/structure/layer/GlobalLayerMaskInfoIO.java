@@ -25,7 +25,7 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
         short opacity = reader.stream.readShort();
         GlobalLayerMaskInfo.Kind kind = GlobalLayerMaskInfo.Kind.of(reader.stream.readByte());
 
-        reader.stream.skipBytes(size - 17); // size:4 + color:10 + opacity:2 + kind:1 = 17
+        reader.stream.skipBytes(size - 13); // color:10 + opacity:2 + kind:1 = 13
 
         return new GlobalLayerMaskInfo((int) size, color, opacity, kind);
     }

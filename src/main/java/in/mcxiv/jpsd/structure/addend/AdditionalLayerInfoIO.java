@@ -9,7 +9,7 @@ import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.addend.types.EffectsLayerIO;
 import in.mcxiv.jpsd.structure.addend.types.TypeToolInfoIO;
@@ -42,17 +42,17 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
     @Override
     public AdditionalLayerInfo read(DataReader reader) throws IOException {
 
-        byte[] signature = reader.verifySignature(PSDFileReader.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL, PSDFileReader.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG,
-                PSDFileReader.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT, PSDFileReader.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT);
+        byte[] signature = reader.verifySignature(PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL, PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG,
+                PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT);
 
-        if (Arrays.equals(signature, PSDFileReader.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT))
+        if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT))
             reader.stream.skipBytes(1);
-        else if (Arrays.equals(signature, PSDFileReader.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT))
+        else if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT))
             reader.stream.skipBytes(2);
 
         AdditionalInfoKey key = AdditionalInfoKey.of(reader.readBytes(4, true));
 
-        boolean isLargeResource = Arrays.equals(PSDFileReader.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG, signature);
+        boolean isLargeResource = Arrays.equals(PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG, signature);
 
         if (version.isLarge()) {
             if (key.isLarge())
@@ -90,10 +90,10 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
                 // Is there any danger of \0 coming next?
                 if (unicodeName.length() != expectedLength) {
                     if (expectedLength - unicodeName.length() == 1) {
-                        PSDFileReader.out.println("Reading num bytes!");
+                        PSDConnection.out.println("Reading num bytes!");
                         reader.stream.skipBytes(2);
                     } else {
-                        new Exception("The heck?").printStackTrace(PSDFileReader.out);
+                        new Exception("The heck?").printStackTrace(PSDConnection.out);
                         reader.stream.skipBytes(2 * (expectedLength - unicodeName.length()));
                     }
                 }
@@ -121,7 +121,7 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
     @Override
     public void write(DataWriter writer, AdditionalLayerInfo alInfo) throws IOException {
 
-        writer.sign(PSDFileReader.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL);
+        writer.sign(PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL);
 
         writer.writeEntry(alInfo.getKey());
 

@@ -13,7 +13,14 @@ import java.util.Objects;
 public class FileHeaderData extends DataObject {
 
     public static class ChannelsEntry implements ShortEntry {
+
+        public static final ChannelsEntry CHANNELS_3 = new ChannelsEntry(3);
+
         private final short channels;
+
+        public ChannelsEntry(int channels) {
+            this((short) channels);
+        }
 
         public ChannelsEntry(short channels) {
             if (channels < 1 || channels > 56)
@@ -92,6 +99,20 @@ public class FileHeaderData extends DataObject {
     private DepthEntry depth;
     private ColorMode colorMode;
 
+    public FileHeaderData(int height, int width) {
+        this(height, width, DepthEntry.E);
+    }
+
+    public FileHeaderData(int height, int width, DepthEntry depth) {
+        this(
+                FileVersion.PSD, ChannelsEntry.CHANNELS_3,
+                new DimensionalEntry(FileVersion.PSD, height),
+                new DimensionalEntry(FileVersion.PSD, width),
+                depth,
+                ColorMode.RGB
+        );
+    }
+
     public FileHeaderData(int version, int channels, int height, int width, int depth, int colorMode) {
         this((short) version, (short) channels, height, width, (short) depth, (short) colorMode);
     }
@@ -121,6 +142,30 @@ public class FileHeaderData extends DataObject {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setVersion(FileVersion version) {
+        this.version = version;
+    }
+
+    public void setChannels(ChannelsEntry channels) {
+        this.channels = channels;
+    }
+
+    public void setHeight(DimensionalEntry height) {
+        this.height = height;
+    }
+
+    public void setWidth(DimensionalEntry width) {
+        this.width = width;
+    }
+
+    public void setDepth(DepthEntry depth) {
+        this.depth = depth;
+    }
+
+    public void setColorMode(ColorMode colorMode) {
+        this.colorMode = colorMode;
+    }
 
     public FileVersion getVersion() {
         return version;

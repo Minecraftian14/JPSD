@@ -2,34 +2,40 @@ package in.mcxiv.jpsd.data.sections;
 
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
+import in.mcxiv.jpsd.data.resource.ImageResourceID;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ImageResourcesData extends DataObject {
 
-    // Image Resources Block
-//  private int length;  // We don't keep it because actual data can change, and we need to calculate it again when writing.
-//  private byte[] blocksInBytes; // We'll just parse and keep the blocks instead!
+    private List<ImageResourceBlock> blocks = new ArrayList<>();
 
-    private ImageResourceBlock[] blocks;
+    public ImageResourcesData(ImageResourceBlock... blocks) {
+        this.blocks.addAll(Arrays.asList(blocks));
+    }
 
-    public ImageResourcesData(ImageResourceBlock[] blocks) {
-        if (blocks == null) blocks = new ImageResourceBlock[0];
-        this.blocks = blocks;
+    public void addBlock(ImageResourceBlock block) {
+        blocks.removeIf(b -> b.getIdentity().equals(block.getIdentity()));
+        blocks.add(block);
+    }
+
+    public ImageResourceBlock getBlock(ImageResourceID id) {
+        for (ImageResourceBlock block : blocks)
+            if (block.getIdentity().equals(id))
+                return block;
+        return null;
+    }
+
+    public ImageResourceBlock[] getBlocks() {
+        return blocks.toArray(new ImageResourceBlock[0]);
     }
 
     @Override
     public String toString() {
         return "ImageResourcesData{" +
-                "blocks=" + Arrays.toString(blocks) +
+                "blocks=" + Arrays.toString(getBlocks()) +
                 '}';
-    }
-
-    public void setBlocks(ImageResourceBlock[] blocks) {
-        this.blocks = blocks;
-    }
-
-    public ImageResourceBlock[] getBlocks() {
-        return blocks;
     }
 }

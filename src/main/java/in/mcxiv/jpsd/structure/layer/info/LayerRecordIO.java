@@ -12,7 +12,7 @@ import in.mcxiv.jpsd.data.layer.info.record.LayerMaskData;
 import in.mcxiv.jpsd.data.layer.info.record.LayerRecordInfoFlag;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.addend.AdditionalLayerInfoIO;
 import in.mcxiv.jpsd.structure.common.RectangleIO;
@@ -21,6 +21,7 @@ import in.mcxiv.jpsd.structure.layer.info.record.LayerMaskDataIO;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LayerRecordIO extends SectionIO<LayerRecord> {
@@ -53,7 +54,7 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
             info[i] = new ChannelInfo(id, infol);
         }
 
-        reader.verifySignature(PSDFileReader.RESOURCE);
+        reader.verifySignature(PSDConnection.RESOURCE);
         BlendingMode blendingMode = BlendingMode.of(reader.readBytes(4, true));
 
         byte opacity = reader.stream.readByte();
@@ -67,16 +68,15 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
         LayerMaskData layerMaskData = LAYER_MASK_DATA_IO.read(reader);
         LayerBlendingRanges layerBlendingRanges = LAYER_BLENDING_RANGES_IO.read(reader);
         String layerName = reader.readPascalStringPaddedTo4();
-        List<AdditionalLayerInfo> additionalLayerInfos = new ArrayList<>();
+        ArrayList<AdditionalLayerInfo> additionalLayerInfos = new ArrayList<>();
 
         while (reader.stream.getStreamPosition() < expectedEnd) {
             AdditionalLayerInfo additionalLayerInfo = ADDITIONAL_LAYER_RECORD_INFO.read(reader);
             if (additionalLayerInfo != null)
-//                System.err.println("Unknown Additional Layer Record Info found with key " + additionalLayerInfo.getKey());
                 additionalLayerInfos.add(additionalLayerInfo);
         }
 
-        return new LayerRecord(content, info, blendingMode, opacity, clipping, layerRecordInfoFlag, filler, layerMaskData, layerBlendingRanges, layerName, additionalLayerInfos.toArray(new AdditionalLayerInfo[0]));
+        return new LayerRecord(content, new ArrayList<>(Arrays.asList(info)), blendingMode, opacity, clipping, layerRecordInfoFlag, filler, layerMaskData, layerBlendingRanges, layerName, additionalLayerInfos);
     }
 
     @Override
@@ -84,18 +84,18 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
 
         RectangleIO.INSTANCE.write(writer, layerRecord.getContent());
 
-        ChannelInfo[] info = layerRecord.getInfo();
-        short numberOfChannels = (short) info.length;
+        ArrayList<ChannelInfo> info = layerRecord.getInfo();
+        short numberOfChannels = (short) info.size();
 
         writer.stream.writeShort(numberOfChannels);
 
         for (int i = 0; i < numberOfChannels; i++) {
-            writer.stream.writeShort(info[i].getId().getValue());
-            if (version.isLarge()) writer.stream.writeLong(info[i].getDataLength());
-            else writer.stream.writeInt((int) info[i].getDataLength());
+            writer.stream.writeShort(info.get(i).getId().getValue());
+            if (version.isLarge()) writer.stream.writeLong(info.get(i).getDataLength());
+            else writer.stream.writeInt((int) info.get(i).getDataLength());
         }
 
-        writer.sign(PSDFileReader.RESOURCE);
+        writer.sign(PSDConnection.RESOURCE);
         writer.writeEntry(layerRecord.getBlendingMode());
 
         writer.writeByte(layerRecord.getOpacity());
@@ -109,9 +109,8 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
         LAYER_BLENDING_RANGES_IO.write(buffer, layerRecord.getLayerBlendingRanges());
         buffer.writePascalStringPaddedTo4(layerRecord.getLayerName());
 
-        AdditionalLayerInfo[] alis = layerRecord.getAdditionalLayerInfos();
-        for (int i = 0, s = alis.length; i < s; i++) {
-            ADDITIONAL_LAYER_RECORD_INFO.write(buffer, alis[i]);
+        for (AdditionalLayerInfo alis : layerRecord.getAdditionalLayerInfos()) {
+            ADDITIONAL_LAYER_RECORD_INFO.write(buffer, alis);
         }
 
         byte[] bytes = buffer.toByteArray();

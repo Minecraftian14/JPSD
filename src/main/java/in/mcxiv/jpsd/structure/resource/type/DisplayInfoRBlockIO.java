@@ -5,7 +5,7 @@ import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.types.DisplayInfoRBlock;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.common.ColorComponentsIO;
 import in.mcxiv.jpsd.structure.resource.ImageResourceBlockIO;
 
@@ -25,12 +25,12 @@ public class DisplayInfoRBlockIO extends ImageResourceBlockIO<DisplayInfoRBlock>
         byte kind = reader.stream.readByte();
         reader.stream.skipBytes(1); // Pad to make even.
 
-        PSDFileReader.out.println("DisplayInfoRBlock is an untested part! There have been doubts about the number of bytes to be read and number of bytes to be skipped (padding).");
+        PSDConnection.out.println("DisplayInfoRBlock is an untested part! There have been doubts about the number of bytes to be read and number of bytes to be skipped (padding).");
         // FIXME: why skip bytes?
         long remainingBytes = blockLength - 14;
 
         if (remainingBytes > 0) {
-            PSDFileReader.out.println("Bytes skipped" + remainingBytes);
+            PSDConnection.out.println("Bytes skipped" + remainingBytes);
             reader.stream.skipBytes(remainingBytes);
         }
 

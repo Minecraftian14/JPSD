@@ -8,12 +8,11 @@ import in.mcxiv.jpsd.data.sections.ImageResourcesData;
 import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.io.PSDFileReader;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.resource.ImageResourceBlockIO;
 import in.mcxiv.jpsd.structure.resource.type.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
 
             // NOTE that now we are not reading the resource data section
             // We are reading the data which is generic/common to every resource data block inside this section.
-            reader.verifySignature(PSDFileReader.RESOURCE, PSDFileReader.RESOURCE_IMAGE_READY, PSDFileReader.RESOURCE_PHOTO_DELUXE, PSDFileReader.RESOURCE_LIGHT_ROOM, PSDFileReader.RESOURCE_DCSR);
+            reader.verifySignature(PSDConnection.RESOURCE, PSDConnection.RESOURCE_IMAGE_READY, PSDConnection.RESOURCE_PHOTO_DELUXE, PSDConnection.RESOURCE_LIGHT_ROOM, PSDConnection.RESOURCE_DCSR);
 
             short id_value = reader.stream.readShort();
             String pascalString = reader.readPascalStringEvenlyPadded();
@@ -234,7 +233,7 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
             }
             byte[] blockBytes = blockWriter.toByteArray();
 
-            allDataWriter.writeBytes(PSDFileReader.RESOURCE);
+            allDataWriter.writeBytes(PSDConnection.RESOURCE);
             allDataWriter.stream.writeShort(block.getIdentity().getIdentity());
             allDataWriter.writePascalStringEvenlyPadded(block.getPascalString());
             allDataWriter.stream.writeInt(blockBytes.length);
