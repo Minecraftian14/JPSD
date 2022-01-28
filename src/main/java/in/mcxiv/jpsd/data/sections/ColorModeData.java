@@ -3,8 +3,6 @@ package in.mcxiv.jpsd.data.sections;
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.file.ColorMode;
 
-import java.awt.image.DataBuffer;
-import java.awt.image.IndexColorModel;
 import java.util.Arrays;
 
 public class ColorModeData extends DataObject {
@@ -39,7 +37,7 @@ public class ColorModeData extends DataObject {
 
     public void setData(byte[] data) {
         this.data = data;
-        this.hasData = data.length!=0;
+        this.hasData = data.length != 0;
     }
 
     public boolean hasData() {

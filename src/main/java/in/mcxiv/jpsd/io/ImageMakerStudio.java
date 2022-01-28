@@ -1,8 +1,8 @@
 package in.mcxiv.jpsd.io;
 
-import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.common.ImageMeta;
 import in.mcxiv.jpsd.data.file.ColorMode;
+import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.ChannelImageData;
@@ -14,11 +14,9 @@ import in.mcxiv.jpsd.data.resource.types.GridAndGuidesRBlock;
 import in.mcxiv.jpsd.data.resource.types.ResolutionRBlock;
 import in.mcxiv.jpsd.data.resource.types.VersionInfoRBlock;
 import in.mcxiv.jpsd.data.sections.*;
-import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.io.Utility.FunctionII;
 import in.mcxiv.jpsd.io.Utility.Map2Dto1D;
 
-import javax.imageio.ImageTypeSpecifier;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;

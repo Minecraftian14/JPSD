@@ -15,7 +15,7 @@ public class BezierKnotRecord extends PathRecord {
         this.preceding_control = preceding_control;
         this.anchor = anchor;
         this.leaving_control = leaving_control;
-        if(!selector.isBezierKnot())
+        if (!selector.isBezierKnot())
             throw new IllegalArgumentException();
     }
 

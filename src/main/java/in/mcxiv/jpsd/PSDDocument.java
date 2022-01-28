@@ -4,7 +4,7 @@ import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.data.file.FileVersion;
-import in.mcxiv.jpsd.data.layer.LayerInfo;
+import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.types.GridAndGuidesRBlock;
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class PSDDocument {
 
@@ -158,15 +159,15 @@ public class PSDDocument {
     }
 
     /**
-     * Retrieve the LayerInfo instance.
+     * Retrieve information about the layers.
      * <p>
-     * This object contains a list of all the layers.
-     * Refer {@link LayerInfo#getLayers()}.
+     * This list contains information about all the layers.
+     * Refer {@link LayerRecord}.
      *
-     * @return the {@link LayerInfo} instance stored in {@link LayerAndMaskData}
+     * @return list of layers.
      */
-    public LayerInfo getLayersInfo() {
-        return connection.getLayerAndMaskData().justGetALayerInfo();
+    public ArrayList<LayerRecord> getLayers() {
+        return connection.getLayerAndMaskData().justGetALayerInfo().getLayers();
     }
 
     public void setCompositeImage(BufferedImage image) {
@@ -192,8 +193,8 @@ public class PSDDocument {
     }
 
     public void writeTo(ImageOutputStream stream) throws IOException {
-        if (getLayersInfo().getNumberOfLayers() != 0) {
-            BufferedImage image = getLayersInfo().getLayers().get(0).getImage(connection);
+        if (getLayers().size() != 0) {
+            BufferedImage image = getLayers().get(0).getImage(connection);
             if (image.getHeight() != connection.getFileHeaderData().getHeight() || image.getWidth() != connection.getFileHeaderData().getWidth())
                 throw new IllegalArgumentException("The first layer should have the same size as the file.");
             if (connection.getImageData() == null)

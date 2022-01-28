@@ -1,7 +1,7 @@
 package in.mcxiv.jpsd.structure.layer;
 
-import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.common.ColorComponents;
+import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
@@ -33,7 +33,7 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
     @Override
     public void write(DataWriter writer, GlobalLayerMaskInfo globalLayerMaskInfo) throws IOException {
 
-        if(globalLayerMaskInfo == null) {
+        if (globalLayerMaskInfo == null) {
             writer.stream.writeInt(0);
             return;
         }

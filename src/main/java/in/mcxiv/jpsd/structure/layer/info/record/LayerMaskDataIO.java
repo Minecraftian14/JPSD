@@ -1,10 +1,10 @@
 package in.mcxiv.jpsd.structure.layer.info.record;
 
+import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.data.layer.info.record.LayerMaskData;
 import in.mcxiv.jpsd.data.layer.info.record.mask.LayerMaskInfoFlag;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameter;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameterFlag;
-import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
@@ -79,7 +79,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
         buffer.stream.writeByte(layerMaskData.getDefaultColor());
         buffer.writeEntry(layerMaskData.getLayerMaskInfoFlag());
 
-        if(layerMaskData.getLayerMaskInfoFlag().has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
+        if (layerMaskData.getLayerMaskInfoFlag().has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
             buffer.writeEntry(layerMaskData.getMaskParameters());
             MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
         }

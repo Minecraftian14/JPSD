@@ -1,8 +1,6 @@
 package in.mcxiv.jpsd.exceptions;
 
 import java.io.IOException;
-import java.util.Formattable;
-import java.util.Formatter;
 
 public class BytesReadDidntMatchExpectedCount extends IOException {
 
@@ -17,6 +15,7 @@ public class BytesReadDidntMatchExpectedCount extends IOException {
     private static String getMessage(long expected, long actual) {
         if (actual > expected)
             return String.format("Read too many bytes! (Read %d bytes more than an expected of %d)", actual - expected, expected);
-        else return String.format("Read less bytes! (Read %d bytes less than an expected of %d)", expected - actual, expected);
+        else
+            return String.format("Read less bytes! (Read %d bytes less than an expected of %d)", expected - actual, expected);
     }
 }

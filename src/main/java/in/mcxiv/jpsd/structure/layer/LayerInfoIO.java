@@ -76,7 +76,7 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
     @Override
     public void write(DataWriter writer, LayerInfo layerInfo) throws IOException {
 
-        if (layerInfo == null || layerInfo.getNumberOfLayers()==0) {
+        if (layerInfo == null || layerInfo.getNumberOfLayers() == 0) {
             if (version.isLarge()) writer.stream.writeLong(0);
             else writer.stream.writeInt(0);
             return;

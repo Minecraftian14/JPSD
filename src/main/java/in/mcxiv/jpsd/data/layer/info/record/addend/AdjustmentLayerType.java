@@ -10,7 +10,7 @@ public enum AdjustmentLayerType implements BytesEntry {
     Pattern("PtFl"),
     Brightness_Contrast("brit"),
     Levels("levl"),
-    Curves("curv" ),
+    Curves("curv"),
     Exposure("expA"),
     Vibrance("vibA"),
     Old_Hue_Saturation("hue "),

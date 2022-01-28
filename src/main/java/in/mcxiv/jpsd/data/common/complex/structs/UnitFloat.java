@@ -1,7 +1,7 @@
 package in.mcxiv.jpsd.data.common.complex.structs;
 
-import in.mcxiv.jpsd.data.primitive.BytesEntry;
 import in.mcxiv.jpsd.data.common.complex.StructureType;
+import in.mcxiv.jpsd.data.primitive.BytesEntry;
 
 import java.nio.charset.StandardCharsets;
 

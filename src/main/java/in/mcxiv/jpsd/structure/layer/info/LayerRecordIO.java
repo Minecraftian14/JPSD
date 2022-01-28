@@ -22,7 +22,6 @@ import in.mcxiv.jpsd.structure.layer.info.record.LayerMaskDataIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LayerRecordIO extends SectionIO<LayerRecord> {
 

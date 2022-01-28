@@ -155,7 +155,7 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
 
             case UNICODE_LAYER_NAME_KEY:
                 UnicodeLayerName unicodeLayerName = (UnicodeLayerName) alInfo;
-                buffer.writeUnicodeString(unicodeLayerName.getName()+"\0");
+                buffer.writeUnicodeString(unicodeLayerName.getName() + "\0");
                 break;
         }
 

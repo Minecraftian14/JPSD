@@ -154,11 +154,11 @@ public class LayerRecord extends DataObject {
         this.blendingMode = blendingMode;
     }
 
-    public void setOpacity(int opacity) {
-        if (opacity < 0 || opacity > 100)
-            throw new IllegalArgumentException("Opacity must be in the range [0, 255]");
-        setOpacity((byte) (opacity * 255 / 100d));
-    }
+//    public void setOpacity(int opacity) {
+//        if (opacity < 0 || opacity > 100)
+//            throw new IllegalArgumentException("Opacity must be in the range [0, 255]");
+//        setOpacity((byte) (opacity * 255 / 100d));
+//    }
 
     public void setOpacity(float opacity) {
         if (opacity < 0 || opacity > 1)

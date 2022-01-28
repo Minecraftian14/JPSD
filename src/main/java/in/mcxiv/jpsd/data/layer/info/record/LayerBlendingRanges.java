@@ -1,7 +1,6 @@
 package in.mcxiv.jpsd.data.layer.info.record;
 
 import in.mcxiv.jpsd.data.DataObject;
-import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 
 import java.util.Arrays;
 

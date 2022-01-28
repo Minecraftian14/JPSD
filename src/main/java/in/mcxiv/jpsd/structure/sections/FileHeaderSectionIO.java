@@ -1,7 +1,7 @@
 package in.mcxiv.jpsd.structure.sections;
 
-import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.data.file.FileVersion;
+import in.mcxiv.jpsd.data.sections.FileHeaderData;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDConnection;

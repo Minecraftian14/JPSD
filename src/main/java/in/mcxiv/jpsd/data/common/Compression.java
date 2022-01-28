@@ -16,6 +16,6 @@ public enum Compression implements ShortEntry {
 
     @Override
     public String toString() {
-        return "Compression:"+name();
+        return "Compression:" + name();
     }
 }

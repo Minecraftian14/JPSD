@@ -67,7 +67,7 @@ public class RawDataDecoder {
                     // **It's not about bytes at the end on each line, but in the extreme end of the file.**
                     // That's why we skip just as many bytes as extra. (else it creates a funny RGB->BGR effects for first ~1000 pixels along with a translation-ish effect in x-axis.)
                     int spareBytes = rawBytes.length - data.length * depth.getBytes();
-                        PSDConnection.out.println("Spare bytes = " + spareBytes);
+                    PSDConnection.out.println("Spare bytes = " + spareBytes);
                     if (spareBytes > 0) {
                         rawData.stream.skipBytes(spareBytes);
                     } /*else {

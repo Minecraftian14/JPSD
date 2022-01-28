@@ -18,12 +18,10 @@
 ```js
     PSDDocument document = new PSDDocument(source);
     
-    LayerInfo layersInfo = document.getLayersInfo();
-    
-    ArrayList<LayerRecord> layers = layersInfo.getLayers();
+    ArrayList<LayerRecord> layers = document.getLayers();
     
     // Total number of layers
-    int nol = layersInfo.getNumberOfLayers();
+    int nol = layers.size();
     
     // Get first layer
     LayerRecord layerRecord = layers.get(0);
@@ -35,7 +33,7 @@
     layerRecord.setBlendingMode(BlendingMode.lite);
     
     // Set opacity
-    layerRecord.setOpacity(100);
+    layerRecord.setOpacity(1.0);
     
     // Set a mask
     BufferedImage mask = ...;
@@ -62,7 +60,7 @@
     PSDDocument document = new PSDDocument(height, width);
     document.setCompositeImage(composite);
     
-    LayerInfo layersInfo = document.getLayersInfo();
+    List<LayerRecord> layers = document.getLayers();
 
     // First two arguments are the offset from top left in pixels
     LayerRecord record1 = new LayerRecord(0, 0, "BackGround", layer1);
@@ -75,9 +73,9 @@
     record3.setOpacity((byte) 127);
 
     // Add the records to layer info
-    layersInfo.addLayer(record1);
-    layersInfo.addLayer(record2);
-    layersInfo.addLayer(record3);
+    layers.add(record1);
+    layers.add(record2);
+    layers.add(record3);
 
     document.writeTo(destination);
 ```

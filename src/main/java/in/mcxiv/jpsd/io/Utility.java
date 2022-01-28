@@ -11,6 +11,7 @@ public class Utility {
 
     /**
      * PSD always saves data in RGB, but the image can be BGR or something else too.
+     *
      * @return a mapper which always returns 0 for R, 1 for G and 2 for B given any image.
      */
     public static FunctionII getComponentMap(BufferedImage image) {

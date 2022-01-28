@@ -1,9 +1,6 @@
 package in.mcxiv.jpsd.data.layer.info.record.mask;
 
 import in.mcxiv.jpsd.data.DataObject;
-import in.mcxiv.jpsd.io.DataReader;
-
-import java.io.IOException;
 
 public class MaskParameter extends DataObject {
 
@@ -11,7 +8,6 @@ public class MaskParameter extends DataObject {
     private double userMaskFeather = -1;
     private byte vectorMaskDensity = -1;
     private double vectorMaskFeather = -1;
-
 
 
     public MaskParameter(byte userMaskDensity, double userMaskFeather, byte vectorMaskDensity, double vectorMaskFeather) {

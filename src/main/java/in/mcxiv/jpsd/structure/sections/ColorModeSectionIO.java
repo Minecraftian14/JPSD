@@ -9,10 +9,10 @@ import java.io.IOException;
 
 /**
  * Total bytes = 4 or 772 or 4+
- *
+ * <p>
  * 4 bytes Section size s= 0 if color mode is NOT indexed and duotone // The size of upcoming data.
  * s bytes Color data    = If indexed color mode length is 768 consisting of the color table in non interleaved order.
- *                    Else if duotone it contains the duotone specification. (undocumented)
+ * Else if duotone it contains the duotone specification. (undocumented)
  */
 public class ColorModeSectionIO extends SectionIO<ColorModeData> {
 
@@ -28,7 +28,7 @@ public class ColorModeSectionIO extends SectionIO<ColorModeData> {
 
         byte[] data = reader.readBytes(sectionLength, true);
 
-        checkBytesCount(sectionLength,mark,reader.stream.getStreamPosition());
+        checkBytesCount(sectionLength, mark, reader.stream.getStreamPosition());
 
         return new ColorModeData(sectionLength, data);
     }

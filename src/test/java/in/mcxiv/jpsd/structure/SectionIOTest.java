@@ -33,7 +33,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class githSectionIOTest {
+public class SectionIOTest {
 
     public static String[] resources = {
             /*0*/ "/2x2_Red.psd",

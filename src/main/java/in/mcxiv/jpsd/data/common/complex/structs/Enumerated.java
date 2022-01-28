@@ -2,7 +2,7 @@ package in.mcxiv.jpsd.data.common.complex.structs;
 
 import in.mcxiv.jpsd.data.common.complex.StructureType;
 
-public class Enumerated extends Structure{
+public class Enumerated extends Structure {
 
     private String name;
     private String classID;

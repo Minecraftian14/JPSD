@@ -18,7 +18,7 @@ public enum BlendingMode implements BytesEntry {
     }
 
     public static BlendingMode of(byte[] value) throws IllegalSignatureException {
-        return BytesEntry.of(value,values());
+        return BytesEntry.of(value, values());
     }
 
     @Override

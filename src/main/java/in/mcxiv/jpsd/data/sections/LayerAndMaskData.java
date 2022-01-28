@@ -6,9 +6,7 @@ import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
-import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.io.PSDConnection;
-import in.mcxiv.jpsd.structure.addend.AdditionalLayerInfoIO;
 
 import java.util.ArrayList;
 import java.util.Arrays;

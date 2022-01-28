@@ -1,10 +1,10 @@
 package in.mcxiv.jpsd.data.layer.info.record;
 
 import in.mcxiv.jpsd.data.DataObject;
+import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.data.layer.info.record.mask.LayerMaskInfoFlag;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameter;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameterFlag;
-import in.mcxiv.jpsd.data.common.Rectangle;
 
 // Can be sized 40, 24, or 4 bytes only.
 public class LayerMaskData extends DataObject {
@@ -46,7 +46,7 @@ public class LayerMaskData extends DataObject {
     }
 
     public MaskParameterFlag getMaskParameters() {
-        if(maskParameter == null) return null;
+        if (maskParameter == null) return null;
         return maskParameter.getMaskParameterFlag();
     }
 

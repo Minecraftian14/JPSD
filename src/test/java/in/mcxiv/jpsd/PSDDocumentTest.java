@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static in.mcxiv.jpsd.structure.SectionIOTest.*;
 
@@ -31,11 +32,10 @@ class PSDDocumentTest {
 
         ImageIO.write(document.getCompositeImage(), "PNG", file("testReadMultiLayerPSD_Composite.png"));
 
-        LayerInfo layersInfo = document.getLayersInfo();
-        ArrayList<LayerRecord> layers = layersInfo.getLayers();
+        ArrayList<LayerRecord> layers = document.getLayers();
 
         // Total number of layers
-        int nol = layersInfo.getNumberOfLayers();
+        int nol = layers.size();
 
         // Get first layer
         LayerRecord layerRecord = layers.get(0);
@@ -47,7 +47,7 @@ class PSDDocumentTest {
         layerRecord.setBlendingMode(BlendingMode.lite);
 
         // Set opacity
-        layerRecord.setOpacity(100);
+        layerRecord.setOpacity(1);
 
         // Set a mask
 //        layerRecord.setMask(mask);
@@ -65,9 +65,9 @@ class PSDDocumentTest {
 
         ImageIO.write(document.getCompositeImage(), "PNG", file("testReadMultiLayerWithMaskPSD_Composite.png"));
 
-        LayerInfo layersInfo = document.getLayersInfo();
+        ArrayList<LayerRecord> layers = document.getLayers();
 
-        for (LayerRecord layer : layersInfo.getLayers()) {
+        for (LayerRecord layer : layers) {
             ImageIO.write(layer.getImage(document), "PNG",
                     file(String.format("testReadMultiLayerWithMaskPSD_layer_%s.png", layer.getLayerName())));
             if (layer.hasMask())
@@ -81,8 +81,7 @@ class PSDDocumentTest {
         BufferedImage image = getRandom(150, 100, false);
         ImageIO.write(image, "PNG", file("testWriteSingleLayerPSD.png"));
 
-        PSDDocument document = new PSDDocument(100, 150);
-        document.setCompositeImage(image);
+        PSDDocument document = new PSDDocument(image);
 
         document.writeTo(put("/testWriteSingleLayerPSD.psd"));
     }
@@ -97,7 +96,7 @@ class PSDDocumentTest {
         ImageIO.write(layer3, "PNG", file("testWriteSingleLayerPSD_layer_3.png"));
 
         PSDDocument document = new PSDDocument(200, 300);
-        LayerInfo layersInfo = document.getLayersInfo();
+        List<LayerRecord> layers = document.getLayers();
 
         LayerRecord record1 = new LayerRecord(0, 0, "BackGround", layer1);
         LayerRecord record2 = new LayerRecord(50, 0, "Layer One", layer2);
@@ -107,9 +106,9 @@ class PSDDocumentTest {
         record3.setBlendingMode(BlendingMode.lite);
         record3.setOpacity((byte) 127);
 
-        layersInfo.addLayer(record1);
-        layersInfo.addLayer(record2);
-        layersInfo.addLayer(record3);
+        layers.add(record1);
+        layers.add(record2);
+        layers.add(record3);
 
         document.writeTo(put("/testWriteMultiLayerPSD.psd"));
     }
@@ -124,7 +123,7 @@ class PSDDocumentTest {
         ImageIO.write(mask, "PNG", file("testWriteMultiLayerWithMaskPSD_layer_2_mask.png"));
 
         PSDDocument document = new PSDDocument(200, 300);
-        LayerInfo layersInfo = document.getLayersInfo();
+        List<LayerRecord> layers = document.getLayers();
 
         LayerRecord record1 = new LayerRecord(0, 0, "BackGround", layer1);
         LayerRecord record2 = new LayerRecord(50, 0, "Layer One", layer2);
@@ -132,8 +131,8 @@ class PSDDocumentTest {
 
         record2.setBlendingMode(BlendingMode.dark);
 
-        layersInfo.addLayer(record1);
-        layersInfo.addLayer(record2);
+        layers.add(record1);
+        layers.add(record2);
 
         document.writeTo(put("/testWriteMultiLayerWithMaskPSD.psd"));
     }

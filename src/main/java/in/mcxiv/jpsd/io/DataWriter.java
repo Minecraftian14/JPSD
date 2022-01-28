@@ -89,7 +89,7 @@ public class DataWriter implements AutoCloseable, Closeable {
 
     public void fillToPadBy(int length, int multiple) throws IOException {
         int bytesWroteExtra = length % multiple;
-        if(bytesWroteExtra == 0)return;
+        if (bytesWroteExtra == 0) return;
         int bytesRequiredMoreToCompleteBlock = multiple - bytesWroteExtra;
         fillZeros(bytesRequiredMoreToCompleteBlock);
     }

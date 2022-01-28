@@ -4,8 +4,6 @@ import in.mcxiv.jpsd.data.resource.ImageResourceBlock;
 import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.sections.ImageData;
 
-import java.util.Arrays;
-
 public class RawImageRBlock extends ImageResourceBlock {
 
     private ImageData imageData;

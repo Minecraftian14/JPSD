@@ -22,7 +22,7 @@ public class LayerInfo extends DataObject {
 
     /**
      * Retrieve the list of all the layers.
-     *
+     * <p>
      * Every layer and its related data is stored in one {@link LayerRecord}.
      *
      * @return the list of all {@link LayerRecord}.

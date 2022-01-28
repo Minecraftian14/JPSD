@@ -4,7 +4,6 @@ import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameter;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameterFlag;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
-import in.mcxiv.jpsd.structure.SectionIO;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ public class MaskParameterIO {
         return new MaskParameter(userMaskDensity, userMaskFeather, vectorMaskDensity, vectorMaskFeather);
     }
 
-    public static void write(MaskParameterFlag maskParameters,DataWriter writer, MaskParameter maskParameter) throws IOException {
+    public static void write(MaskParameterFlag maskParameters, DataWriter writer, MaskParameter maskParameter) throws IOException {
         if (maskParameters.has(MaskParameterFlag.USER_MASK_DENSITY))
             writer.stream.writeByte(maskParameter.getUserMaskDensity());
 

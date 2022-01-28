@@ -17,7 +17,7 @@ public class TypeToolInfo extends AdditionalLayerInfo {
     private double[] transformInfo;
     // Font Info
     private short fontVersion;
-//  private short numberOfFaces;
+    //  private short numberOfFaces;
     private FontInfo[] fontInfos; // length == numberOfFaces
     // Style Info
 //  private short numberOfStyles;
@@ -30,7 +30,7 @@ public class TypeToolInfo extends AdditionalLayerInfo {
     private int verticalPlacement;
     private int selectionStart;
     private int selectionEnd;
-//  private short lineNumber;
+    //  private short lineNumber;
     private LineInfo[] lineInfos; // length == lineNumber
     // Color info
     private ColorComponents colorComponents;

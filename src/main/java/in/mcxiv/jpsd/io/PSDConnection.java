@@ -4,7 +4,6 @@ import in.mcxiv.jpsd.data.sections.*;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.sections.ImageDataIO;
 
-import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.io.IOException;
@@ -249,7 +248,7 @@ public class PSDConnection {
     public ImageData getImageData() {
         getLayerAndMaskData();
         if (imageData == null) {
-            if(reader==null)return null;
+            if (reader == null) return null;
             try {
                 SectionIO<ImageData> IMAGE_DATA_IO = new ImageDataIO(fileHeaderData);
                 imageData = IMAGE_DATA_IO.read(reader);
