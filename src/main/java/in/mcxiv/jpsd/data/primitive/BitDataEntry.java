@@ -8,6 +8,11 @@ public abstract class BitDataEntry implements ByteEntry {
         this.value = value;
     }
 
+    public void set(boolean value, byte b) {
+        if (value) add(b);
+        else remove(b);
+    }
+
     public void add(byte b) {
         this.value |= b;
     }

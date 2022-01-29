@@ -44,7 +44,7 @@ class PSDDocumentTest {
         BufferedImage image = layerRecord.getImage(document);
 
         // Change the blending mode
-        layerRecord.setBlendingMode(BlendingMode.lite);
+        layerRecord.setBlendingMode(BlendingMode.LIGHTEN);
 
         // Set opacity
         layerRecord.setOpacity(1);
@@ -102,8 +102,8 @@ class PSDDocumentTest {
         LayerRecord record2 = new LayerRecord(50, 0, "Layer One", layer2);
         LayerRecord record3 = new LayerRecord(100, 0, "Layer Two", layer3);
 
-        record2.setBlendingMode(BlendingMode.dark);
-        record3.setBlendingMode(BlendingMode.lite);
+        record2.setBlendingMode(BlendingMode.DARKEN);
+        record3.setBlendingMode(BlendingMode.LIGHTER_COLOR);
         record3.setOpacity((byte) 127);
 
         layers.add(record1);
@@ -129,7 +129,7 @@ class PSDDocumentTest {
         LayerRecord record2 = new LayerRecord(50, 0, "Layer One", layer2);
         record2.setMask(mask);
 
-        record2.setBlendingMode(BlendingMode.dark);
+        record2.setBlendingMode(BlendingMode.DARKER_COLOR);
 
         layers.add(record1);
         layers.add(record2);

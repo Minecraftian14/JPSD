@@ -12,6 +12,7 @@ import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
 import in.mcxiv.jpsd.data.layer.info.record.LayerBlendingRanges;
 import in.mcxiv.jpsd.data.layer.info.record.LayerMaskData;
 import in.mcxiv.jpsd.data.layer.info.record.LayerRecordInfoFlag;
+import in.mcxiv.jpsd.data.layer.info.record.mask.LayerMaskInfoFlag;
 import in.mcxiv.jpsd.io.ImageMakerStudio;
 import in.mcxiv.jpsd.io.PSDConnection;
 
@@ -88,7 +89,7 @@ public class LayerRecord extends DataObject {
         this(
                 new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
                 createChannelInfo(image),
-                BlendingMode.norm,
+                BlendingMode.NORMAL,
                 (byte) -1,
                 Clipping.Base,
                 new LayerRecordInfoFlag(LayerRecordInfoFlag.HAS_FOURTH),
@@ -104,7 +105,7 @@ public class LayerRecord extends DataObject {
         this(
                 new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
                 createChannelInfo(image, mask),
-                BlendingMode.norm,
+                BlendingMode.NORMAL,
                 (byte) -1,
                 Clipping.Base,
                 new LayerRecordInfoFlag(LayerRecordInfoFlag.HAS_FOURTH),
@@ -323,6 +324,22 @@ public class LayerRecord extends DataObject {
 
     public boolean hasAlpha() {
         return getColorChannelsCount() > 3;
+    }
+
+    public void setLayerVisible(boolean value) {
+        getLayerRecordInfoFlag().set(value, LayerRecordInfoFlag.VISIBLE);
+    }
+
+    public void setInvertMask(boolean value) {
+        getLayerMaskData().getLayerMaskInfoFlag().set(value, LayerMaskInfoFlag.INVERT_LAYER_MASK);
+    }
+
+    public void setMaskDisabled(boolean value) {
+        getLayerMaskData().getLayerMaskInfoFlag().set(value, LayerMaskInfoFlag.LAYER_MASK_DISABLED);
+    }
+
+    public void setMaskPositionRelativeToLayer(boolean value) {
+        getLayerMaskData().getLayerMaskInfoFlag().set(value, LayerMaskInfoFlag.POS_RELATIVE_TO_LAYER);
     }
 
     @Override

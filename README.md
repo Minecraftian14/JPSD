@@ -30,7 +30,7 @@
     BufferedImage image = layerRecord.getImage(document);
     
     // Change the blending mode
-    layerRecord.setBlendingMode(BlendingMode.lite);
+    layerRecord.setBlendingMode(BlendingMode.LIGHTEN);
     
     // Set opacity
     layerRecord.setOpacity(1.0);
@@ -38,6 +38,30 @@
     // Set a mask
     BufferedImage mask = ...;
     layerRecord.setMask(mask);
+```
+
+### Altering other Layer Properties
+
+```js
+    // To check if a layer has a mask
+    if(layerRecord.hasMask()) {
+        ...
+    }
+
+    // To change a layer's visibility
+    layerRecord.setLayerVisible(#boolean)
+
+    // To invert the effect of mask
+    layerRecord.setInvertMask(#boolean)
+
+    // To disable a mask
+    layerRecord.setMaskDisabled(#boolean)
+
+    // To change mask location behaviour
+    layerRecord.setMaskPositionRelativeToLayer(#boolean)
+    
+    // To change the bounds of mask
+    layerRecord.getLayerMaskData().setMaskEncloser(#Rectangle)
 ```
 
 ### Writing a PSD file
@@ -56,7 +80,7 @@
 ```js
     // composite, layer1, layer2, layer3 are BufferedImage 
 
-    // height and width of composite or layer1 should be same
+    // height and width of composite and layer1 should be same
     PSDDocument document = new PSDDocument(height, width);
     document.setCompositeImage(composite);
     
@@ -68,9 +92,9 @@
     LayerRecord record3 = new LayerRecord(100, 0, "Layer Two", layer3);
 
     // May change parameters as required
-    record2.setBlendingMode(BlendingMode.dark);
-    record3.setBlendingMode(BlendingMode.lite);
-    record3.setOpacity((byte) 127);
+    record2.setBlendingMode(BlendingMode.DARKER_COLOR);
+    record3.setBlendingMode(BlendingMode.LIGHTER_COLOR);
+    record3.setOpacity(0.5f);
 
     // Add the records to layer info
     layers.add(record1);

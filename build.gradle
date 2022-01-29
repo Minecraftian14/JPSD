@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-//    id 'maven'
 }
 
 java {
@@ -12,7 +11,7 @@ sourceCompatibility = 1.8 // java 8
 targetCompatibility = 1.8
 
 group 'in.mcxiv.jpsd'
-version '0.2'
+version '0.3.1'
 
 repositories {
     mavenCentral()
@@ -32,7 +31,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
         attributes 'Implementation-Title': 'JPSD',
                 'Implementation-Version': version
     }
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
