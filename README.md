@@ -1,6 +1,6 @@
 # JPSD
 
-[![](https://jitpack.io/v/Minecraftian14/JPSD.svg)](https://jitpack.io/#Minecraftian14/JPSD)
+[![](https://jitpack.io/v/in.mcxiv/JPSD.svg)](https://jitpack.io/#in.mcxiv/JPSD)
 
 
 ## Some quick example of using builtin methods  
@@ -103,3 +103,5 @@
 
     document.writeTo(destination);
 ```
+
+[![](https://jitpack.io/v/Minecraftian14/JPSD.svg)](https://jitpack.io/#Minecraftian14/JPSD)
