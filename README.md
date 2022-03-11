@@ -1,7 +1,7 @@
 # JPSD
 
 [![](https://jitpack.io/v/in.mcxiv/JPSD.svg)](https://jitpack.io/#in.mcxiv/JPSD)
-
+[![](https://img.shields.io/discord/872811194170347520?color=%237289da&logoColor=%23424549)](https://discord.gg/hZnHFGvU6W)
 
 ## Some quick example of using builtin methods  
 
