@@ -3,6 +3,7 @@ package in.mcxiv.jpsd.data.layer.info;
 import in.mcxiv.jpsd.PSDDocument;
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
+import in.mcxiv.jpsd.data.addend.types.LayerID;
 import in.mcxiv.jpsd.data.addend.types.UnicodeLayerName;
 import in.mcxiv.jpsd.data.common.BlendingMode;
 import in.mcxiv.jpsd.data.common.Clipping;
@@ -144,7 +145,10 @@ public class LayerRecord extends DataObject {
         this.layerBlendingRanges = layerBlendingRanges;
         this.layerName = layerName;
         this.additionalLayerInfos = additionalLayerInfos;
-        this.additionalLayerInfos.add(new UnicodeLayerName(layerName, 0));
+        if (this.additionalLayerInfos.stream().noneMatch(ali -> ali instanceof UnicodeLayerName))
+            this.additionalLayerInfos.add(new UnicodeLayerName(layerName, 0));
+        if (this.additionalLayerInfos.stream().noneMatch(ali -> ali instanceof LayerID))
+            this.additionalLayerInfos.add(new LayerID(5, 0));
     }
 
     public void setContent(Rectangle content) {
@@ -293,8 +297,21 @@ public class LayerRecord extends DataObject {
     }
 
     public void setMask(BufferedImage mask) {
+        setMask(mask, 0, 0);
+    }
+
+    public void setMask(BufferedImage mask, int x, int y) {
+        setMask(mask, new Rectangle(y, x, y + mask.getHeight(), x + mask.getWidth()));
+    }
+
+    public void setMask(BufferedImage mask, Rectangle maskEncloser) {
+        setMask(mask, new LayerMaskData(maskEncloser, (byte) -1, new LayerMaskInfoFlag((byte) 0), null));
+    }
+
+    public void setMask(BufferedImage mask, LayerMaskData layerMaskData) {
         info.removeIf(channelInfo -> channelInfo.getId().equals(ChannelInfo.ChannelID.UserSuppliedMask));
         info.add(new ChannelInfo(ChannelInfo.ChannelID.UserSuppliedMask, new ChannelImageData(Compression.Raw_Data, extractChannel(0, mask))));
+        setLayerMaskData(layerMaskData);
     }
 
     public ChannelInfo getMask() {
@@ -345,17 +362,17 @@ public class LayerRecord extends DataObject {
     @Override
     public String toString() {
         return "LayerRecord{" +
-                "content=" + content +
-                ", info=" + info +
-                ", blendingMode=" + blendingMode +
-                ", opacity=" + opacity +
-                ", clipping=" + clipping +
-                ", layerRecordInfoFlag=" + layerRecordInfoFlag +
-                ", filler=" + filler +
-                ", layerMaskData=" + layerMaskData +
-                ", layerBlendingRanges=" + layerBlendingRanges +
-                ", layerName='" + layerName + '\'' +
-                ", additionalLayerInfos=" + additionalLayerInfos +
-                '}';
+               "content=" + content +
+               ", info=" + info +
+               ", blendingMode=" + blendingMode +
+               ", opacity=" + opacity +
+               ", clipping=" + clipping +
+               ", layerRecordInfoFlag=" + layerRecordInfoFlag +
+               ", filler=" + filler +
+               ", layerMaskData=" + layerMaskData +
+               ", layerBlendingRanges=" + layerBlendingRanges +
+               ", layerName='" + layerName + '\'' +
+               ", additionalLayerInfos=" + additionalLayerInfos +
+               '}';
     }
 }

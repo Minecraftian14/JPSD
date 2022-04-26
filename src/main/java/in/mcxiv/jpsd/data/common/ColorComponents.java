@@ -19,6 +19,10 @@ public class ColorComponents extends DataObject {
         this.colorComponent4 = colorComponent4;
     }
 
+    public ColorComponents(ColorSpace colorSpace, int colorComponent1, int colorComponent2, int colorComponent3, int colorComponent4) {
+        this(colorSpace, (short) colorComponent1, (short) colorComponent2, (short) colorComponent3, (short) colorComponent4);
+    }
+
     public ColorSpace getColorSpace() {
         return colorSpace;
     }
@@ -62,12 +66,12 @@ public class ColorComponents extends DataObject {
     @Override
     public String toString() {
         return "ColorComponents{" +
-                "colorSpace=" + colorSpace +
-                ", colorComponent1=" + colorComponent1 +
-                ", colorComponent2=" + colorComponent2 +
-                ", colorComponent3=" + colorComponent3 +
-                ", colorComponent4=" + colorComponent4 +
-                '}';
+               "colorSpace=" + colorSpace +
+               ", colorComponent1=" + colorComponent1 +
+               ", colorComponent2=" + colorComponent2 +
+               ", colorComponent3=" + colorComponent3 +
+               ", colorComponent4=" + colorComponent4 +
+               '}';
     }
 
 }

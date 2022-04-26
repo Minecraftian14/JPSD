@@ -91,6 +91,10 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
         DataWriter buffer = new DataWriter();
 
         LAYER_INFO_IO.write(buffer, layerAndMaskData.getLayerInfo());
+
+        if(layerAndMaskData.doesAnyLayerContainAMask() && layerAndMaskData.getGlobalLayerMaskInfo() == null)
+            layerAndMaskData.createDefaultGlobalLayerMaskInfo();
+
         GLOBAL_LAYER_MASK_INFO_IO.write(buffer, layerAndMaskData.getGlobalLayerMaskInfo());
 
         // FIXME:

@@ -38,9 +38,10 @@ public class GlobalLayerMaskInfoIO extends SectionIO<GlobalLayerMaskInfo> {
             return;
         }
 
-        writer.stream.writeInt(13);
+        writer.stream.writeInt(16);
         ColorComponentsIO.INSTANCE.write(writer, globalLayerMaskInfo.getColor());
         writer.stream.writeShort(globalLayerMaskInfo.getOpacity());
         writer.writeEntry(globalLayerMaskInfo.getKind());
+        writer.fillZeros(3);
     }
 }

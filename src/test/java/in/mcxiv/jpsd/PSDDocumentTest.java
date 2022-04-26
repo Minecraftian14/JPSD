@@ -1,7 +1,6 @@
 package in.mcxiv.jpsd;
 
 import in.mcxiv.jpsd.data.common.BlendingMode;
-import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.structure.SectionIOTest;
 import org.junit.jupiter.api.Test;
@@ -95,7 +94,7 @@ class PSDDocumentTest {
         ImageIO.write(layer2, "PNG", file("testWriteSingleLayerPSD_layer_2.png"));
         ImageIO.write(layer3, "PNG", file("testWriteSingleLayerPSD_layer_3.png"));
 
-        PSDDocument document = new PSDDocument(200, 300);
+        PSDDocument document = new PSDDocument(300, 200);
         List<LayerRecord> layers = document.getLayers();
 
         LayerRecord record1 = new LayerRecord(0, 0, "BackGround", layer1);
@@ -122,7 +121,7 @@ class PSDDocumentTest {
         ImageIO.write(layer2, "PNG", file("testWriteMultiLayerWithMaskPSD_layer_2.png"));
         ImageIO.write(mask, "PNG", file("testWriteMultiLayerWithMaskPSD_layer_2_mask.png"));
 
-        PSDDocument document = new PSDDocument(200, 300);
+        PSDDocument document = new PSDDocument(300, 200);
         List<LayerRecord> layers = document.getLayers();
 
         LayerRecord record1 = new LayerRecord(0, 0, "BackGround", layer1);

@@ -1,0 +1,327 @@
+PSDDocument {
+  type=MULTI_LAYER
+  connection=PSDFileReader {
+    fileHeaderData=FileHeaderData {
+      version=PSD
+      channels=3
+      height=912
+      width=684
+      depth=8
+      colorMode=RGB
+    }
+    colorModeData=ColorModeData {
+      length=0
+      data= {
+        
+      }
+      hasData=false
+    }
+    imageResourcesData=ImageResourcesData {
+      blocks= {
+        ResolutionRBlock {
+          HDpi=299.99942
+          HResDisplayUnit=PxPerInch
+          WidthDisplayUnit=Inches
+          VDpi=299.99942
+          VResDisplayUnit=PxPerInch
+          HeightDisplayUnit=Inches
+        }
+        GridAndGuidesRBlock {
+          version=1
+          horizontal=576
+          vertical=576
+          fGuideCount=0
+          blocks= {
+            
+          }
+        }
+        VersionInfoRBlock {
+          version=1
+          hasMergedData=true
+          readerName='JPSD'
+          writerName='JPSD'
+          fileVersion=1
+        }
+      }
+    }
+    layerAndMaskData=LayerAndMaskData {
+      layerInfo=LayerInfo {
+        hasAlpha=true
+        layerRecords= {
+          LayerRecord {
+            content=Rectangle {
+              top=0
+              lef=0
+              bot=912
+              rig=684
+            }
+            info= {
+              ChannelInfo {
+                id=ChannelID:Channel1
+                dataLength=623810
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=623808
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel2
+                dataLength=623810
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=623808
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel3
+                dataLength=623810
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=623808
+                }
+              }
+            }
+            blendingMode=NORMAL
+            opacity=-1
+            clipping=Base
+            layerRecordInfoFlag=LayerRecordInfoFlag {
+              TRANSPARENCY_PROTECTED=false
+              VISIBLE=false
+              OBSOLETE=false
+              HAS_FOURTH=true
+              PIXEL_DATA=false
+            }
+            filler=0
+            layerMaskData=null
+            layerBlendingRanges=LayerBlendingRanges {
+              compositeGray=Blend {
+                source=Range {
+                  black=0
+                  white=-1
+                }
+                destination=Range {
+                  black=0
+                  white=-1
+                }
+              }
+              otherChannels= {
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+              }
+            }
+            layerName='Layer Ek'
+            additionalLayerInfos= {
+              UnicodeLayerName {
+                key=Key:UNICODE_LAYER_NAME_KEY:luni
+                name='Layer Ek '
+              }
+              LayerID {
+                key=Key:LAYER_ID_KEY:lyid
+                id=5
+              }
+            }
+          }
+          LayerRecord {
+            content=Rectangle {
+              top=456
+              lef=0
+              bot=912
+              rig=342
+            }
+            info= {
+              ChannelInfo {
+                id=ChannelID:TransparencyMask
+                dataLength=155954
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=155952
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel1
+                dataLength=155954
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=155952
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel2
+                dataLength=155954
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=155952
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel3
+                dataLength=155954
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=155952
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:UserSuppliedMask
+                dataLength=155954
+                data=ChannelImageData {
+                  compression=Compression:Raw_Data
+                  data.length=155952
+                }
+              }
+            }
+            blendingMode=NORMAL
+            opacity=-1
+            clipping=Base
+            layerRecordInfoFlag=LayerRecordInfoFlag {
+              TRANSPARENCY_PROTECTED=false
+              VISIBLE=false
+              OBSOLETE=false
+              HAS_FOURTH=true
+              PIXEL_DATA=false
+            }
+            filler=0
+            layerMaskData=LayerMaskData {
+              maskEncloser=Rectangle {
+                top=0
+                lef=0
+                bot=0
+                rig=0
+              }
+              defaultColor=-1
+              layerMaskInfoFlag=LayerMaskInfoFlag {
+                POS_RELATIVE_TO_LAYER=false
+                LAYER_MASK_DISABLED=false
+                INVERT_LAYER_MASK=false
+                CAME_FROM_RENDERING_DATA=false
+                HAVE_PARAMETERS_APPLIED=false
+              }
+              maskParameter=null
+            }
+            layerBlendingRanges=LayerBlendingRanges {
+              compositeGray=Blend {
+                source=Range {
+                  black=0
+                  white=-1
+                }
+                destination=Range {
+                  black=0
+                  white=-1
+                }
+              }
+              otherChannels= {
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+              }
+            }
+            layerName='Layer Do'
+            additionalLayerInfos= {
+              UnicodeLayerName {
+                key=Key:UNICODE_LAYER_NAME_KEY:luni
+                name='Layer Do '
+              }
+              LayerID {
+                key=Key:LAYER_ID_KEY:lyid
+                id=5
+              }
+            }
+          }
+        }
+      }
+      globalLayerMaskInfo=GlobalLayerMaskInfo {
+        length=16
+        color=ColorComponents {
+          colorSpace=RGB
+          colorComponent1=-1
+          colorComponent2=0
+          colorComponent3=0
+          colorComponent4=0
+        }
+        opacity=50
+        kind=UseValueStoredPerLayer
+      }
+      additionalLayerInfo= {
+        
+      }
+    }
+    imageData=ImageData {
+      imageData.length=1871424
+    }
+  }
+}

@@ -4,8 +4,11 @@ import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
+import in.mcxiv.jpsd.data.common.ColorComponents;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
+import in.mcxiv.jpsd.data.layer.info.LayerRecord;
+import in.mcxiv.jpsd.data.resource.types.ColorSamplersRBlock;
 import in.mcxiv.jpsd.io.PSDConnection;
 
 import java.util.ArrayList;
@@ -31,10 +34,10 @@ public class LayerAndMaskData extends DataObject {
     @Override
     public String toString() {
         return "LayerAndMaskData{" +
-                "layerInfo=" + layerInfo +
-                ", globalLayerMaskInfo=" + globalLayerMaskInfo +
-                ", additionalLayerInfo=" + Arrays.toString(getAdditionalLayerInfo()) +
-                '}';
+               "layerInfo=" + layerInfo +
+               ", globalLayerMaskInfo=" + globalLayerMaskInfo +
+               ", additionalLayerInfo=" + Arrays.toString(getAdditionalLayerInfo()) +
+               '}';
     }
 
     public LayerInfo getLayerInfo() {
@@ -47,6 +50,10 @@ public class LayerAndMaskData extends DataObject {
 
     public GlobalLayerMaskInfo getGlobalLayerMaskInfo() {
         return globalLayerMaskInfo;
+    }
+
+    public void setGlobalLayerMaskInfo(GlobalLayerMaskInfo globalLayerMaskInfo) {
+        this.globalLayerMaskInfo = globalLayerMaskInfo;
     }
 
     public void addInfo(AdditionalLayerInfo info) {
@@ -79,4 +86,14 @@ public class LayerAndMaskData extends DataObject {
         return null;
     }
 
+    public boolean doesAnyLayerContainAMask() {
+        for (LayerRecord layer : justGetALayerInfo().getLayers())
+            if (layer.hasMask())
+                return true;
+        return false;
+    }
+
+    public void createDefaultGlobalLayerMaskInfo() {
+        setGlobalLayerMaskInfo(new GlobalLayerMaskInfo(16, new ColorComponents(ColorSamplersRBlock.SamplersResourceSubBlock.ColorSpace.RGB, -1, 0, 0, 0), (byte) 50, GlobalLayerMaskInfo.Kind.UseValueStoredPerLayer));
+    }
 }

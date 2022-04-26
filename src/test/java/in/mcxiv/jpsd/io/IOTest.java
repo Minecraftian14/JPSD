@@ -10,7 +10,8 @@ public class IOTest {
     @Test
     void generalTest() throws IOException {
 
-        String str = "This is some data, okay?";
+//        String str = "This is some data, okay?";
+        String str = "Layer Ek";
         System.out.println(str);
 
         DataWriter writer = new DataWriter();

@@ -1,0 +1,368 @@
+
+PSDDocument {
+  type=MULTI_LAYER
+  connection=PSDFileReader {
+    fileHeaderData=FileHeaderData {
+      version=PSD
+      channels=3
+      height=912
+      width=684
+      depth=8
+      colorMode=RGB
+    }
+    colorModeData=ColorModeData {
+      length=0
+      data= {
+        
+      }
+      hasData=false
+    }
+    imageResourcesData=ImageResourcesData {
+      blocks= {
+        ImageResourceBlock {
+          identity=PrintScale
+          pascalString=''
+          length when read (if read)=14
+        }
+        ImageResourceBlock {
+          identity=PrintFlags
+          pascalString=''
+          length when read (if read)=9
+        }
+        ImageResourceBlock {
+          identity=PrintFlagsInfo
+          pascalString=''
+          length when read (if read)=10
+        }
+        ImageResourceBlock {
+          identity=PixelAspectRatio
+          pascalString=''
+          length when read (if read)=12
+        }
+        ThumbnailRBlock {
+          isOldFormat=false
+          format=kJpegRGB
+          width=120
+          height=160
+          widthBytes=360
+          totalSize=57600
+          compressedSize=1797
+          bitsPerPixel=24
+          numberOfPlanes=1
+          imageData.length=1797
+        }
+        ResolutionRBlock {
+          HDpi=299.99942
+          HResDisplayUnit=PxPerInch
+          WidthDisplayUnit=Inches
+          VDpi=299.99942
+          VResDisplayUnit=PxPerInch
+          HeightDisplayUnit=Inches
+        }
+        GridAndGuidesRBlock {
+          version=1
+          horizontal=576
+          vertical=576
+          fGuideCount=0
+          blocks= {
+            
+          }
+        }
+        VersionInfoRBlock {
+          version=1
+          hasMergedData=true
+          readerName='JPSD'
+          writerName='JPSD'
+          fileVersion=1
+        }
+      }
+    }
+    layerAndMaskData=LayerAndMaskData {
+      layerInfo=LayerInfo {
+        hasAlpha=false
+        layerRecords= {
+          LayerRecord {
+            content=Rectangle {
+              top=0
+              lef=0
+              bot=912
+              rig=684
+            }
+            info= {
+              ChannelInfo {
+                id=ChannelID:TransparencyMask
+                dataLength=12770
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=12768
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel1
+                dataLength=12770
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=12768
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel2
+                dataLength=12770
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=12768
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel3
+                dataLength=12770
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=12768
+                }
+              }
+            }
+            blendingMode=NORMAL
+            opacity=-1
+            clipping=Base
+            layerRecordInfoFlag=LayerRecordInfoFlag {
+              TRANSPARENCY_PROTECTED=false
+              VISIBLE=false
+              OBSOLETE=false
+              HAS_FOURTH=true
+              PIXEL_DATA=false
+            }
+            filler=0
+            layerMaskData=null
+            layerBlendingRanges=LayerBlendingRanges {
+              compositeGray=Blend {
+                source=Range {
+                  black=0
+                  white=-1
+                }
+                destination=Range {
+                  black=0
+                  white=-1
+                }
+              }
+              otherChannels= {
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+              }
+            }
+            layerName='Layer Ek'
+            additionalLayerInfos= {
+              UnicodeLayerName {
+                key=Key:UNICODE_LAYER_NAME_KEY:luni
+                name='Layer Ek'
+              }
+              LayerID {
+                key=Key:LAYER_ID_KEY:lyid
+                id=5
+              }
+            }
+          }
+          LayerRecord {
+            content=Rectangle {
+              top=456
+              lef=0
+              bot=912
+              rig=342
+            }
+            info= {
+              ChannelInfo {
+                id=ChannelID:TransparencyMask
+                dataLength=3650
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=3648
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel1
+                dataLength=3650
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=3648
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel2
+                dataLength=3650
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=3648
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:Channel3
+                dataLength=3650
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=3648
+                }
+              }
+              ChannelInfo {
+                id=ChannelID:UserSuppliedMask
+                dataLength=16820
+                data=ChannelImageData {
+                  compression=Compression:RLE_Compression
+                  data.length=16818
+                }
+              }
+            }
+            blendingMode=NORMAL
+            opacity=-1
+            clipping=Base
+            layerRecordInfoFlag=LayerRecordInfoFlag {
+              TRANSPARENCY_PROTECTED=false
+              VISIBLE=false
+              OBSOLETE=false
+              HAS_FOURTH=true
+              PIXEL_DATA=false
+            }
+            filler=0
+            layerMaskData=LayerMaskData {
+              maskEncloser=Rectangle {
+                top=0
+                lef=0
+                bot=912
+                rig=684
+              }
+              defaultColor=-1
+              layerMaskInfoFlag=LayerMaskInfoFlag {
+                POS_RELATIVE_TO_LAYER=false
+                LAYER_MASK_DISABLED=false
+                INVERT_LAYER_MASK=false
+                CAME_FROM_RENDERING_DATA=false
+                HAVE_PARAMETERS_APPLIED=false
+              }
+              maskParameter=null
+            }
+            layerBlendingRanges=LayerBlendingRanges {
+              compositeGray=Blend {
+                source=Range {
+                  black=0
+                  white=-1
+                }
+                destination=Range {
+                  black=0
+                  white=-1
+                }
+              }
+              otherChannels= {
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+                Blend {
+                  source=Range {
+                    black=0
+                    white=-1
+                  }
+                  destination=Range {
+                    black=0
+                    white=-1
+                  }
+                }
+              }
+            }
+            layerName='Layer Do'
+            additionalLayerInfos= {
+              UnicodeLayerName {
+                key=Key:UNICODE_LAYER_NAME_KEY:luni
+                name='Layer Do'
+              }
+              LayerID {
+                key=Key:LAYER_ID_KEY:lyid
+                id=13
+              }
+            }
+          }
+        }
+      }
+      globalLayerMaskInfo=GlobalLayerMaskInfo {
+        length=16
+        color=ColorComponents {
+          colorSpace=RGB
+          colorComponent1=-1
+          colorComponent2=0
+          colorComponent3=0
+          colorComponent4=0
+        }
+        opacity=50
+        kind=UseValueStoredPerLayer
+      }
+      additionalLayerInfo= {
+        
+      }
+    }
+    imageData=ImageData {
+      imageData.length=1871424
+    }
+  }
+}

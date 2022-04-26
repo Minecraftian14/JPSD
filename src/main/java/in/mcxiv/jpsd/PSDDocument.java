@@ -69,11 +69,11 @@ public class PSDDocument {
     // To write files
 
     public PSDDocument(BufferedImage image) {
-        this(image.getHeight(), image.getWidth());
+        this(image.getWidth(), image.getHeight());
         setCompositeImage(image);
     }
 
-    public PSDDocument(int height, int width) {
+    public PSDDocument(int width, int height) {
         this(new PSDConnection(
                 new FileHeaderData(height, width),
                 new ColorModeData(),
@@ -83,7 +83,7 @@ public class PSDDocument {
         ));
     }
 
-    public PSDDocument(int height, int width, DepthEntry depth) {
+    public PSDDocument(int width, int height, DepthEntry depth) {
         this(new PSDConnection(
                 new FileHeaderData(height, width, depth),
                 new ColorModeData(),
@@ -205,4 +205,11 @@ public class PSDDocument {
         connection.write(stream);
     }
 
+    @Override
+    public String toString() {
+        return "PSDDocument{" +
+               "type=" + type +
+               ", connection=" + connection +
+               '}';
+    }
 }
