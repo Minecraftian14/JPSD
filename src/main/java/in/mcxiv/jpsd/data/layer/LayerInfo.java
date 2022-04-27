@@ -12,7 +12,7 @@ public class LayerInfo extends DataObject {
     private ArrayList<LayerRecord> layerRecords = new ArrayList<>();
 
     public LayerInfo() {
-        this(true);
+        this(/* FIXME: When is this value true? */ false);
     }
 
     public LayerInfo(boolean hasAlpha, LayerRecord... layerRecords) {

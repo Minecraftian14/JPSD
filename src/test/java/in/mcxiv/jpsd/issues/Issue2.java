@@ -51,7 +51,42 @@ public class Issue2 {
     }
 
     @Test
+    void testCreateAnEvenMoreSimplePSDFile() throws IOException {
+        BufferedImage layer1 = new BufferedImage(684, 912, BufferedImage.TYPE_INT_RGB);
+        Graphics g = layer1.createGraphics();
+        g.setColor(Color.BLUE);
+        g.fillRect(0, 0, 684, 912);
+        g.dispose();
+
+        BufferedImage layer2 = new BufferedImage(684, 912 , BufferedImage.TYPE_INT_ARGB);
+        g = layer2.createGraphics();
+        g.setColor(Color.RED);
+        g.fillRect(0, 456, 342, 456);
+        g.dispose();
+
+        BufferedImage layer2_mask = new BufferedImage(684, 912, BufferedImage.TYPE_INT_ARGB);
+        g = layer2_mask.createGraphics();
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 684 , 912);
+        g.setColor(Color.WHITE);
+        g.fillOval(0, 456, 342, 456);
+        g.dispose();
+
+        PSDDocument document = new PSDDocument(684, 912);
+
+        ArrayList<LayerRecord> layers = document.getLayers();
+        layers.add(new LayerRecord(0, 0, "Layer Ek", layer1));
+        layers.add(new LayerRecord(/*fit to bottom left*/ 0, 0, "Layer Do", layer2) {{
+            setMask(layer2_mask);
+        }});
+
+        document.writeTo(file("EvenSimpleByJPSD.psd"));
+    }
+
+    @Test
     void compare_PSD_and_JPSD_workings() throws IOException {
+
+//        PSDDocument jpsd = new PSDDocument(file("EvenSimpleByJPSD.psd"));
         PSDDocument jpsd = new PSDDocument(file("SimpleByJPSD.psd"));
         PSDDocument psd_ = new PSDDocument(file("SimpleByPSD.psd"));
 

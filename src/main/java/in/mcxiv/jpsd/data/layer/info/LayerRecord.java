@@ -148,7 +148,7 @@ public class LayerRecord extends DataObject {
         if (this.additionalLayerInfos.stream().noneMatch(ali -> ali instanceof UnicodeLayerName))
             this.additionalLayerInfos.add(new UnicodeLayerName(layerName, 0));
         if (this.additionalLayerInfos.stream().noneMatch(ali -> ali instanceof LayerID))
-            this.additionalLayerInfos.add(new LayerID(5, 0));
+            this.additionalLayerInfos.add(new LayerID(0));
     }
 
     public void setContent(Rectangle content) {

@@ -161,50 +161,50 @@ PSDDocument {
           }
           LayerRecord {
             content=Rectangle {
-              top=456
+              top=0
               lef=0
               bot=912
-              rig=342
+              rig=684
             }
             info= {
               ChannelInfo {
                 id=ChannelID:TransparencyMask
-                dataLength=155954
+                dataLength=623810
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=155952
+                  data.length=623808
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel1
-                dataLength=155954
+                dataLength=623810
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=155952
+                  data.length=623808
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel2
-                dataLength=155954
+                dataLength=623810
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=155952
+                  data.length=623808
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel3
-                dataLength=155954
+                dataLength=623810
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=155952
+                  data.length=623808
                 }
               }
               ChannelInfo {
                 id=ChannelID:UserSuppliedMask
-                dataLength=155954
+                dataLength=623810
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=155952
+                  data.length=623808
                 }
               }
             }
@@ -223,8 +223,8 @@ PSDDocument {
               maskEncloser=Rectangle {
                 top=0
                 lef=0
-                bot=0
-                rig=0
+                bot=912
+                rig=684
               }
               defaultColor=-1
               layerMaskInfoFlag=LayerMaskInfoFlag {

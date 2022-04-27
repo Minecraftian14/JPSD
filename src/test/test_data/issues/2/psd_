@@ -1,4 +1,3 @@
-
 PSDDocument {
   type=MULTI_LAYER
   connection=PSDFileReader {
