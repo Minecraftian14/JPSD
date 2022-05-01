@@ -5,6 +5,7 @@ import in.mcxiv.jpsd.data.resource.ImageResourceID;
 import in.mcxiv.jpsd.data.resource.UnknownRBlock;
 import in.mcxiv.jpsd.data.resource.types.*;
 import in.mcxiv.jpsd.data.sections.ImageResourcesData;
+import in.mcxiv.jpsd.exceptions.BytesReadDidntMatchExpectedCount;
 import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
@@ -92,14 +93,22 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
                 blocks.add(path_IO.read(reader, ImageResourceID.PathInformation, pascalString, blockLength));
 
                 // It should mostly be always false.
-                System.err.println(paddingRequired);
                 if (paddingRequired)
                     reader.stream.readByte();
 
                 continue;
             }
 
+            // Plugin resources - do we need them?
+            if (id_value >= 4000 && id_value <= 4999) {
+                reader.stream.skipBytes(blockLength);
+                if (paddingRequired)
+                    reader.stream.readByte();
+                continue;
+            }
+
             ImageResourceID id = ImageResourceID.of(id_value);
+            long mark_block = reader.stream.getStreamPosition();
 
             switch (id) {
                 case AlphaChannelNames:
@@ -170,8 +179,15 @@ public class ImageResourcesSectionIO extends SectionIO<ImageResourcesData> {
                     }
             }
 
+            mark_block /*bytes actually read*/ = reader.stream.getStreamPosition() - mark_block;
+
             if (paddingRequired)
                 reader.stream.readByte();
+
+            if (mark_block > blockLength)
+                throw new BytesReadDidntMatchExpectedCount(blockLength, mark_block);
+            else if (mark_block < blockLength)
+                reader.stream.skipBytes(blockLength - mark_block);
 
         }
 

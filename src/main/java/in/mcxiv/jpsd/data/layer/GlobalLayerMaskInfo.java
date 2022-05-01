@@ -2,6 +2,7 @@ package in.mcxiv.jpsd.data.layer;
 
 import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.common.ColorComponents;
+import in.mcxiv.jpsd.data.common.OverlayColorComponents;
 import in.mcxiv.jpsd.data.primitive.ByteEntry;
 
 public class GlobalLayerMaskInfo extends DataObject {
@@ -28,22 +29,22 @@ public class GlobalLayerMaskInfo extends DataObject {
     }
 
     private int length;
-    private ColorComponents color;
+    private OverlayColorComponents color;
     private short opacity;
     private Kind kind;
 
-    public GlobalLayerMaskInfo(int length, ColorComponents color, short opacity, Kind kind) {
+    public GlobalLayerMaskInfo(int length, OverlayColorComponents color, short opacity, Kind kind) {
         this.length = length;
         this.color = color;
         this.opacity = opacity;
         this.kind = kind;
     }
 
-    public ColorComponents getColor() {
+    public OverlayColorComponents getColor() {
         return color;
     }
 
-    public void setColor(ColorComponents color) {
+    public void setColor(OverlayColorComponents color) {
         this.color = color;
     }
 

@@ -4,7 +4,7 @@ import in.mcxiv.jpsd.data.DataObject;
 import in.mcxiv.jpsd.data.addend.AdditionalInfoKey;
 import in.mcxiv.jpsd.data.addend.AdditionalLayerInfo;
 import in.mcxiv.jpsd.data.addend.types.LayerAndMaskInfo;
-import in.mcxiv.jpsd.data.common.ColorComponents;
+import in.mcxiv.jpsd.data.common.OverlayColorComponents;
 import in.mcxiv.jpsd.data.layer.GlobalLayerMaskInfo;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
@@ -94,6 +94,6 @@ public class LayerAndMaskData extends DataObject {
     }
 
     public void createDefaultGlobalLayerMaskInfo() {
-        setGlobalLayerMaskInfo(new GlobalLayerMaskInfo(16, new ColorComponents(ColorSamplersRBlock.SamplersResourceSubBlock.ColorSpace.RGB, -1, 0, 0, 0), (byte) 50, GlobalLayerMaskInfo.Kind.UseValueStoredPerLayer));
+        setGlobalLayerMaskInfo(new GlobalLayerMaskInfo(16, new OverlayColorComponents(ColorSamplersRBlock.SamplersResourceSubBlock.ColorSpace.RGB.getValue(), -1, 0, 0, 0), (byte) 50, GlobalLayerMaskInfo.Kind.UseValueStoredPerLayer));
     }
 }

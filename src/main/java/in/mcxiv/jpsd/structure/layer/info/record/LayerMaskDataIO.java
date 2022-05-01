@@ -39,6 +39,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
         // reading MaskParameters IN CASE WE ACTUALLY HAVE TO READ IT.
         long mark = reader.stream.getStreamPosition();
 
+        // FIXME: Should this block even come here? Arent we supposed to remove it completely?
         if (layerMaskInfoFlag.has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
             maskParameters = new MaskParameterFlag(reader.stream.readByte());
             maskParameter = MaskParameterIO.read(maskParameters, reader);
@@ -84,7 +85,7 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
 
         if (layerMaskData.getLayerMaskInfoFlag().has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
             buffer.writeEntry(layerMaskData.getMaskParameters());
-                MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
+            MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
         } else {
             buffer.fillZeros(2); // padding to 20.
         }

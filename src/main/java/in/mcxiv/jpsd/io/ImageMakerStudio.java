@@ -201,6 +201,12 @@ public class ImageMakerStudio {
 
         int w = layer.getWidth();
         int h = layer.getHeight();
+
+        if (h * w == 0) /* It's probably a Layer Group or somthing unique like that */ {
+            PSDConnection.out.println(layer.getLayerName() + " doesnt looks like it has image data!");
+            return null;
+        }
+
         DepthEntry depth = file.getFileHeaderData().getDepthEntry();
         ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 

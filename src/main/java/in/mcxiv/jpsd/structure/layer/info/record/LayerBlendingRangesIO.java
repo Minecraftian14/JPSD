@@ -19,6 +19,8 @@ public class LayerBlendingRangesIO extends SectionIO<LayerBlendingRanges> {
 
         int size = reader.stream.readInt();
 
+        if(size == 0)return null;
+
         short compositeGraySource_Black = reader.stream.readShort();
         short compositeGraySource_White = reader.stream.readShort();
         short compositeGrayDest_Black = reader.stream.readShort();

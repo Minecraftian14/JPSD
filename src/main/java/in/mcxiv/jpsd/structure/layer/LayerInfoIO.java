@@ -45,10 +45,12 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
     public LayerInfo read(DataReader reader, long length) throws IOException {
 
         if (length % 2 != 0)
-            throw new RuntimeException("Hey MCXIV, shouldn't this be an even number? ((rounded up to a multiple of 2))");
+            length++;
 
         if (length == 0)
             return null;
+
+//        long mark = reader.stream.getStreamPosition();
 
         short layers = reader.stream.readShort();
         boolean hasAlpha = false;
@@ -69,6 +71,10 @@ public class LayerInfoIO extends SectionIO<LayerInfo> {
                 channelInfo.setData(new ChannelImageData(compression, data));
             }
         }
+
+//        mark /* bytes read */ = reader.stream.getStreamPosition() - mark;
+//        if (mark < length)
+//            reader.stream.skipBytes(length - mark);
 
         return new LayerInfo(hasAlpha, recordList);
     }

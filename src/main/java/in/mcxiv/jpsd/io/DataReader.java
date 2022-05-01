@@ -102,6 +102,8 @@ public class DataReader implements AutoCloseable, Closeable {
 
     public byte[] verifySignature(byte[]... signatures) throws IOException {
         byte[] readings = readBytes(signatures[0].length, false);
+        if(new String(readings).equals("BIMP"))
+            System.out.println("Here");
         for (byte[] signature : signatures)
             if (Arrays.equals(signature, readings))
                 return readings;
@@ -131,9 +133,7 @@ public class DataReader implements AutoCloseable, Closeable {
     public String readPascalStringPaddedTo4() throws IOException {
         int stringLength = stream.readUnsignedByte();
         byte[] bytes = readBytes(stringLength, true);
-
         skipToPadBy(stringLength + 1, 4);
-
         return new String(bytes, StandardCharsets.US_ASCII);
     }
 

@@ -12,6 +12,7 @@ import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.addend.types.EffectsLayerIO;
+import in.mcxiv.jpsd.structure.addend.types.FillSettingIO;
 import in.mcxiv.jpsd.structure.addend.types.TypeToolInfoIO;
 import in.mcxiv.jpsd.structure.layer.LayerInfoIO;
 
@@ -24,6 +25,7 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
 
     public final LayerInfoIO LAYER_INFO_IO;
 
+    public static final FillSettingIO FILL_SETTING_IO = new FillSettingIO();
     public static final EffectsLayerIO EFFECTS_LAYER_IO = new EffectsLayerIO();
     public static final TypeToolInfoIO TYPE_TOOL_INFO_IO = new TypeToolInfoIO();
 
@@ -42,37 +44,56 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
     @Override
     public AdditionalLayerInfo read(DataReader reader) throws IOException {
 
-        byte[] signature = reader.verifySignature(PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL, PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG,
-                PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT);
+        byte[] signature = reader.verifySignature(
+                PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_SMALL
+                , PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG
+//                , PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT
+//                , PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT
+        );
 
-        if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT))
-            reader.stream.skipBytes(1);
-        else if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT))
-            reader.stream.skipBytes(2);
+//        if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_1_BYTE_CHOOT))
+//            reader.stream.skipBytes(1);
+//        else if (Arrays.equals(signature, PSDConnection.CORRUPTED_ADDITIONAL_LAYER_INFO_SIGNATURE_2_BYTES_CHOOT))
+//            reader.stream.skipBytes(2);
 
         AdditionalInfoKey key = AdditionalInfoKey.of(reader.readBytes(4, true));
 
         boolean isLargeResource = Arrays.equals(PSDConnection.ADDITIONAL_LAYER_INFO_SIGNATURE_LONG, signature);
 
-        if (version.isLarge()) {
-            if (key.isLarge())
-                isLargeResource = true;
-        }
+        if (version.isLarge() && key.isLarge())
+            isLargeResource = true;
 
         long size;
         if (isLargeResource) size = reader.stream.readLong();
         else size = reader.stream.readInt();
 
+        if (size == 0) return null;
+
         switch (key) {
 
             case EFFECTS_KEY:
-                return EFFECTS_LAYER_IO.readEffectsLayer(reader, size);
+                long mark_effects = reader.stream.getStreamPosition();
+                EffectsLayer effectsLayer = EFFECTS_LAYER_IO.readEffectsLayer(reader, size);
+                mark_effects /* bytes read */ = reader.stream.getStreamPosition() - mark_effects;
+                if (mark_effects < size)
+                    reader.stream.skipBytes(size - mark_effects);
+                return effectsLayer;
 
             case LAYER_AND_MASK_INFO_16:
+            case LAYER_AND_MASK_INFO:
                 if (size % 2 != 0) size++; // make even
                 LayerInfo layerInfo = LAYER_INFO_IO.read(reader, size);
                 reader.skipToPadBy(size, 4);
                 return new LayerAndMaskInfo(key, size, layerInfo);
+
+            case SOLID_COLOR_SHEET_SETTING:
+            case GRADIENT_FILL_SETTING:
+            case PATTERN_FILL_SETTING:
+                PSDConnection.out.println("Descriptor IO is still a work in Progress!!" +
+                                          "This is, you just used a PSD file which uses s feature I haven't tested yet!");
+//                reader.skipAndPadBy4(size);
+                reader.skipAndPadBy4(size);
+                return FILL_SETTING_IO.read(reader);
 
             case LAYER_ID_KEY:
                 int id = reader.stream.readInt();
@@ -90,10 +111,9 @@ public class AdditionalLayerInfoIO extends SectionIO<AdditionalLayerInfo> {
                 // Is there any danger of \0 coming next?
                 if (unicodeName.length() != expectedLength) {
                     if (expectedLength - unicodeName.length() == 1) {
-                        PSDConnection.out.println("Reading num bytes!");
                         reader.stream.skipBytes(2);
                     } else {
-                        new Exception("The heck?").printStackTrace(PSDConnection.out);
+                        PSDConnection.out.println("Something went wrong 478!");
                         reader.stream.skipBytes(2 * (expectedLength - unicodeName.length()));
                     }
                 }

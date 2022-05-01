@@ -52,6 +52,10 @@ public class LayerAndMaskSectionIO extends SectionIO<LayerAndMaskData> {
         long expectedEnd = mark + sectionLength;
 
         LayerInfo layerInfo = LAYER_INFO_IO.read(reader);
+
+        if(reader.stream.getStreamPosition()-mark-sectionLength==0)
+            return new LayerAndMaskData(layerInfo, null);
+
         GlobalLayerMaskInfo globalLayerMaskInfo = GLOBAL_LAYER_MASK_INFO_IO.read(reader);
         List<AdditionalLayerInfo> additionalLayerInfos = new ArrayList<>();
 
