@@ -5,6 +5,7 @@ import in.mcxiv.jpsd.data.layer.info.record.LayerMaskData;
 import in.mcxiv.jpsd.data.layer.info.record.mask.LayerMaskInfoFlag;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameter;
 import in.mcxiv.jpsd.data.layer.info.record.mask.MaskParameterFlag;
+import in.mcxiv.jpsd.exceptions.UnknownByteBlockException;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
 import in.mcxiv.jpsd.structure.SectionIO;
@@ -39,7 +40,6 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
         long mark = reader.stream.getStreamPosition();
 
         if (layerMaskInfoFlag.has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
-            System.err.println("UNTESTED!!! This part of code is not reliable!");
             maskParameters = new MaskParameterFlag(reader.stream.readByte());
             maskParameter = MaskParameterIO.read(maskParameters, reader);
         }
@@ -62,6 +62,9 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
             maskEncloser = RectangleIO.INSTANCE.read(reader);
         }
 
+        if (dataUnread > 0)
+            throw new UnknownByteBlockException("Too many bytes to read! About " + dataUnread + " remaining.");
+
         return new LayerMaskData(maskEncloser, defaultColor, layerMaskInfoFlag, maskParameter);
     }
 
@@ -81,7 +84,9 @@ public class LayerMaskDataIO extends SectionIO<LayerMaskData> {
 
         if (layerMaskData.getLayerMaskInfoFlag().has(LayerMaskInfoFlag.HAVE_PARAMETERS_APPLIED)) {
             buffer.writeEntry(layerMaskData.getMaskParameters());
-            MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
+                MaskParameterIO.write(layerMaskData.getMaskParameters(), buffer, layerMaskData.getMaskParameter());
+        } else {
+            buffer.fillZeros(2); // padding to 20.
         }
 
         byte[] bytes = buffer.toByteArray();

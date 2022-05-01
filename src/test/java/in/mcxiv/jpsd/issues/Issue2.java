@@ -2,6 +2,7 @@ package in.mcxiv.jpsd.issues;
 
 import in.mcxiv.jpsd.PSDDocument;
 import in.mcxiv.jpsd.data.layer.info.LayerRecord;
+import in.mcxiv.jpsd.io.PSDConnection;
 import in.mcxiv.jpsd.structure.SectionIOTest;
 import org.junit.jupiter.api.Test;
 
@@ -86,6 +87,7 @@ public class Issue2 {
     @Test
     void compare_PSD_and_JPSD_workings() throws IOException {
 
+        PSDConnection.unknownBytesStrategy = new PSDConnection.UnknownBytesStrategy(PSDConnection.UnknownBytesStrategy.Action.ExcludeData);
 //        PSDDocument jpsd = new PSDDocument(file("EvenSimpleByJPSD.psd"));
         PSDDocument jpsd = new PSDDocument(file("SimpleByJPSD.psd"));
         PSDDocument psd_ = new PSDDocument(file("SimpleByPSD.psd"));

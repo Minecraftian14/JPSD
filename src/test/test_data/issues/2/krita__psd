@@ -1,0 +1,262 @@
+pos: 0
+(valid: true, signature: "8BPS", version:1, number of channels: 3, height: 912, width: 684, channel depth: 8, color mode: RGB)
+Read header. pos: 26
+Read color mode block. pos: 30
+Image Resource Sectionlength: 18330 , starts at: 34
+Reading resource block
+	resource block identifier "0x0425 - (Photoshop 7.0) Caption digest. 16 bytes: RSA Data Security, MD5 message-digest algorithm" 1061
+	resource block name ""
+	resource block size 16
+resource block created. Type: 1061 name "" size 16 , 18302 bytes to go
+Reading resource block
+	resource block identifier "0x0424 - XMP data block" 1060
+	resource block name ""
+	resource block size 13874
+resource block created. Type: 1060 name "" size 13874 , 4416 bytes to go
+Reading resource block
+	resource block identifier "0x043A - (Photoshop CS5) Print Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print settings in the document. The color management options." 1082
+	resource block name ""
+	resource block size 230
+resource block created. Type: 1082 name "" size 230 , 4174 bytes to go
+Reading resource block
+	resource block identifier "0x043B - (Photoshop CS5) Print Style. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print style in the document. The printing marks, labels, ornaments, etc." 1083
+	resource block name ""
+	resource block size 558
+resource block created. Type: 1083 name "" size 558 , 3604 bytes to go
+Reading resource block
+	resource block identifier "0x03ed - ResolutionInfo structure" 1005
+	resource block name ""
+	resource block size 16
+Reading RESN_INFO_1005
+hres 4718592 vres 4718592
+72 1 2 72 1 2
+resource block created. Type: 1005 name "" size 16 , 3576 bytes to go
+Reading resource block
+	resource block identifier "0x0426 - (Photoshop 7.0) Print scale. 2 bytes style (0 = centered, 1 = size to fit, 2 = user defined). 4 bytes x location (floating point). 4 bytes y location (floating point). 4 bytes scale (floating point)" 1062
+	resource block name ""
+	resource block size 14
+resource block created. Type: 1062 name "" size 14 , 3550 bytes to go
+Reading resource block
+	resource block identifier "0x040d - Global angle" 1037
+	resource block name ""
+	resource block size 4
+Reading GLOBAL_ANGLE_1037
+resource block created. Type: 1037 name "" size 4 , 3534 bytes to go
+Reading resource block
+	resource block identifier "0x0419 - Global altitude" 1049
+	resource block name ""
+	resource block size 4
+Reading GLOBAL_ALT_1049
+resource block created. Type: 1049 name "" size 4 , 3518 bytes to go
+Reading resource block
+	resource block identifier "0x03f3 - Print flags" 1011
+	resource block name ""
+	resource block size 10
+resource block created. Type: 1011 name "" size 10 , 3496 bytes to go
+Reading resource block
+	resource block identifier "0x2710 - Print flags" 10000
+	resource block name ""
+	resource block size 10
+resource block created. Type: 10000 name "" size 10 , 3474 bytes to go
+Reading resource block
+	resource block identifier "0x03f5 - Colour halftoning info" 1013
+	resource block name ""
+	resource block size 72
+resource block created. Type: 1013 name "" size 72 , 3390 bytes to go
+Reading resource block
+	resource block identifier "0x03f8 - Colour transfer functions" 1016
+	resource block name ""
+	resource block size 112
+resource block created. Type: 1016 name "" size 112 , 3266 bytes to go
+Reading resource block
+	resource block identifier "0x0400 - Layer state info" 1024
+	resource block name ""
+	resource block size 2
+resource block created. Type: 1024 name "" size 2 , 3252 bytes to go
+Reading resource block
+	resource block identifier "0x0402 - Layers group info" 1026
+	resource block name ""
+	resource block size 4
+resource block created. Type: 1026 name "" size 4 , 3236 bytes to go
+Reading resource block
+	resource block identifier "0x0430 - (Photoshop CS2) Layer Group(s) Enabled ID. 1 byte for each layer in the document, repeated by length of the resource. NOTE: Layer groups have start and end markers" 1072
+	resource block name ""
+	resource block size 2
+resource block created. Type: 1072 name "" size 2 , 3222 bytes to go
+Reading resource block
+	resource block identifier "0x042D - (Photoshop CS2) Layer Selection ID(s). 2 bytes count, following is repeated for each count: 4 bytes layer ID" 1069
+	resource block name ""
+	resource block size 2
+resource block created. Type: 1069 name "" size 2 , 3208 bytes to go
+Reading resource block
+	resource block identifier "0x0408 - Grid & guide info" 1032
+	resource block name ""
+	resource block size 16
+resource block created. Type: 1032 name "" size 16 , 3180 bytes to go
+Reading resource block
+	resource block identifier "0x041e - URL list - unicode" 1054
+	resource block name ""
+	resource block size 4
+resource block created. Type: 1054 name "" size 4 , 3164 bytes to go
+Reading resource block
+	resource block identifier "0x041a - Slices" 1050
+	resource block name ""
+	resource block size 842
+resource block created. Type: 1050 name "" size 842 , 2310 bytes to go
+Reading resource block
+	resource block identifier "0x0428 - (Photoshop CS) Pixel Aspect Ratio. 4 bytes (version = 1 or 2), 8 bytes double, x / y of a pixel. Version 2, attempting to correct values for NTSC and PAL, previously off by a factor of approx. 5%." 1064
+	resource block name ""
+	resource block size 12
+resource block created. Type: 1064 name "" size 12 , 2286 bytes to go
+Reading resource block
+	resource block identifier "0x0411 - Do not use ICC profile flag" 1041
+	resource block name ""
+	resource block size 2
+resource block created. Type: 1041 name "" size 2 , 2272 bytes to go
+Reading resource block
+	resource block identifier "0x0414 - Document specific IDs" 1044
+	resource block name ""
+	resource block size 4
+resource block created. Type: 1044 name "" size 4 , 2256 bytes to go
+Reading resource block
+	resource block identifier "0x040c - Thumbnail resource" 1036
+	resource block name ""
+	resource block size 1826
+resource block created. Type: 1036 name "" size 1826 , 418 bytes to go
+Reading resource block
+	resource block identifier "0x0421 - Version info" 1057
+	resource block name ""
+	resource block size 88
+resource block created. Type: 1057 name "" size 88 , 318 bytes to go
+Reading resource block
+	resource block identifier "0x0422 - (Photoshop 7.0) EXIF data 1. See http://www.kodak.com/global/plugins/acrobat/en/service/digCam/exifStandard2.pdf" 1058
+	resource block name ""
+	resource block size 306
+resource block created. Type: 1058 name "" size 306 , 0 bytes to go
+Read 25 Image Resource Blocks
+Read image resource section. pos: 18364
+reading layer section. Pos: 18364 bytes left: 123010
+layer + mask section size 84700
+Layer info block size 84124
+Number of layers: 2
+Has separate projection transparency: false
+Going to read layer 0 pos 18374
+== Enter PSDLayerRecord
+Going to read layer record. Pos: 18374
+	top 0 left 0 bottom 912 right 684 number of channels 4
+	channel 0 id "Transparency mask" length 12770 start 0 offset 0 channelInfoPosition 0
+	channel 1 id "red" length 12770 start 0 offset 0 channelInfoPosition 0
+	channel 2 id "green" length 12770 start 0 offset 0 channelInfoPosition 0
+	channel 3 id "blue" length 12770 start 0 offset 0 channelInfoPosition 0
+	Blend mode "norm" pos 18424
+	Opacity 255 18425
+	clipping 0 18426
+	flags 8 18427
+	transparency protected false
+	visible true
+	irrelevant false
+	filler at  18427
+	Going to read extra data length 18428
+	Extra data length 304
+Going to read extra data field. Bytes available:  122942 pos 18432
+	Read layer mask/adjustment layer data. Length of block: 0 pos 18436
+	Going to read layer name at 18480
+	layer name length unpadded 8 pos 18481
+	layer name length padded 11 pos 18481
+	layer name "Layer Ek" 18492
+found info block with key "luni"
+unicodeLayerName "Layer Ek"
+found info block with key "lyid"
+found info block with key "clbl"
+found info block with key "infx"
+found info block with key "knko"
+found info block with key "lspf"
+found info block with key "lclr"
+found info block with key "shmd"
+found info block with key "fxrp"
+== Leave PSDLayerRecord
+Finished reading layer 0 "Layer Ek" blending mode "norm" 18736 Number of channels: 4
+Going to read layer 1 pos 18736
+== Enter PSDLayerRecord
+Going to read layer record. Pos: 18736
+	top 456 left 0 bottom 912 right 342 number of channels 5
+	channel 0 id "Transparency mask" length 3650 start 0 offset 0 channelInfoPosition 0
+	channel 1 id "red" length 3650 start 0 offset 0 channelInfoPosition 0
+	channel 2 id "green" length 3650 start 0 offset 0 channelInfoPosition 0
+	channel 3 id "blue" length 3650 start 0 offset 0 channelInfoPosition 0
+	channel 4 id "User Supplied Layer Mask" length 16820 start 0 offset 0 channelInfoPosition 0
+	Blend mode "norm" pos 18792
+	Opacity 255 18793
+	clipping 0 18794
+	flags 8 18795
+	transparency protected false
+	visible true
+	irrelevant false
+	filler at  18795
+	Going to read extra data length 18796
+	Extra data length 1196
+Going to read extra data field. Bytes available:  122574 pos 18800
+	Read layer mask/adjustment layer data. Length of block: 20 pos 18824
+	Going to read layer name at 18868
+	layer name length unpadded 8 pos 18869
+	layer name length padded 11 pos 18869
+	layer name "Layer Do" 18880
+found info block with key "luni"
+unicodeLayerName "Layer Do"
+found info block with key "lyid"
+found info block with key "clbl"
+found info block with key "infx"
+found info block with key "knko"
+found info block with key "lspf"
+found info block with key "lclr"
+found info block with key "shmd"
+found info block with key "vstk"
+found info block with key "sn2P"
+found info block with key "fxrp"
+found info block with key "lyvr"
+== Leave PSDLayerRecord
+Finished reading layer 1 "Layer Do" blending mode "norm" 19996 Number of channels: 5
+Going to seek channel positions for layer 0 pos 19996
+	Reading channel image data for channel 0 from pos 19996
+		Channel 0 has compression type 1
+		start 19996 data start 21822 data length 12770 pos 21822
+		channel record 0 for layer 0 with id -1 starting position 21822 with length 10944 and has compression type 1
+	Reading channel image data for channel 1 from pos 32766
+		Channel 1 has compression type 1
+		start 32766 data start 34592 data length 12770 pos 34592
+		channel record 1 for layer 0 with id 0 starting position 34592 with length 10944 and has compression type 1
+	Reading channel image data for channel 2 from pos 45536
+		Channel 2 has compression type 1
+		start 45536 data start 47362 data length 12770 pos 47362
+		channel record 2 for layer 0 with id 1 starting position 47362 with length 10944 and has compression type 1
+	Reading channel image data for channel 3 from pos 58306
+		Channel 3 has compression type 1
+		start 58306 data start 60132 data length 12770 pos 60132
+		channel record 3 for layer 0 with id 2 starting position 60132 with length 10944 and has compression type 1
+Going to seek channel positions for layer 1 pos 71076
+	Reading channel image data for channel 0 from pos 71076
+		Channel 0 has compression type 1
+		start 71076 data start 71990 data length 3650 pos 71990
+		channel record 0 for layer 1 with id -1 starting position 71990 with length 2736 and has compression type 1
+	Reading channel image data for channel 1 from pos 74726
+		Channel 1 has compression type 1
+		start 74726 data start 75640 data length 3650 pos 75640
+		channel record 1 for layer 1 with id 0 starting position 75640 with length 2736 and has compression type 1
+	Reading channel image data for channel 2 from pos 78376
+		Channel 2 has compression type 1
+		start 78376 data start 79290 data length 3650 pos 79290
+		channel record 2 for layer 1 with id 1 starting position 79290 with length 2736 and has compression type 1
+	Reading channel image data for channel 3 from pos 82026
+		Channel 3 has compression type 1
+		start 82026 data start 82940 data length 3650 pos 82940
+		channel record 3 for layer 1 with id 2 starting position 82940 with length 2736 and has compression type 1
+	Reading channel image data for channel 4 from pos 85676
+		Channel 4 has compression type 1
+		start 85676 data start 87502 data length 16820 pos 87502
+		channel record 4 for layer 1 with id -2 starting position 87502 with length 14994 and has compression type 1
+Read layer/mask section.  2 layers. pos: 103068
+Going to read channels for layer 0 "Layer Ek"
+Reading pixel data for layer "Layer Ek" pos 103068
+Going to read channels for layer 1 "Layer Do"
+Reading pixel data for layer "Layer Do" pos 103068
+Going to read "User Supplied Layer Mask" mask

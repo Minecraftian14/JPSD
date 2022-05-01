@@ -1,0 +1,79 @@
+pos: 0
+(valid: true, signature: "8BPS", version:1, number of channels: 3, height: 912, width: 684, channel depth: 8, color mode: RGB)
+Read header. pos: 26
+Read color mode block. pos: 30
+Image Resource Sectionlength: 102 , starts at: 34
+Reading resource block
+	resource block identifier "0x03ed - ResolutionInfo structure" 1005
+	resource block name ""
+	resource block size 16
+Reading RESN_INFO_1005
+hres 19660761 vres 19660761
+299 1 1 299 1 1
+resource block created. Type: 1005 name "" size 16 , 74 bytes to go
+Reading resource block
+	resource block identifier "0x0408 - Grid & guide info" 1032
+	resource block name ""
+	resource block size 16
+resource block created. Type: 1032 name "" size 16 , 46 bytes to go
+Reading resource block
+	resource block identifier "0x0421 - Version info" 1057
+	resource block name ""
+	resource block size 34
+resource block created. Type: 1057 name "" size 34 , 0 bytes to go
+Read 3 Image Resource Blocks
+Read image resource section. pos: 136
+reading layer section. Pos: 136 bytes left: 6862290
+layer + mask section size 4990860
+Layer info block size 4990836
+Number of layers: 2
+Has separate projection transparency: false
+Going to read layer 0 pos 146
+== Enter PSDLayerRecord
+Going to read layer record. Pos: 146
+	top 0 left 0 bottom 912 right 684 number of channels 3
+	channel 0 id "red" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 1 id "green" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 2 id "blue" length 623810 start 0 offset 0 channelInfoPosition 0
+	Blend mode "norm" pos 190
+	Opacity 255 191
+	clipping 0 192
+	flags 8 193
+	transparency protected false
+	visible true
+	irrelevant false
+	filler at  193
+	Going to read extra data length 194
+	Extra data length 110
+Going to read extra data field. Bytes available:  6862228 pos 198
+	Read layer mask/adjustment layer data. Length of block: 0 pos 202
+	Going to read layer name at 246
+	layer name length unpadded 8 pos 247
+	layer name length padded 11 pos 247
+	layer name "Layer Ek" 258
+found info block with key "luni"
+unicodeLayerName "Layer Ek"
+found info block with key "lyid"
+== Leave PSDLayerRecord
+Finished reading layer 0 "Layer Ek" blending mode "norm" 308 Number of channels: 3
+Going to read layer 1 pos 308
+== Enter PSDLayerRecord
+Going to read layer record. Pos: 308
+	top 0 left 0 bottom 912 right 684 number of channels 5
+	channel 0 id "Transparency mask" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 1 id "red" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 2 id "green" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 3 id "blue" length 623810 start 0 offset 0 channelInfoPosition 0
+	channel 4 id "User Supplied Layer Mask" length 623810 start 0 offset 0 channelInfoPosition 0
+	Blend mode "norm" pos 364
+	Opacity 255 365
+	clipping 0 366
+	flags 8 367
+	transparency protected false
+	visible true
+	irrelevant false
+	filler at  367
+	Going to read extra data length 368
+	Extra data length 128
+Going to read extra data field. Bytes available:  6862054 pos 372
+failed reading layer/mask section:  "Could not load layer 1: Could not read layer mask length: 18"

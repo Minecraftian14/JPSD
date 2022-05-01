@@ -99,6 +99,8 @@ public class FileHeaderData extends DataObject {
     private DepthEntry depth;
     private ColorMode colorMode;
 
+    // Fixme: Is a PSD file "always" Big Endian?
+
     public FileHeaderData(int height, int width) {
         this(height, width, DepthEntry.E);
     }

@@ -19,9 +19,39 @@ PSDDocument {
     imageResourcesData=ImageResourcesData {
       blocks= {
         ImageResourceBlock {
+          identity=CaptionDigest
+          pascalString=''
+          length when read (if read)=16
+        }
+        ImageResourceBlock {
+          identity=XMPMetadata
+          pascalString=''
+          length when read (if read)=13873
+        }
+        ImageResourceBlock {
+          identity=PrintInformation
+          pascalString=''
+          length when read (if read)=229
+        }
+        ImageResourceBlock {
+          identity=PrintStyle
+          pascalString=''
+          length when read (if read)=557
+        }
+        ImageResourceBlock {
           identity=PrintScale
           pascalString=''
           length when read (if read)=14
+        }
+        ImageResourceBlock {
+          identity=GlobalAngle
+          pascalString=''
+          length when read (if read)=4
+        }
+        ImageResourceBlock {
+          identity=GlobalAltitude
+          pascalString=''
+          length when read (if read)=4
         }
         ImageResourceBlock {
           identity=PrintFlags
@@ -34,9 +64,59 @@ PSDDocument {
           length when read (if read)=10
         }
         ImageResourceBlock {
+          identity=ColorHalftoning
+          pascalString=''
+          length when read (if read)=72
+        }
+        ImageResourceBlock {
+          identity=ColorTransferFunction
+          pascalString=''
+          length when read (if read)=112
+        }
+        ImageResourceBlock {
+          identity=LayerState
+          pascalString=''
+          length when read (if read)=2
+        }
+        ImageResourceBlock {
+          identity=LayerGroup
+          pascalString=''
+          length when read (if read)=4
+        }
+        ImageResourceBlock {
+          identity=LayerGroupsID
+          pascalString=''
+          length when read (if read)=2
+        }
+        ImageResourceBlock {
+          identity=LayerSelectionIDs
+          pascalString=''
+          length when read (if read)=2
+        }
+        ImageResourceBlock {
+          identity=URLList
+          pascalString=''
+          length when read (if read)=4
+        }
+        ImageResourceBlock {
+          identity=Slices
+          pascalString=''
+          length when read (if read)=841
+        }
+        ImageResourceBlock {
           identity=PixelAspectRatio
           pascalString=''
           length when read (if read)=12
+        }
+        ImageResourceBlock {
+          identity=ICCUntaggedProfile
+          pascalString=''
+          length when read (if read)=1
+        }
+        ImageResourceBlock {
+          identity=DocumentIDSeed
+          pascalString=''
+          length when read (if read)=4
         }
         ThumbnailRBlock {
           isOldFormat=false
@@ -49,6 +129,11 @@ PSDDocument {
           bitsPerPixel=24
           numberOfPlanes=1
           imageData.length=1797
+        }
+        ImageResourceBlock {
+          identity=EXIFData1
+          pascalString=''
+          length when read (if read)=306
         }
         ResolutionRBlock {
           HDpi=299.99942
@@ -64,7 +149,7 @@ PSDDocument {
           vertical=576
           fGuideCount=0
           blocks= {
-            
+
           }
         }
         VersionInfoRBlock {
@@ -196,6 +281,34 @@ PSDDocument {
               LayerID {
                 key=Key:LAYER_ID_KEY:lyid
                 id=5
+              }
+              AdditionalLayerInfo {
+                key=Key:BLEND_CLIPPING_ELEMENTS:clbl
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:BLEND_INTERIOR_ELEMENTS:infx
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:KNOCKOUT_SETTING:knko
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:PROTECTED_SETTING:lspf
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:SHEET_COLOR_SETTING:lclr
+                length=8
+              }
+              AdditionalLayerInfo {
+                key=Key:METADATA_SETTING:shmd
+                length=72
+              }
+              AdditionalLayerInfo {
+                key=Key:REFERENCE_POINT:fxrp
+                length=16
               }
             }
           }
@@ -340,6 +453,46 @@ PSDDocument {
                 key=Key:LAYER_ID_KEY:lyid
                 id=13
               }
+              AdditionalLayerInfo {
+                key=Key:BLEND_CLIPPING_ELEMENTS:clbl
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:BLEND_INTERIOR_ELEMENTS:infx
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:KNOCKOUT_SETTING:knko
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:PROTECTED_SETTING:lspf
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:SHEET_COLOR_SETTING:lclr
+                length=8
+              }
+              AdditionalLayerInfo {
+                key=Key:METADATA_SETTING:shmd
+                length=72
+              }
+              AdditionalLayerInfo {
+                key=Key:VECTOR_STROKE_DATA:vstk
+                length=828
+              }
+              AdditionalLayerInfo {
+                key=Key:USING_ALIGNED_RENDERING:sn2P
+                length=4
+              }
+              AdditionalLayerInfo {
+                key=Key:REFERENCE_POINT:fxrp
+                length=16
+              }
+              AdditionalLayerInfo {
+                key=Key:LAYER_VERSION:lyvr
+                length=4
+              }
             }
           }
         }
@@ -357,7 +510,18 @@ PSDDocument {
         kind=UseValueStoredPerLayer
       }
       additionalLayerInfo= {
-        
+        AdditionalLayerInfo {
+          key=Key:PATTERN:Patt
+          length=0
+        }
+        AdditionalLayerInfo {
+          key=Key:FILTER_MASK:FMsk
+          length=12
+        }
+        AdditionalLayerInfo {
+          key=Key:COMPOSITOR_USED:cinf
+          length=502
+        }
       }
     }
     imageData=ImageData {

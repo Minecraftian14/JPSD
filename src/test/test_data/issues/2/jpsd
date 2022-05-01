@@ -46,7 +46,7 @@ PSDDocument {
     }
     layerAndMaskData=LayerAndMaskData {
       layerInfo=LayerInfo {
-        hasAlpha=true
+        hasAlpha=false
         layerRecords= {
           LayerRecord {
             content=Rectangle {
@@ -155,56 +155,56 @@ PSDDocument {
               }
               LayerID {
                 key=Key:LAYER_ID_KEY:lyid
-                id=5
+                id=1
               }
             }
           }
           LayerRecord {
             content=Rectangle {
-              top=0
+              top=456
               lef=0
               bot=912
-              rig=684
+              rig=342
             }
             info= {
               ChannelInfo {
                 id=ChannelID:TransparencyMask
-                dataLength=623810
+                dataLength=155954
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=623808
+                  data.length=155952
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel1
-                dataLength=623810
+                dataLength=155954
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=623808
+                  data.length=155952
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel2
-                dataLength=623810
+                dataLength=155954
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=623808
+                  data.length=155952
                 }
               }
               ChannelInfo {
                 id=ChannelID:Channel3
-                dataLength=623810
+                dataLength=155954
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=623808
+                  data.length=155952
                 }
               }
               ChannelInfo {
                 id=ChannelID:UserSuppliedMask
-                dataLength=623810
+                dataLength=155954
                 data=ChannelImageData {
                   compression=Compression:Raw_Data
-                  data.length=623808
+                  data.length=155952
                 }
               }
             }
@@ -221,10 +221,10 @@ PSDDocument {
             filler=0
             layerMaskData=LayerMaskData {
               maskEncloser=Rectangle {
-                top=0
+                top=456
                 lef=0
                 bot=912
-                rig=684
+                rig=342
               }
               defaultColor=-1
               layerMaskInfoFlag=LayerMaskInfoFlag {
@@ -298,7 +298,7 @@ PSDDocument {
               }
               LayerID {
                 key=Key:LAYER_ID_KEY:lyid
-                id=5
+                id=2
               }
             }
           }

@@ -47,10 +47,10 @@ public class LayerRecordIO extends SectionIO<LayerRecord> {
 
         for (int i = 0; i < numberOfChannels; i++) {
             ChannelInfo.ChannelID id = ChannelInfo.ChannelID.of(reader.stream.readShort());
-            long infol;
-            if (version.isLarge()) infol = reader.stream.readLong();
-            else infol = reader.stream.readInt();
-            info[i] = new ChannelInfo(id, infol);
+            long info_length;
+            if (version.isLarge()) info_length = reader.stream.readLong();
+            else info_length = reader.stream.readInt();
+            info[i] = new ChannelInfo(id, info_length);
         }
 
         reader.verifySignature(PSDConnection.RESOURCE);
