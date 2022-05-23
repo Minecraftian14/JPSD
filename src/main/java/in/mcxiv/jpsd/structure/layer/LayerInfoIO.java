@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.structure.layer;
 
 import in.mcxiv.jpsd.data.common.Compression;
+import in.mcxiv.jpsd.data.common.complex.structs.RawData;
 import in.mcxiv.jpsd.data.file.FileVersion;
 import in.mcxiv.jpsd.data.layer.LayerInfo;
 import in.mcxiv.jpsd.data.layer.info.ChannelImageData;
@@ -8,6 +9,7 @@ import in.mcxiv.jpsd.data.layer.info.LayerRecord;
 import in.mcxiv.jpsd.data.layer.info.record.ChannelInfo;
 import in.mcxiv.jpsd.io.DataReader;
 import in.mcxiv.jpsd.io.DataWriter;
+import in.mcxiv.jpsd.io.RawDataDecoder;
 import in.mcxiv.jpsd.structure.SectionIO;
 import in.mcxiv.jpsd.structure.layer.info.LayerRecordIO;
 
@@ -15,8 +17,8 @@ import java.io.IOException;
 
 public class LayerInfoIO extends SectionIO<LayerInfo> {
 
-    private final FileVersion version;
     public final SectionIO<LayerRecord> LAYER_RECORD_IO;
+    private final FileVersion version;
 
     public LayerInfoIO(FileVersion version) {
         super(true);

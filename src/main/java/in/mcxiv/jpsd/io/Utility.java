@@ -4,7 +4,7 @@ import java.awt.image.*;
 
 public class Utility {
 
-    public static final Map2Dto1D BANDED_INDEX_MAP = (w, x, h, y, s, c, B, b) -> y * B * w + B * x + b + B * B * c * w * h;
+    public static final Map2Dto1D BANDED_INDEX_MAP = (w, x, h, y, s, c, B, b) -> y * B * w + B * x + b + B * /*B **/ c * w * h;
     public static final Map2Dto1D INTERLEAVED_INDEX_MAP = (w, x, h, y, s, c, B, b) -> s * (y * w + x) + c;
 
     private static final int[] RGBtoBGR = {2, 1, 0};
