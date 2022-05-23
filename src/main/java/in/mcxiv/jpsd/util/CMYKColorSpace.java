@@ -22,12 +22,11 @@ public class CMYKColorSpace extends ColorSpace {
 
     @Override
     public float[] fromRGB(float[] floats) {
-        float k = Math.max(Math.max(floats[0], floats[1]), floats[2]);
-        float omk = 1 - k;
+        float k = Math.min(Math.min(1 - floats[0], 1 - floats[1]), 1 - floats[2]);
         return new float[]{
-                (omk - floats[0]) / omk,
-                (omk - floats[1]) / omk,
-                (omk - floats[2]) / omk,
+                1 - floats[0] - k,
+                1 - floats[1] - k,
+                1 - floats[2] - k,
                 k
         };
     }

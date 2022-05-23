@@ -3,12 +3,13 @@ package in.mcxiv.jpsd.util;
 import java.awt.color.ColorSpace;
 
 /**
- * Adapted using https://stackoverflow.com/a/5021831/18800689 as a reference.
+ * Adapted using https://imagej.nih.gov/ij/plugins/download/Color_Space_Converter.java as a reference.
  */
 public class LABColorSpace extends ColorSpace {
 
     public static final ColorSpace INSTANCE = new LABColorSpace();
     private static final ColorSpace CIEXYZ = ColorSpace.getInstance(ColorSpace.CS_CIEXYZ);
+    private static final double N = 4.0 / 29.0;
 
     private LABColorSpace() {
         super(TYPE_Lab, 3);
@@ -26,20 +27,47 @@ public class LABColorSpace extends ColorSpace {
 
     @Override
     public float[] toCIEXYZ(float[] colorvalue) {
-        double i = (colorvalue[0] + 16.0) * (1.0 / 116.0);
-        double X = fInv(i + colorvalue[1] * (1.0 / 500.0));
-        double Y = fInv(i);
-        double Z = fInv(i - colorvalue[2] * (1.0 / 200.0));
-        return new float[]{(float) X, (float) Y, (float) Z};
+        float y = (colorvalue[0] + 16.0f) / 116.0f;
+        float y3 = y * y * y;
+        float x = (colorvalue[1] / 500.0f) + y;
+        float x3 = x * x * x;
+        float z = y - (colorvalue[2] / 200.0f);
+        float z3 = z * z * z;
+
+        if (y3 > 0.008856f) y = y3;
+        else y = (y - (16.0f / 116.0f)) / 7.787f;
+
+        if (x3 > 0.008856f) x = x3;
+        else x = (x - (16.0f / 116.0f)) / 7.787f;
+
+        if (z3 > 0.008856f) z = z3;
+        else z = (z - (16.0f / 116.0f)) / 7.787f;
+
+        return new float[]{
+                x * 94.9722f,
+                y * 100.0f,
+                z * 122.6394f
+        };
     }
 
     @Override
     public float[] fromCIEXYZ(float[] colorvalue) {
-        double l = f(colorvalue[1]);
-        double L = 116.0 * l - 16.0;
-        double a = 500.0 * (f(colorvalue[0]) - l);
-        double b = 200.0 * (l - f(colorvalue[2]));
-        return new float[]{(float) L, (float) a, (float) b};
+        float x = colorvalue[0] / 94.9722f;
+        float y = colorvalue[1] / 100.0f;
+        float z = colorvalue[2] / 122.6394f;
+
+        if (x > 0.008856) x = (float) Math.pow(x, 1.0 / 3.0);
+        else x = (7.787f * x) + (16.0f / 116.0f);
+        if (y > 0.008856) y = (float) Math.pow(y, 1.0 / 3.0);
+        else y = (7.787f * y) + (16.0f / 116.0f);
+        if (z > 0.008856f) z = (float) Math.pow(z, 1.0 / 3.0);
+        else z = (7.787f * z) + (16.0f / 116.0f);
+
+        return new float[]{
+                (116.0f * y) - 16.0f,
+                500.0f * (x - y),
+                200.0f * (y - z)
+        };
     }
 
     @Override
@@ -49,29 +77,11 @@ public class LABColorSpace extends ColorSpace {
 
     @Override
     public float getMinValue(int component) {
-        return (component == 0) ? 0f : -128f;
+        return 0f;
     }
 
     @Override
     public String getName(int idx) {
         return String.valueOf("Lab".charAt(idx));
     }
-
-    private static double f(double x) {
-        if (x > 216.0 / 24389.0) {
-            return Math.cbrt(x);
-        } else {
-            return (841.0 / 108.0) * x + N;
-        }
-    }
-
-    private static double fInv(double x) {
-        if (x > 6.0 / 29.0) {
-            return x * x * x;
-        } else {
-            return (108.0 / 841.0) * (x - N);
-        }
-    }
-
-    private static final double N = 4.0 / 29.0;
 }

@@ -1,6 +1,7 @@
 package in.mcxiv.jpsd.io;
 
-import in.mcxiv.jpsd.data.common.ImageMeta;
+import in.mcxiv.jpsd.data.common.Compression;
+import in.mcxiv.jpsd.data.common.Rectangle;
 import in.mcxiv.jpsd.data.file.ColorMode;
 import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.data.file.FileVersion;
@@ -15,10 +16,8 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Hashtable;
-
-import static javax.imageio.ImageTypeSpecifier.createBanded;
 
 public class ImageMakerStudio2 {
 
@@ -28,6 +27,123 @@ public class ImageMakerStudio2 {
     //  Meanwhile for 32 bit
     //  -1 is 01 only :eyes:
     //  127 seems to be the max
+    public static byte[][] bytesBankFromImage(BufferedImage image) {
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        ColorModel colorModel = image.getColorModel();
+        WritableRaster raster = image.getRaster();
+        DataBuffer buffer = raster.getDataBuffer();
+        SampleModel sampleModel = raster.getSampleModel();
+
+        DepthEntry depth = DepthEntry.of(buffer);
+        assert depth != null;
+        ColorSpace colorSpace = colorModel.getColorSpace();
+        int channels = sampleModel.getNumBands();
+
+        if (colorSpace == null) {
+            // TODO: Handle Indexed/Bitmap/Multichannel
+            return null;
+        }
+
+        byte[][] data = new byte[channels][w * h * depth.getBytes()];
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        boolean didConversionFail = true;
+        if (sampleModel instanceof SinglePixelPackedSampleModel) {
+            int[] bitMasks = ((SinglePixelPackedSampleModel) sampleModel).getBitMasks();
+            int[] bitOffsets = ((SinglePixelPackedSampleModel) sampleModel).getBitOffsets();
+
+            switch (depth) {
+                case O:
+                    break;
+                case E:
+                    didConversionFail = false;
+                    // TODO: what is this? 2 bit per channel?
+                    byte[] bytes = ((DataBufferByte) buffer).getData();
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 1, 0)] = (byte)
+                                        ((bytes[Utility.BANDED_INDEX_MAP.map(w, i, h, j, channels, 0, 1, 0)] & bitMasks[c]) >>> bitOffsets[c]);
+                    break;
+
+                case S:
+                    didConversionFail = false;
+                    short[] shorts;
+                    if (buffer instanceof DataBufferShort)
+                        shorts = ((DataBufferShort) buffer).getData();
+                    else if (buffer instanceof DataBufferUShort)
+                        shorts = ((DataBufferUShort) buffer).getData();
+                    else break;
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 1, 0)] = (byte)
+                                        ((shorts[Utility.BANDED_INDEX_MAP.map(w, i, h, j, channels, 0, 1, 0)] & bitMasks[c]) >>> bitOffsets[c]);
+                    break;
+
+                case T:
+                    didConversionFail = false;
+                    int[] ints = ((DataBufferInt) buffer).getData();
+
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 1, 0)] = (byte)
+                                        ((ints[Utility.BANDED_INDEX_MAP.map(w, i, h, j, channels, 0, 1, 0)] & bitMasks[c]) >>> bitOffsets[c]);
+                    break;
+            }
+        } else if (sampleModel instanceof BandedSampleModel) {
+            Map2Dto1D indexMap = Utility.getIndexMap(sampleModel);
+            FunctionII componentMap = Utility.getComponentMap(image);
+
+            switch (depth) {
+                case E:
+                    didConversionFail = false;
+                    byte[][] bytes = ((DataBufferByte) buffer).getBankData();
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 1, 0)] =
+                                        bytes[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)];
+                    break;
+                case S:
+                    didConversionFail = false;
+                    short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                for (int b = 0; b < 2; b++)
+                                    data[0][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 2, b)] =
+                                            (byte) ((shorts[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)] >>> (8 * b)) & 0xff);
+
+                    break;
+                case T:
+                    didConversionFail = false;
+                    int[][] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getBankData();
+                    for (int i = 0; i < w; i++)
+                        for (int j = 0; j < h; j++)
+                            for (int c = 0; c < channels; c++)
+                                for (int b = 0; b < 4; b++)
+                                    data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 4, b)] =
+                                            (byte) ((ints[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)]) >>> (8 * b) & 0xff);
+                    break;
+                case O:
+                    throw new UnsupportedOperationException();
+            }
+        }
+        if (didConversionFail) {
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                    for (int c = 2; c >= 0; c--)
+                        data[c][Utility.BANDED_INDEX_MAP.map(w, i, h, j, 1, 0, 1, 0)] =
+                                (byte) ((image.getRGB(i, j) >>> (16 * c)) & 0xff);
+        }
+
+        return data;
+    }
 
     public static BufferedImage toImage(PSDConnection connection) {
 
@@ -209,7 +325,7 @@ public class ImageMakerStudio2 {
                             for (int c = 0; c < channels; c++)
                                 for (int b = 0; b < 2; b++)
                                     data[Utility.BANDED_INDEX_MAP.map(w, i, h, j, channels, c, 2, b)] =
-                                            (byte) ((shorts[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)] >>> (16 * b)) & 0xff);
+                                            (byte) ((shorts[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)] >>> (8 * b)) & 0xff);
 
                     break;
                 case T:
@@ -220,7 +336,7 @@ public class ImageMakerStudio2 {
                             for (int c = 0; c < channels; c++)
                                 for (int b = 0; b < 4; b++)
                                     data[Utility.BANDED_INDEX_MAP.map(w, i, h, j, channels, c, 4, b)] =
-                                            (byte) ((ints[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)]) >>> (16 * b) & 0xff);
+                                            (byte) ((ints[componentMap.map(c)][indexMap.map(w, i, h, j, channels, 0, 1, 0)]) >>> (8 * b) & 0xff);
                     break;
                 case O:
                     throw new UnsupportedOperationException();
@@ -253,72 +369,98 @@ public class ImageMakerStudio2 {
         return null;
     }
 
-    private static BufferedImage toImage(LayerRecord layer, PSDConnection file, boolean mask) {
+    private static BufferedImage toImage(LayerRecord layer, PSDConnection connection, boolean mask) {
+        FileHeaderData fhd = connection.getFileHeaderData();
+        int w = fhd.getWidth();
+        int h = fhd.getHeight();
+        DepthEntry depth = fhd.getDepthEntry();
+        ColorMode colorMode = mask ? ColorMode.Grayscale : fhd.getColorMode();
+        short channels = (short) (mask ? 1 : layer.getColorChannelsCount());
+        ColorSpace colorSpace = colorMode.getColorSpace();
 
-        int w = layer.getWidth();
-        int h = layer.getHeight();
-
-        if (h * w == 0) /* It's probably a Layer Group or something unique like that */ {
-            PSDConnection.out.println(layer.getLayerName() + " doesnt looks like it has image data!");
+        if (colorSpace == null) {
+            // TODO: Handle Indexed/Bitmap/Multichannel
             return null;
         }
 
-        DepthEntry depth = file.getFileHeaderData().getDepthEntry();
-        ColorSpace colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+        boolean hasAlpha = false;
+        int transferType = depth.getDataType();
 
-        boolean hasAlpha = layer.hasAlpha();
+        ComponentColorModel colorModel = new ComponentColorModel(colorSpace, hasAlpha, true, Transparency.TRANSLUCENT, transferType);
 
-        int[] bankIndices = hasAlpha ? new int[]{0, 1, 2, 3} : new int[]{0, 1, 2};
-        int[] bandOffsets = hasAlpha ? new int[4] : new int[3];
+        BandedSampleModel sampleModel = new BandedSampleModel(transferType, w, h, channels);
 
-        byte[][] data = new byte[mask ? 1 : bandOffsets.length][];  // === hasAlpha ? new int[4][] : new int[3][];
-
+        byte[][] data = new byte[channels][];
         if (mask) {
             ChannelImageData cid = layer.getInfo(ChannelInfo.ChannelID.UserSuppliedMask).getData();
-            data[0] = RawDataDecoder.decode(cid.getCompression(), cid.getData(), file.getFileHeaderData());
+            data[0] = RawDataDecoder.decode(cid.getCompression(), cid.getData(), connection.getFileHeaderData());
         } else for (int i = 0; i < data.length; i++) {
             ChannelImageData cid = layer.getInfo(i == 3 ? -1 : i).getData();
-            data[i] = RawDataDecoder.decode(cid.getCompression(), cid.getData(), file.getFileHeaderData());
+            data[i] = RawDataDecoder.decode(cid.getCompression(), cid.getData(), connection.getFileHeaderData());
         }
 
-        BufferedImage image = createBanded(colorSpace, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
-        switch (depth) { //@formatter:off
-            case E:
-                byte[][] bytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getBankData();
-                for (int i = 0; i < bytes.length; i++)
-                    for (int j = 0; j < bytes[i].length; j++)
-                        bytes[i][j] = data[i][j]; // data[bytes[i].length * i + j];
-                break;
-            case S:
-                image = createBanded(colorSpace, bankIndices, bandOffsets, depth.getDataType(), hasAlpha, false).createBufferedImage(w, h);
-                short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
-                for (int i = 0; i < shorts.length; i++)
-                    for (int j = 0; j < shorts[i].length; j++)
-                        shorts[i][j] = (short) data[i][j];
-                break;
-            case T:
-                FileHeaderData fhd = file.getFileHeaderData();
-                BufferedImage out = new BufferedImage(fhd.getWidth(), fhd.getHeight(), BufferedImage.TYPE_INT_RGB);
-                int s = fhd.getHeight() * fhd.getWidth();
-                for (int x = 0; x < fhd.getWidth(); x++) {
-                    for (int y = 0; y < fhd.getHeight(); y++) {
-                        int i = y * fhd.getWidth() + x;
-                        out.setRGB(x, y, (0xFF << 24) |
-                                (((int) (data[1][i] * 255d / Integer.MAX_VALUE)) << 16) |
-                                (((int) (data[2][i] * 255d / Integer.MAX_VALUE)) << 8) |
-                                (((int) (data[3][i] * 255d / Integer.MAX_VALUE)))
-                        );
-                    }
-                }
-                image = out;
-                break;
+        DataBuffer buffer = null;
+        assert data[0].length == layer.getWidth() * layer.getHeight() * depth.getBytes();
+
+        int span = w * h * depth.getBytes();
+
+        switch (depth) {
+
             case O:
-            default:
-                throw new IllegalStateException();
-                //@formatter:on
+                DataBufferByte dataBufferByte0 = new DataBufferByte(data.length / channels / depth.getBytes(), channels);
+                for (int c = 0; c < channels; c++) {
+                    byte[] channel = dataBufferByte0.getData(c);
+                    for (int i = 0; i < channel.length; i++)
+                        channel[i] = (byte) (data[c][i] == 0 ? 0 : -1);
+                }
+                buffer = dataBufferByte0;
+                break;
+
+            case E:
+                DataBufferByte dataBufferByte = new DataBufferByte(data.length / channels / depth.getBytes(), channels);
+                for (int c = 0; c < channels; c++) {
+                    byte[] channel = dataBufferByte.getData(c);
+                    System.arraycopy(data[c], c * span, channel, 0, channel.length);
+                }
+                buffer = dataBufferByte;
+                break;
+
+            case S:
+                DataBufferUShort dataBufferUShort = new DataBufferUShort(data.length / channels / depth.getBytes(), channels);
+                for (int c = 0; c < channels; c++) {
+                    short[] channel = dataBufferUShort.getData(c);
+                    ByteBuffer wrap = ByteBuffer.wrap(data[c]);
+                    for (int i = 0; i < channel.length; i++)
+                        channel[i] = wrap.getShort();
+                }
+                buffer = dataBufferUShort;
+                break;
+
+            case T:
+                throw new UnsupportedOperationException("This feature is not yet implemented, it requires writing some stuff for managing for pixel data is stored in HDR images. Make an issue if this feature should be implemented.");
         }
-        return image;
+
+        WritableRaster raster = WritableRaster.createWritableRaster(sampleModel, buffer, null);
+
+        return new BufferedImage(colorModel, raster, true, new Hashtable<>());
     }
 
+    private static LayerRecord fromImage(BufferedImage image, BufferedImage mask, String layerName, PSDConnection connection) {
+        if (mask != null) if (mask.getColorModel().getColorSpace().equals(ColorMode.Grayscale.getColorSpace())
+                              || mask.getHeight() != image.getHeight() || mask.getWidth() != image.getWidth())
+            throw new IllegalArgumentException("Mask is not compatible with the given image!");
 
+        byte[][] bytes_image = bytesBankFromImage(image);
+        byte[][] bytes_mask = mask == null ? null : bytesBankFromImage(mask);
+        if (bytes_mask != null && bytes_mask.length > 1)
+            PSDConnection.out.println("Why does the mask have more channels?");
+
+        ArrayList<ChannelInfo> infos = new ArrayList<>();
+        for (int c = 0; c < bytes_image.length; c++)
+            infos.add(new ChannelInfo(ChannelInfo.ChannelID.of((short) c), new ChannelImageData(Compression.Raw_Data, bytes_image[c])));
+        if (bytes_mask != null)
+            infos.add(new ChannelInfo(ChannelInfo.ChannelID.UserSuppliedMask, new ChannelImageData(Compression.Raw_Data, bytes_mask[0])));
+
+        return new LayerRecord(new Rectangle(image.getWidth(), image.getHeight()), infos, layerName);
+    }
 }

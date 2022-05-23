@@ -82,10 +82,12 @@ public class LayerRecord extends DataObject {
         return list;
     }
 
+    @Deprecated
     public LayerRecord(int topLefX, int topLefY, String layerName, BufferedImage image) {
         this(topLefX, topLefY, topLefX + image.getWidth(), topLefY + image.getHeight(), layerName, image);
     }
 
+    @Deprecated
     public LayerRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image) {
         this(
                 new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
@@ -102,10 +104,27 @@ public class LayerRecord extends DataObject {
         );
     }
 
+    @Deprecated
     public LayerRecord(int topLefX, int topLefY, int botRhtX, int botRhtY, String layerName, BufferedImage image, BufferedImage mask) {
         this(
                 new Rectangle(topLefY, topLefX, botRhtY, botRhtX),
                 createChannelInfo(image, mask),
+                BlendingMode.NORMAL,
+                (byte) -1,
+                Clipping.Base,
+                new LayerRecordInfoFlag(LayerRecordInfoFlag.HAS_FOURTH),
+                (byte) 0,
+                null,
+                LayerBlendingRanges.DEFAULT,
+                layerName,
+                new ArrayList<>()
+        );
+    }
+
+    public LayerRecord(Rectangle content, ArrayList<ChannelInfo> info, String layerName) {
+        this(
+                content,
+                info,
                 BlendingMode.NORMAL,
                 (byte) -1,
                 Clipping.Base,

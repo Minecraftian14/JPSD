@@ -8,8 +8,8 @@ import java.awt.image.*;
 public abstract class ImageIterator {
 
     public BufferedImage image;
-    public int w;
-    public int h;
+    public int width;
+    public int height;
     public ColorModel colorModel;
     public WritableRaster raster;
     public DataBuffer buffer;
@@ -20,8 +20,8 @@ public abstract class ImageIterator {
 
     public ImageIterator(BufferedImage image) {
         this.image = image;
-        this.w = image.getWidth();
-        this.h = image.getHeight();
+        this.width = image.getWidth();
+        this.height = image.getHeight();
         this.colorModel = image.getColorModel();
         this.raster = image.getRaster();
         this.buffer = raster.getDataBuffer();
@@ -31,10 +31,34 @@ public abstract class ImageIterator {
         this.valueConvertor = new ValueDepthConvertor(DepthEntry.of(this.buffer));
     }
 
-    public static class BandedImageIterator extends ImageIterator{
 
+    public static class BandedImageIterator extends ImageIterator {
         public BandedImageIterator(BufferedImage image) {
             super(image);
         }
     }
+
+    public class Depth8Cursor extends ImageIteratorCursor{
+
+        @Override
+        public void getData(Cursor data) {
+
+        }
+
+        @Override
+        public void setData(Cursor data) {
+        }
+    }
+
+    public abstract class ImageIteratorCursor {
+
+        protected int x = 0;
+        protected int y = 0;
+
+        public abstract void getData(Cursor data);
+
+        public abstract void setData(Cursor data);
+
+    }
+
 }

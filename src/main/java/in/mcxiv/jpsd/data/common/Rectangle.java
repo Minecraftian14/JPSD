@@ -19,7 +19,6 @@ public class Rectangle extends DataObject {
         this.rig = rig;
     }
 
-    @Deprecated
     public Rectangle(int width, int height) {
         this(0, 0, height, width);
     }

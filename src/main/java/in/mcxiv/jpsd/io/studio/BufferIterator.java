@@ -1,7 +1,5 @@
 package in.mcxiv.jpsd.io.studio;
 
-import java.awt.image.*;
-
 public abstract class BufferIterator {
 
     public byte[] data;
@@ -18,7 +16,24 @@ public abstract class BufferIterator {
         this.data = new byte[this.width * this.height * this.channels * this.depth];
     }
 
-    public void setRed(int x, int y, byte[] color) {
+    public Cursor createCursor() {
+        return new BufferIteratorCursor();
+    }
 
+    public class BufferIteratorCursor extends Cursor {
+        @Override
+        public void setPosition(int x, int y) {
+            position = (x + width * y) * depth;
+        }
+
+        @Override
+        public byte getData() {
+            return data[position];
+        }
+
+        @Override
+        public void setData(byte d) {
+            data[position] = d;
+        }
     }
 }
