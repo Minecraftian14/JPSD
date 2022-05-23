@@ -78,7 +78,9 @@ public enum AdditionalInfoKey implements BytesEntry {
     LAYER_AND_MASK_INFO_32("Lr32", true) /*LARGE*/,
     LAYER_AND_MASK_INFO("Layr", true) /*LARGE*/,
     // The only mention of Alph is given here https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/#:~:text=Mt16%2C%20Mt32%2C%20Mtrn%2C-,Alph,-%2C%20FMsk%2C%20lnk2%2C%20FEid
-    Alph("Alph", true) /*LARGE*/;
+    Alph("Alph", true) /*LARGE*/,
+
+    UNKNOWN("null", false);
 
     private final byte[] value;
     private final boolean isLarge;
@@ -89,7 +91,7 @@ public enum AdditionalInfoKey implements BytesEntry {
     }
 
     public static AdditionalInfoKey of(byte[] bytes) throws IllegalSignatureException {
-        return BytesEntry.of(bytes, values());
+        return BytesEntry.of(bytes, values(), UNKNOWN);
     }
 
     @Override

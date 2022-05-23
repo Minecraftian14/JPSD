@@ -4,8 +4,8 @@ import java.awt.image.*;
 
 public class Utility {
 
-    public static final Map2Dto1D BANDED_INDEX_MAP = (w, x, h, y, s, c) -> y * w + x + c * w * h;
-    public static final Map2Dto1D INTERLEAVED_INDEX_MAP = (w, x, h, y, s, c) -> s * (y * w + x) + c;
+    public static final Map2Dto1D BANDED_INDEX_MAP = (w, x, h, y, s, c, B, b) -> y * B * w + B * x + b + B * B * c * w * h;
+    public static final Map2Dto1D INTERLEAVED_INDEX_MAP = (w, x, h, y, s, c, B, b) -> s * (y * w + x) + c;
 
     private static final int[] RGBtoBGR = {2, 1, 0};
 
@@ -38,9 +38,11 @@ public class Utility {
          * @param y ordinate in [0, h)
          * @param s upper limit of c
          * @param c sample in [0, s)
+         * @param B
+         * @param b
          * @return
          */
-        int map(int w, int x, int h, int y, int s, int c);
+        int map(int w, int x, int h, int y, int s, int c, int B, int b);
     }
 
     public interface FunctionII {

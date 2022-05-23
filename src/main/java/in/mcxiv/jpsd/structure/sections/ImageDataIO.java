@@ -23,7 +23,7 @@ public class ImageDataIO extends SectionIO<ImageData> {
     public ImageData read(DataReader reader) throws IOException {
 
         Compression compression = Compression.of(reader.stream.readShort());
-        int[] imgData = RawDataDecoder.decode(compression, reader, header);
+        byte[] imgData = RawDataDecoder.decode(compression, reader, header);
 
         return new ImageData(imgData);
     }
@@ -33,6 +33,7 @@ public class ImageDataIO extends SectionIO<ImageData> {
 
         writer.writeEntry(Compression.Raw_Data);
         writer.writeBytes(RawDataDecoder.encode(Compression.Raw_Data, imageData.getData(), header));
+//        writer.writeBytes(imageData.getImageData());
 
     }
 

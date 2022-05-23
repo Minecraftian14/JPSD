@@ -32,7 +32,8 @@ public enum BlendingMode implements BytesEntry {
     DIVIDE("fdiv"),
     SATURATION("sat"),
     COLOR("colr"),
-    LUMINOSITY("lum");
+    LUMINOSITY("lum"),
+    UNKNOWN("null");
 
     private final byte[] value;
 
@@ -42,7 +43,7 @@ public enum BlendingMode implements BytesEntry {
     }
 
     public static BlendingMode of(byte[] value) throws IllegalSignatureException {
-        return BytesEntry.of(value, values());
+        return BytesEntry.of(value, values(), UNKNOWN);
     }
 
     @Override

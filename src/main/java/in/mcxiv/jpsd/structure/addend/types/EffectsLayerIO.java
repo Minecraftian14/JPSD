@@ -76,7 +76,7 @@ public class EffectsLayerIO extends SectionIO<EffectsLayer> {
                     ColorComponents nativeColorComponents;
                     if (size == 51) nativeColorComponents = ColorComponentsIO.INSTANCE.read(reader);
                     else /* size == 41 */ nativeColorComponents = null;
-                    effects.add(new Shadow(type, versionS, effectEnabled, blur, intensity, angle, distance, colorComponents, mode, useAngleInAllEffects, opacityAsPercent, nativeColorComponents));
+                    effects.add(new Shadow(type == EffectType.InnerShadow, versionS, effectEnabled, blur, intensity, angle, distance, colorComponents, mode, useAngleInAllEffects, opacityAsPercent, nativeColorComponents));
                 }
                 break;
 

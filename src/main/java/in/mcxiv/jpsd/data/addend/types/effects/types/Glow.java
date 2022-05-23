@@ -20,8 +20,8 @@ public abstract class Glow extends Effect {
     protected boolean opacityAsPercent;
     protected ColorComponents nativeColorComponents;
 
-    public Glow(EffectType type, int version, boolean isEnabled, int blur, int intensity, ColorComponents colorComponents, BlendingMode blendingMode, boolean opacityAsPercent, ColorComponents nativeColorComponents) {
-        super(type, version, isEnabled);
+    public Glow(boolean isInner, int version, boolean isEnabled, int blur, int intensity, ColorComponents colorComponents, BlendingMode blendingMode, boolean opacityAsPercent, ColorComponents nativeColorComponents) {
+        super(isInner ? EffectType.InnerGlow : EffectType.OuterGlow, version, isEnabled);
         this.blur = blur;
         this.intensity = intensity;
         this.colorComponents = colorComponents;
@@ -81,15 +81,15 @@ public abstract class Glow extends Effect {
     @Override
     public String toString() {
         return "Glow{" +
-                "type=" + type +
-                ", version=" + version +
-                ", isEnabled=" + isEnabled +
-                ", blur=" + blur +
-                ", intensity=" + intensity +
-                ", colorComponents=" + colorComponents +
-                ", blendingMode=" + blendingMode +
-                ", opacityAsPercent=" + opacityAsPercent +
-                ", nativeColorComponents=" + nativeColorComponents +
-                '}';
+               "type=" + type +
+               ", version=" + version +
+               ", isEnabled=" + isEnabled +
+               ", blur=" + blur +
+               ", intensity=" + intensity +
+               ", colorComponents=" + colorComponents +
+               ", blendingMode=" + blendingMode +
+               ", opacityAsPercent=" + opacityAsPercent +
+               ", nativeColorComponents=" + nativeColorComponents +
+               '}';
     }
 }

@@ -150,9 +150,9 @@ public class ImageMakerStudio {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     Color c = new Color(image.getRGB(i, j));
-                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 0)] = c.getRed();
-                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 1)] = c.getGreen();
-                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 2)] = c.getBlue();
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 0, 1, 0)] = c.getRed();
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 1, 1, 0)] = c.getGreen();
+                    data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, 2, 1, 0)] = c.getBlue();
                 }
             }
         } else if (sampleModel instanceof BandedSampleModel) switch (depth) {
@@ -161,24 +161,24 @@ public class ImageMakerStudio {
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                         for (int c = 0; c < channels; c++)
-                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
-                                    bytes[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c, 1, 0)] =
+                                    bytes[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0, 1, 0)];
                 break;
             case S:
                 short[][] shorts = ((DataBufferUShort) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                         for (int c = 0; c < channels; c++)
-                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
-                                    shorts[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c, 1, 0)] =
+                                    shorts[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0, 1, 0)];
                 break;
             case T:
                 int[][] ints = ((DataBufferInt) image.getRaster().getDataBuffer()).getBankData();
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                         for (int c = 0; c < channels; c++)
-                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c)] =
-                                    ints[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0)];
+                            data[Utility.BANDED_INDEX_MAP.map(width, i, height, j, channels, c, 1, 0)] =
+                                    ints[componentMap.map(c)][indexMap.map(width, i, height, j, channels, 0, 1, 0)];
                 break;
             case O:
                 throw new UnsupportedOperationException();

@@ -8,10 +8,14 @@ public class LayerAndMaskInfo extends AdditionalLayerInfo {
 
     private LayerInfo layerInfo;
 
+    public LayerAndMaskInfo(AdditionalInfoKey key, LayerInfo layerInfo) {
+        this(key, -1, layerInfo);
+    }
+
     public LayerAndMaskInfo(AdditionalInfoKey key, long length, LayerInfo layerInfo) {
         super(key, length);
 
-        if (!AdditionalInfoKey.LAYER_AND_MASK_INFO_16.equals(key))
+        if (key != AdditionalInfoKey.LAYER_AND_MASK_INFO_16 && key != AdditionalInfoKey.LAYER_AND_MASK_INFO)
             throw new IllegalArgumentException();
 
         this.layerInfo = layerInfo;
@@ -20,9 +24,9 @@ public class LayerAndMaskInfo extends AdditionalLayerInfo {
     @Override
     public String toString() {
         return "LayerAndMaskInfo{" +
-                "key=" + key +
-                ", layerInfo=" + layerInfo +
-                '}';
+               "key=" + key +
+               ", layerInfo=" + layerInfo +
+               '}';
     }
 
     public LayerInfo getLayerInfo() {

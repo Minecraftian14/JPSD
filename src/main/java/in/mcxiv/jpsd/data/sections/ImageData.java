@@ -4,17 +4,23 @@ import in.mcxiv.jpsd.data.DataObject;
 
 public class ImageData extends DataObject {
 
-    private int[] imageData;
+    private byte[] imageData;
 
     public ImageData(byte[] data) {
-        throw new UnsupportedOperationException();
+        imageData = data;
     }
 
     public ImageData(int[] imgData) {
-        imageData = imgData;
+//        imageData = imgData;
+        throw new UnsupportedOperationException();
     }
 
     public int[] getData() {
+        throw new UnsupportedOperationException();
+//        return imageData;
+    }
+
+    public byte[] getImageData() {
         return imageData;
     }
 

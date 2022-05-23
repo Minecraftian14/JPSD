@@ -22,8 +22,8 @@ public class Shadow extends Effect {
     protected boolean opacityAsPercent;
     protected ColorComponents nativeColorComponents;
 
-    public Shadow(EffectType type, int version, boolean isEnabled, int blur, int intensity, int angle, int distance, ColorComponents colorComponents, BlendingMode mode, boolean useAngleInAllEffects, boolean opacityAsPercent, ColorComponents nativeColorComponents) {
-        super(type, version, isEnabled);
+    public Shadow(boolean isInner, int version, boolean isEnabled, int blur, int intensity, int angle, int distance, ColorComponents colorComponents, BlendingMode mode, boolean useAngleInAllEffects, boolean opacityAsPercent, ColorComponents nativeColorComponents) {
+        super(isInner ? EffectType.InnerShadow : EffectType.DropShadow, version, isEnabled);
         this.blur = blur;
         this.intensity = intensity;
         this.angle = angle;
@@ -110,18 +110,18 @@ public class Shadow extends Effect {
     @Override
     public String toString() {
         return "Shadow{" +
-                "type=" + type +
-                ", version=" + version +
-                ", isEnabled=" + isEnabled +
-                ", blur=" + blur +
-                ", intensity=" + intensity +
-                ", angle=" + angle +
-                ", distance=" + distance +
-                ", colorComponents=" + colorComponents +
-                ", mode=" + mode +
-                ", useAngleInAllEffects=" + useAngleInAllEffects +
-                ", opacityAsPercent=" + opacityAsPercent +
-                ", nativeColorComponents=" + nativeColorComponents +
-                '}';
+               "type=" + type +
+               ", version=" + version +
+               ", isEnabled=" + isEnabled +
+               ", blur=" + blur +
+               ", intensity=" + intensity +
+               ", angle=" + angle +
+               ", distance=" + distance +
+               ", colorComponents=" + colorComponents +
+               ", mode=" + mode +
+               ", useAngleInAllEffects=" + useAngleInAllEffects +
+               ", opacityAsPercent=" + opacityAsPercent +
+               ", nativeColorComponents=" + nativeColorComponents +
+               '}';
     }
 }

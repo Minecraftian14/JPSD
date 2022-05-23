@@ -5,10 +5,11 @@ import in.mcxiv.jpsd.data.primitive.ShortEntry;
 import java.awt.image.*;
 
 public enum DepthEntry implements ShortEntry {
-    O(1, DataBuffer.TYPE_UNDEFINED, null),
+    O(1, DataBuffer.TYPE_BYTE, null),
     E(8, DataBuffer.TYPE_BYTE, DataBufferByte.class),
     S(16, DataBuffer.TYPE_USHORT, DataBufferUShort.class),
     T(32, DataBuffer.TYPE_INT, DataBufferInt.class);
+
     private final short depth;
     private final short bytes;
     private final int dataType;
@@ -16,7 +17,7 @@ public enum DepthEntry implements ShortEntry {
 
     DepthEntry(int depth, int dataType, Class<? extends DataBuffer> bufferType) {
         this.depth = (short) depth;
-        this.bytes = (short) (depth / 8);
+        this.bytes = depth == 1 ? 1 : (short) (depth / 8);
         this.dataType = dataType;
         this.bufferType = bufferType;
     }
@@ -43,6 +44,13 @@ public enum DepthEntry implements ShortEntry {
             default:
                 throw new IllegalArgumentException("No such depth possible as " + depth);    //@formatter:on
         }
+    }
+
+    public static DepthEntry of(DataBuffer buffer) {
+        for (DepthEntry value : values())
+            if (value.bufferType.isInstance(buffer))
+                return value;
+        return null;
     }
 
     public static DepthEntry of(BufferedImage image) {

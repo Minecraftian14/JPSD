@@ -9,6 +9,10 @@ public class UnicodeLayerName extends AdditionalLayerInfo {
 
     private String name;
 
+    public UnicodeLayerName(String name) {
+        this(name, -1);
+    }
+
     public UnicodeLayerName(String name, long length) {
         super(KEY, length);
         this.name = name;

@@ -19,6 +19,14 @@ public interface BytesEntry {
         throw new IllegalSignatureException(Arrays.stream(collection).map(BytesEntry::getValue).toArray(byte[][]::new), value);
     }
 
+    static <T extends BytesEntry> T of(byte[] value, T[] collection, T defaultV) throws IllegalSignatureException {
+        if (value.length != collection[0].getLength()) throw new IllegalArgumentException("Length not matching.");
+        for (T entry : collection)
+            if (Arrays.equals(entry.getValue(), value))
+                return entry;
+        return defaultV;
+    }
+
     static <T extends BytesEntry> T of(String strValue, T[] collection) throws IllegalSignatureException {
         byte[] value = strValue.getBytes(StandardCharsets.US_ASCII);
         return of(value, collection);

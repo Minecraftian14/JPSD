@@ -36,6 +36,10 @@ public class TypeToolInfo extends AdditionalLayerInfo {
     private ColorComponents colorComponents;
     private boolean antiAlias;
 
+    public TypeToolInfo(short version, double[] transformInfo, short fontVersion, FontInfo[] fontInfos, StyleInfo[] styleInfos, short type, float scalingFactor, int charCount, int horizontalPlacement, int verticalPlacement, int selectionStart, int selectionEnd, LineInfo[] lineInfos, ColorComponents colorComponents, boolean antiAlias) {
+        this(-1, version, transformInfo, fontVersion, fontInfos, styleInfos, type, scalingFactor, charCount, horizontalPlacement, verticalPlacement, selectionStart, selectionEnd, lineInfos, colorComponents, antiAlias);
+    }
+
     public TypeToolInfo(long length, short version, double[] transformInfo, short fontVersion, FontInfo[] fontInfos, StyleInfo[] styleInfos, short type, float scalingFactor, int charCount, int horizontalPlacement, int verticalPlacement, int selectionStart, int selectionEnd, LineInfo[] lineInfos, ColorComponents colorComponents, boolean antiAlias) {
         super(KEY, length);
         this.version = version;

@@ -10,6 +10,10 @@ public class LayerID extends AdditionalLayerInfo {
 
     private int id;
 
+    public LayerID(int id) {
+        this(id, -1);
+    }
+
     public LayerID(int id, long length) {
         super(KEY, length);
         this.id = id;
@@ -17,6 +21,10 @@ public class LayerID extends AdditionalLayerInfo {
 //            throw new IllegalArgumentException("Please provide an ID greater than " + AUTO_ID_THING);
         if (id >= AUTO_ID_THING)
             AUTO_ID_THING = id + 1;
+    }
+
+    public LayerID() {
+        this(-1);
     }
 
     public LayerID(long length) {

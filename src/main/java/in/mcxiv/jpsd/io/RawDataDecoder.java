@@ -2,8 +2,10 @@ package in.mcxiv.jpsd.io;
 
 import in.mcxiv.jpsd.data.common.Compression;
 import in.mcxiv.jpsd.data.common.ImageMeta;
+import in.mcxiv.jpsd.data.file.ColorMode;
 import in.mcxiv.jpsd.data.file.DepthEntry;
 import in.mcxiv.jpsd.data.sections.FileHeaderData;
+import in.mcxiv.jpsd.exceptions.BytesReadDidntMatchExpectedCount;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,17 +13,101 @@ import java.util.zip.InflaterInputStream;
 
 public class RawDataDecoder {
 
-    public static int[] decode(Compression compression, DataReader reader, FileHeaderData fhd) throws IOException {
+    public static byte[] decode(Compression compression, DataReader reader, FileHeaderData fhd) throws IOException {
         if (reader.stream.length() == -1) System.err.println("WHYYYYYYY!!!");
         byte[] data = new byte[(int) (reader.stream.length() - reader.stream.getStreamPosition())];
         reader.stream.readFully(data, 0, data.length);
         return decode(compression, data, fhd);
     }
 
-    public static int[] decode(Compression compression, byte[] compressedData, FileHeaderData fhd) {
-        return decode(compression, compressedData, fhd.toImageMeta());
+    public static byte[] decode(Compression compression, byte[] compressedData, FileHeaderData fhd) {
+        return decode(compression, compressedData,
+                fhd.getWidth(), fhd.getHeight(),
+                fhd.getNumberOfChannels(), fhd.isLarge(),
+                fhd.getColorMode(),fhd.getDepthEntry());
     }
 
+    public static byte[] decode(Compression compression, byte[] compressedData,
+                               int width, int height,
+                               int channels,
+                               boolean isLarge,
+                               ColorMode colorMode,
+                               DepthEntry depth) {
+
+        try {
+            byte[] data = new byte[height * width * channels * depth.getBytes()];
+
+            switch (compression) {
+                case Raw_Data:
+                    if (data.length != compressedData.length)
+                        throw new BytesReadDidntMatchExpectedCount(data.length, compressedData.length);
+                    data = compressedData;
+                    break;
+
+                case RLE_Compression:
+                    DataReader rleData = new DataReader(compressedData);
+
+                    /* If we ever require scanLengths for a better algo towards reading raw data.
+                    int[] scanLengths = new int[height];
+                    if (fhd.isLarge())
+                        for (int i = 0; i < height; scanLengths[i++] = rleData.stream.readInt()) ;
+                    else for (int i = 0; i < height; scanLengths[i++] = rleData.stream.readUnsignedShort()) ;
+                    */
+
+                    if (isLarge) rleData.stream.skipBytes(height * channels * 4);
+                    else  rleData.stream.skipBytes(height * channels * 2);
+
+                    DataWriter rawWriter = new DataWriter();
+
+                    while (rleData.stream.getStreamPosition() < compressedData.length) {
+                        int len = (byte) rleData.stream.read();
+                        if (len >= 0) {
+                            rawWriter.writeBytes(rleData.readBytes(++len, true));
+                        } else if (len != -128) {
+                            rawWriter.fill(1 - len, rleData.stream.readByte());
+                        }
+                    }
+
+                    byte[] rawBytes = rawWriter.toByteArray();
+                    DataReader rawData = new DataReader(rawBytes);
+
+                    // Often there are extra bytes left unread at the end of the whole raw data block.
+                    // **It's not about bytes at the end on each line, but in the extreme end of the file.**
+                    // That's why we skip just as many bytes as extra. (else it creates a funny RGB->BGR effects for first ~1000 pixels along with a translation-ish effect in x-axis.)
+                    int spareBytes = rawBytes.length - data.length * depth.getBytes();
+                    PSDConnection.out.println("Spare bytes = " + spareBytes);
+                    if (spareBytes > 0) {
+                        rawData.stream.skipBytes(spareBytes);
+                    } /*else {
+                        System.out.println("Boom");
+                    }*/
+
+//                    for (int i = 0; i < data.length; data[i++] = rawData.readByBits(depth)) ;
+                    data = rawBytes;
+                    break;
+
+                case ZIP:
+                case ZIP_With_Prediction:
+
+                    // TODO: I think we are near... Currently the data retrieved looks like a bunch of dots aligned by the edges.
+                    InflaterInputStream stream = new InflaterInputStream(new ByteArrayInputStream(compressedData));
+                    DataReader zipReader = new DataReader(stream);
+//                    for (int i = 0; i < data.length; data[i++] = zipReader.readByBits(depth)) ;
+                    zipReader.stream.read(data);
+                    break;
+            }
+
+
+            if (ColorMode.CMYK.equals(colorMode) && channels < colorMode.components())
+                invert(data, depth);
+            return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException();
+    }
+
+    @Deprecated
     public static int[] decode(Compression compression, byte[] compressedData, ImageMeta fhd) {
         int height = fhd.getHeight();
         int width = fhd.getWidth();
@@ -87,19 +173,15 @@ public class RawDataDecoder {
                     break;
             }
 
-            return decode(data, fhd);
+//            if (fhd.isInvertRequired())
+//                invert(data, depth);
+            return data;
         } catch (IOException e) {
             e.printStackTrace();
         }
         throw new IllegalStateException();
     }
 
-    public static int[] decode(int[] data, ImageMeta fhd) {
-        if (fhd.isInvertRequired())
-            invert(data, fhd.getDepthEntry());
-
-        return data;
-    }
 
     public static byte[] encode(Compression compression, int[] data, FileHeaderData fhd) {
         return encode(compression, data, fhd.toImageMeta());
@@ -132,7 +214,7 @@ public class RawDataDecoder {
         throw new IllegalStateException();
     }
 
-    private static void invert(int[] data, DepthEntry depth) {
+    private static void invert(byte[] data, DepthEntry depth) {
         switch (depth) {
             case O:
                 // I didn't understand the invert and iffset part
@@ -141,15 +223,14 @@ public class RawDataDecoder {
                 for (int i = 0; i < data.length; i++)
                     data[i] = (byte) (0xff - data[i] & 0xff);
                 break;
-            case S:
-                for (int i = 0; i < data.length; i++)
-                    data[i] = (short) (0xffff - data[i] & 0xffff);
-                break;
-            case T:
-                for (int i = 0; i < data.length; i++)
-                    data[i] = 0xffff_ffff - data[i];
-                break;
+//            case S:
+//                for (int i = 0; i < data.length; i++)
+//                    data[i] = (short) (0xffff - data[i] & 0xffff);
+//                break;
+//            case T:
+//                for (int i = 0; i < data.length; i++)
+//                    data[i] = 0xffff_ffff - data[i];
+//                break;
         }
     }
-
 }

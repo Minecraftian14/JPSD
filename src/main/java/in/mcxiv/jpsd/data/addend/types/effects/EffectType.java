@@ -16,7 +16,8 @@ public enum EffectType implements BytesEntry {
     OuterGlow("oglw"),
     InnerGlow("iglw"),
     Bevel("bevl"),
-    SolidFill("sofi");
+    SolidFill("sofi"),
+    Unknown("null");
 
     private final byte[] value;
 
@@ -25,7 +26,7 @@ public enum EffectType implements BytesEntry {
     }
 
     public static EffectType of(byte[] value) throws IllegalSignatureException {
-        return BytesEntry.of(value, values());
+        return BytesEntry.of(value, values(), Unknown);
     }
 
     @Override

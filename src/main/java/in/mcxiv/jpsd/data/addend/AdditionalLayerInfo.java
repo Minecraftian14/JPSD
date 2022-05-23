@@ -7,6 +7,10 @@ public class AdditionalLayerInfo extends DataObject {
     protected final AdditionalInfoKey key;
     private long length;
 
+    public AdditionalLayerInfo(AdditionalInfoKey key) {
+        this(key, -1);
+    }
+
     public AdditionalLayerInfo(AdditionalInfoKey key, long length) {
         this.key = key;
         this.length = length;
@@ -19,8 +23,8 @@ public class AdditionalLayerInfo extends DataObject {
     @Override
     public String toString() {
         return "AdditionalLayerInfo{" +
-                "key=" + key +
-                ", length=" + length +
-                '}';
+               "key=" + key +
+               ", length=" + length +
+               '}';
     }
 }

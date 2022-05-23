@@ -13,6 +13,10 @@ public class EffectsLayer extends AdditionalLayerInfo {
     private short version;
     private Effect[] effects;
 
+    public EffectsLayer(short version, Effect[] effects) {
+        this(-1, version, effects);
+    }
+
     public EffectsLayer(long length, short version, Effect[] effects) {
         super(KEY, length);
         this.version = version;
@@ -34,7 +38,7 @@ public class EffectsLayer extends AdditionalLayerInfo {
     @Override
     public String toString() {
         return "EffectsLayer{" +
-                "effects=" + Arrays.toString(effects) +
-                '}';
+               "effects=" + Arrays.toString(effects) +
+               '}';
     }
 }

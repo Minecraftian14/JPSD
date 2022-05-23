@@ -1,7 +1,7 @@
 
 **/*.png
 src/test/test_data/random_test_files/*.psd
-src/test/test_data/random_test_files/**.psd
+src/test/test_data/random_test_files
 src/test/test_data/out/
 /out/
 /build/

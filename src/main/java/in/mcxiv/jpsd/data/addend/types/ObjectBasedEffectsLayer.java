@@ -13,6 +13,10 @@ public class ObjectBasedEffectsLayer extends AdditionalLayerInfo {
     private int descriptorVersion;
     private Descriptor descriptor;
 
+    public ObjectBasedEffectsLayer(String signature) {
+        this(signature, -1);
+    }
+
     public ObjectBasedEffectsLayer(String signature, long length) {
         super(KEY, length);
     }
